@@ -1,0 +1,81 @@
+{
+    "name": "kitenga_whiro",
+    "version": "1.0.0",
+    "origin": "AwaNet",
+    "type": "dual_kaitiaki",
+    "mauri_aligned": true,
+    "realms": {
+        "te_ao": {
+            "agent": "kitenga_whiro_ui",
+            "model": "gpt-4o",
+            "path": "te_ao/kitenga_whiro.json"
+        },
+        "te_po": {
+            "agent": "kitenga_whiro_body",
+            "model": "gpt-5.1",
+            "path": "te_po/kitenga_whiro_body.json"
+        }
+    },
+    "bridge": {
+        "realm": "te_hau",
+        "route": "/kitenga/execute",
+        "middleware": [
+            "intent_validation",
+            "tool_router",
+            "log_to_supabase"
+        ]
+    },
+    "identity": {
+        "glyph": "wolf_spiral.svg",
+        "tohu": "seer_of_realms",
+        "voice": "neutral_dev_kaitiaki",
+        "whakapapa": [
+            "whiro.json",
+            "mauri_anchor.md",
+            "kaitiaki_signatures.json"
+        ]
+    },
+    "models": {
+        "default_ui": "gpt-4o",
+        "default_backend": "gpt-5.1",
+        "embedding_model": "text-embedding-3-large",
+        "vision_model": "gpt-4o"
+    },
+    "permissions": {
+        "ui": {
+            "can_generate": [
+                "code",
+                "guidance",
+                "metadata",
+                "pipeline_structure"
+            ],
+            "cannot_execute": [
+                "tools",
+                "writes",
+                "embedding"
+            ]
+        },
+        "body": {
+            "can_execute": [
+                "ocr",
+                "summarise",
+                "embed",
+                "log"
+            ],
+            "cannot_reason": true
+        }
+    },
+    "state": {
+        "status": "active",
+        "dev_mode": true,
+        "registered_in": "mauri/kaitiaki/kitenga_manifest.json"
+    },
+    "linked_files": [
+        ".env.example",
+        "model_registry.json",
+        "pipeline_map.json",
+        "domain_map.json",
+        "drift_protection.json",
+        "naming_conventions.json"
+    ]
+}

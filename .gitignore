@@ -1,0 +1,235 @@
+##############################
+#        PYTHON (backend)
+##############################
+
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+*.whl
+.venv/
+venv/
+env/
+build/
+dist/
+pip-wheel-metadata/
+
+# Byte-compiled
+**/__pycache__/
+
+# Virtual env for submodules
+backend/**/.venv/
+te_po/**/.venv/
+tiwhanawhana/**/.venv/
+
+##############################
+#         NODE / REACT
+##############################
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+
+# Build outputs
+frontend/dist/
+frontend/build/
+te_ao/dist/
+te_ao/build/
+
+##############################
+#          ENV FILES
+##############################
+
+.env
+.env.*
+!/.env.example
+!**/.env.example
+!te_po/core/.env.example
+
+# Subdirectories
+**/.env
+**/.env.*
+**/.env.local
+**/.env.development
+**/.env.production
+
+##############################
+#          SUPABASE
+##############################
+
+# CLI temp files
+supabase/.temp/
+supabase/.branches/
+supabase/.logs/
+
+# Buckets (local)
+supabase/storage/*.json
+supabase/storage/tmp/
+
+# Supabase keys (NEVER tracked)
+supabase/.env
+**/supabase_env.json
+**/supabase-key.json
+
+##############################
+#        DEV CONTAINER
+##############################
+
+.devcontainer/.env
+.devcontainer/.history/
+.devcontainer/Dockerfile-local
+.vscode-server/
+.vscode-test/
+.vscode/ipch/
+
+# VS Code junk
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+##############################
+#         DOCKER
+##############################
+
+docker-compose.override.yml
+docker-data/
+**/docker-local/
+**/.docker/
+**/*.pid
+
+##############################
+#       MAURI + TOHU
+##############################
+
+# Sacred internal lineage
+mauri/
+**/mauri/
+tohu_json/
+**/tohu.json
+**/glyphs/*.png
+**/glyphs/*.svg
+**/glyph_manifest.json
+
+# Ignore entire projects tree, keep explicit placeholders
+projects/*
+!projects/.gitkeep
+!projects/kaitiaki_legacy/
+projects/kaitiaki_legacy/*
+!projects/kaitiaki_legacy/.gitkeep
+
+# Ignore mauri tree entirely
+mauri/
+
+# Carved seals + hashed keys
+**/mauri_key.json
+**/mauri_lock.json
+**/seal.json
+
+# Storage artifacts (keep synthetic test fixtures only)
+te_po/storage/*
+!te_po/storage/test_files/**
+**/seal.lock
+
+##############################
+#          LOGS
+##############################
+
+logs/
+**/logs/
+*.log
+*.out
+*.err
+
+# Agent logs
+documents/json/audit_logs/
+documents/json/elder_reviews/
+documents/json/tmp/
+documents/wtf.json
+
+##############################
+#        RUNTIME STATE
+##############################
+
+.cache/
+**/.cache/
+**/.pytest_cache/
+**/tmp/
+**/temp/
+
+# Notebook state
+.ipynb_checkpoints/
+
+##############################
+#          TESTS
+##############################
+
+**/tests/__pycache__/
+**/tests/tmp/
+**/tests/output/
+
+##############################
+#        MISC SAFETY
+##############################
+
+# Shell history
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor backups
+*.bak
+*~
+
+##############################
+#   PROJECT-LEVEL IGNORE
+##############################
+
+SAFE_AWA_EXTRACT/
+AwaNet(fixing)/
+scratch/
+drafts/
+old_versions/
+mauri/current_seal.json
+*.zip
+SAFE_PRIVATE/
+mauri/current_seal.json
+te_po/kaitiaki-intake.zip
+Kaitiaki/state/
+Kaitiaki/whakapapa*.json
+te_po/intake/
+SAFE_PRIVATE/
+.supabase/
+logs/
+*.pem
+*.key
+# === AwaNet Project Protection ===
+# Sensitive storage outputs
+te_po/storage/raw/
+te_po/storage/clean/
+te_po/storage/chunks/
+te_po/storage/openai/
+*.b64
+
+# Mauri state and private agents
+mauri/state/
+mauri/kaitiaki/kitenga_whiro.json
+mauri/kaitiaki/te_kitenga_nui.json
+
+# Unsafe scripts (if not refactored)
+projects/scripts/query_tables.py
+
+# Optional: Preserve structure
+!te_po/storage/.gitkeep
+!mauri/.env.example
+!mauri/kaitiaki/kaitiaki_signatures.json
+# Mauri private system state
+mauri/mauri.json
+storage/test_files/

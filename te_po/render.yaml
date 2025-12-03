@@ -1,0 +1,55 @@
+version: 1
+services:
+  - ocr
+  - reo_engine
+  - vector
+  - pro_activation
+  - health
+  - whakapapa
+  - intake
+routes:
+  - /ocr
+  - /translate
+  - /embed
+  - /memory
+  - /reo
+  - /reo/pro
+  - /iwi
+  - /intake
+  - /kitenga/health
+  - /kitenga/whakapapa
+  - /health/full
+supabase:
+  url: ${SUPABASE_URL}
+  service_role_key: ${SUPABASE_SERVICE_ROLE_KEY}
+database:
+  url: ${DATABASE_URL}
+intake_pipeline:
+  raw: SAFE_PRIVATE/intake/raw
+  active: SAFE_PRIVATE/intake/active
+  processed: SAFE_PRIVATE/intake/processed
+expected_tables:
+  - reo_logs
+  - pronunciation_logs
+  - pro_api_keys
+  - mauri_trace
+  - taonga
+  - embeddings
+  - ti_memory
+  - vector_embeddings
+env_placeholders:
+  OPENAI_API_KEY: ${OPENAI_API_KEY}
+  TESSERACT_PATH: ${TESSERACT_PATH}
+  LANG: ${LANG}
+  LC_ALL: ${LC_ALL}
+external_services:
+  - OpenAI
+  - Supabase
+  - pgvector
+warnings:
+  - "Migrations for expected tables not present in repo."
+  - "Vector search route not implemented (/vector/search missing)."
+deploy:
+  render:
+    file: render.yaml
+    service: te-po-kitenga-backend

@@ -1,0 +1,12 @@
+kaitiaki: "Kitenga Whiro"
+description: "CLI for interacting with Te Pō backend and AwaNet services."
+version: 1.0
+
+services:
+  reo: "/reo"
+  pronounce: "/reo/pronounce"
+  ingest: "/intake"
+  vector: "/vector"
+  health: "/health"
+  whakapapa: "/whakapapa"
+  keys: "/pro"

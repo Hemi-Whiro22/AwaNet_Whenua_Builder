@@ -1,0 +1,16 @@
+version: 1
+panels:
+  - TranslationPanel -> /reo/translate
+  - PronunciationPanel -> /reo/pronounce
+  - CulturalScanPanel -> /reo/scan (missing backend)
+  - AdminPanel -> /admin/pro/generate_key
+frontend_stack:
+  build: Vite + React
+  styling: Tailwind
+deployment:
+  cloudflare_pages: configured (workflow present)
+  workflow: .github/workflows/te_ao_deploy.yml
+env:
+  VITE_API_URL: ${VITE_API_URL}
+accessibility:
+  status: "Base dark UI; needs ARIA review and error states."

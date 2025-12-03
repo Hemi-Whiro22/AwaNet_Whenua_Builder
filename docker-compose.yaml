@@ -1,0 +1,76 @@
+version: "3.9"
+
+name: awanet
+
+networks:
+  kaitiaki-net:
+    driver: bridge
+
+volumes:
+  tepo_venv:
+  tepo_cache:
+  tehau_cache:
+  teao_node_modules:
+  teao_cache:
+
+services:
+  te_po:
+    build:
+      context: ./te_po
+      dockerfile: Dockerfile
+    container_name: te_po
+    networks:
+      - kaitiaki-net
+    volumes:
+      - ./te_po:/workspace
+      - tepo_venv:/workspace/.venv
+      - tepo_cache:/root/.cache
+      - ./mauri:/mauri
+      - ./shared:/workspace/shared
+    env_file:
+      - ./te_po/core/.env
+    ports:
+      - "8010:8010"
+    profiles: ["te_po", "all"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+
+  te_hau:
+    build:
+      context: ./te_hau
+      dockerfile: Dockerfile
+    container_name: te_hau
+    networks:
+      - kaitiaki-net
+    volumes:
+      - ./te_hau:/workspace
+      - tehau_cache:/root/.cache
+      - ./mauri:/mauri
+      - ./shared:/workspace/shared
+    env_file:
+      - ./te_hau/.env
+    ports:
+      - "8020:8020"
+    profiles: ["te_hau", "all"]
+
+  te_ao:
+    build:
+      context: ./te_ao
+      dockerfile: Dockerfile
+    container_name: te_ao
+    networks:
+      - kaitiaki-net
+    volumes:
+      - ./te_ao:/workspace
+      - teao_node_modules:/workspace/node_modules
+      - teao_cache:/home/node/.cache
+      - ./mauri:/mauri
+      - ./shared:/workspace/shared
+    env_file:
+      - ./te_ao/.env
+    ports:
+      - "3030:5173"
+    profiles: ["te_ao", "all"]

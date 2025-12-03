@@ -1,0 +1,166 @@
+{
+  "timestamp": "2025-11-08T21:06:00.652925",
+  "project": "te_puna",
+  "summary": {
+    "local_tables": 4,
+    "remote_tables": 5,
+    "matched_tables": 3,
+    "missing_tables": 1,
+    "extra_tables": 2
+  },
+  "tables": {
+    "ocr_logs": {
+      "status": "ALIGNED",
+      "local_columns": {
+        "id": "uuid",
+        "file_name": "text",
+        "file_url": "text",
+        "text_content": "text",
+        "language_detected": "text",
+        "meta": "jsonb",
+        "created_at": "timestamp"
+      },
+      "remote_columns": {
+        "id": "uuid",
+        "file_name": "text",
+        "file_url": "text",
+        "text_content": "text",
+        "language_detected": "text",
+        "confidence_score": "numeric",
+        "meta": "jsonb",
+        "created_at": "timestamp"
+      },
+      "matched_columns": 7,
+      "total_columns": 7,
+      "match_percentage": 100.0,
+      "missing_fields": [],
+      "type_mismatches": [],
+      "extra_remote_columns": [
+        "confidence_score"
+      ],
+      "recommendations": [
+        "\u2705 ocr_logs is fully aligned"
+      ]
+    },
+    "translations": {
+      "status": "ALIGNED",
+      "local_columns": {
+        "id": "uuid",
+        "ocr_id": "uuid",
+        "source_lang": "text",
+        "target_lang": "text",
+        "source_text": "text",
+        "translated_text": "text",
+        "model_used": "text",
+        "confidence": "numeric",
+        "meta": "jsonb",
+        "created_at": "timestamp"
+      },
+      "remote_columns": {
+        "id": "uuid",
+        "ocr_id": "uuid",
+        "source_lang": "text",
+        "target_lang": "text",
+        "source_text": "text",
+        "translated_text": "text",
+        "model_used": "text",
+        "confidence": "numeric",
+        "meta": "jsonb",
+        "created_at": "timestamp"
+      },
+      "matched_columns": 10,
+      "total_columns": 10,
+      "match_percentage": 100.0,
+      "missing_fields": [],
+      "type_mismatches": [],
+      "extra_remote_columns": [],
+      "recommendations": [
+        "\u2705 translations is fully aligned"
+      ]
+    },
+    "memory_logs": {
+      "status": "ALIGNED",
+      "local_columns": {
+        "id": "uuid",
+        "memory_type": "text",
+        "content": "text",
+        "embedding": "vector",
+        "related_task": "uuid",
+        "meta": "jsonb",
+        "created_at": "timestamp"
+      },
+      "remote_columns": {
+        "id": "uuid",
+        "memory_type": "text",
+        "content": "text",
+        "embedding": "vector",
+        "related_task": "uuid",
+        "meta": "jsonb",
+        "created_at": "timestamp"
+      },
+      "matched_columns": 7,
+      "total_columns": 7,
+      "match_percentage": 100.0,
+      "missing_fields": [],
+      "type_mismatches": [],
+      "extra_remote_columns": [],
+      "recommendations": [
+        "\u2705 memory_logs is fully aligned"
+      ]
+    },
+    "task_queue": {
+      "status": "MISSING",
+      "local_columns": {
+        "id": "uuid",
+        "task_type": "text",
+        "payload": "jsonb",
+        "status": "text",
+        "priority": "integer",
+        "retries": "integer",
+        "created_at": "timestamp",
+        "updated_at": "timestamp",
+        "completed_at": "timestamp"
+      },
+      "remote_columns": {},
+      "match_percentage": 0,
+      "recommendations": [
+        "Table task_queue does not exist in Te Puna"
+      ]
+    },
+    "taonga_metadata": {
+      "status": "EXTRA",
+      "local_columns": {},
+      "remote_columns": {
+        "id": "uuid",
+        "name": "text",
+        "description": "text",
+        "cultural_significance": "text",
+        "source": "text",
+        "iwi": "text",
+        "category": "text",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "match_percentage": 0,
+      "recommendations": [
+        "Extra table in Te Puna (may be reusable)"
+      ]
+    },
+    "summaries": {
+      "status": "EXTRA",
+      "local_columns": {},
+      "remote_columns": {
+        "id": "uuid",
+        "document_id": "uuid",
+        "summary_text": "text",
+        "keywords": "text",
+        "language": "text",
+        "created_at": "timestamp"
+      },
+      "match_percentage": 0,
+      "recommendations": [
+        "Extra table in Te Puna (may be reusable)"
+      ]
+    }
+  }
+}

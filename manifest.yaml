@@ -1,0 +1,149 @@
+# mauri/project.yaml
+
+- name: Ruru
+  role: Summariser
+  port: 8004
+  path: backend/services/ruru# Te Puna o Ngā Kaitiaki
+name: Te Puna o Ngā Kaitiaki
+  purpose: >
+    Indigenous AI system protecting, processing, and guiding taonga knowledge.
+    Anchored in tikanga, sovereignty, and digital whakapapa.
+  version: 1.0.0
+  maintainer: Adrian William Hemi Whiro & Kitenga Whiro
+  license: open-sacred
+
+structure:
+  kaitiaki_agents:
+    - name: Tiwhanawhana
+      role: Memory + Whakapapa Logs
+      repo: ./den-core/
+      backend: FastAPI
+      supabase_schema: ti_memory, whiro_audit
+    - name: Mataroa
+      role: Navigator / Summariser
+      repo: ./te-puna/
+      backend: FastAPI
+      supabase_schema: pdf_summaries, cultural_classifications
+    - name: Ruru
+      role: OCR + Archive Intake
+      repo: ./awa-tools/
+      backend: Supabase Edge Function
+      supabase_schema: uploads, document_registry
+
+  databases:
+    primary: Supabase
+    secondary: PostgreSQL local (optional)
+    schemas:
+      - ti_memory
+      - whiro_audit
+      - cultural_blocks
+      - elder_reviews
+      - iwi_registry
+      - taputapu
+      - documents
+      - summaries
+      - consultations
+
+  pipeline:
+    - name: ingest
+      description: Upload or drop multi-format documents into the awa.
+      entrypoint: /ingest
+      agent: Ruru
+    - name: classify
+      description: Tag tapu level, cultural sensitivity, and iwi scope.
+      agent: Whiro
+    - name: summarise
+      description: Culturally aware summarisation in te reo + English.
+      agent: Mataroa
+    - name: audit
+      description: Immutable Whiro audit trail.
+      agent: Tiwhanawhana
+
+  manifests:
+    - ./docs/indigenous_ai_tikanga.md
+    - ./json/KAITIAKI_ECOSYSTEM_STATUS.json
+    - ./json/WHIRO_SYSTEM_AUDIT.json
+    - ./json/AGENT_ACTIVITY_LOG.json
+    - ./json/CULTURAL_COMPLIANCE_LOG.json
+    - ./json/mataroa_comprehensive_audit.json
+
+metadata:
+  te_reo_macrons: enforced
+  timezone: Pacific/Auckland
+  locale: mi_NZ.UTF-8
+  encryption: enabled
+  vector_embeddings:
+    engine: openai:gpt-4o-mini
+    store: supabase_vectors
+  logging:
+    live_supabase_stream: true
+    local_backup: ./logs/system_health.json
+  carver_state: active
+  last_validated: 2025-11-05T00:00:00Z
+
+openai:
+  model_summariser: gpt-4o-mini
+  model_embedding: text-embedding-3-large
+  api_key: ${OPENAI_API_KEY}
+  enable_cultural_chain: true
+  translation_language: te_reo
+  moderation_guardrails: tika_nga_kupu
+supabase:
+  project: "Te-Puna-o-Nga-Kaitiaki"
+  url: ${SUPABASE_URL}
+  anon_key: ${SUPABASE_ANON_KEY}
+  service_role_key: ${SUPABASE_SERVICE_ROLE_KEY}
+  bucket: "kaitiaki-taonga"
+  realtime_logging: true
+  schema_sync: true
+database:
+authors:
+  - Adrian William Hemi Whiro
+  - Kitenga Whiro
+provenance: >
+  This system was carved through kaupapa Māori principles of kaitiakitanga,  
+  sovereignty, and digital whakapapa.
+version: 1.0.0
+carver_signature: "🪶"
+last_updated: 2024-06-15
+
+  backend/services/ocr/main.py: |
+    *** Add File: backend/services/ocr/main.py
+    +"""Render OCR service."""
+    +from __future__ import annotations
+    +
+    +from datetime import datetime, timezone
+    +from io import BytesIO
+    +
+    +from fastapi import FastAPI, File, HTTPException, UploadFile
+    +from PIL import Image, UnidentifiedImageError
+    +import pytesseract
+    +from starlette.concurrency import run_in_threadpool
+    +
+    +from utils.logger import get_logger
+    +from utils.middleware.utf8_enforcer import apply_utf8_middleware
+    +from utils.supabase_client import insert_record
+    +
+    +logger = get_logger("services.ocr")
+    +
+    +app = FastAPI(title="Tiwhanawhana OCR Service", version="1.0.0")
+    +apply_utf8_middleware(app)
+    +
+    +@app.on_event("startup")
+    +async def on_startup() -> None:
+    +    pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
+    +    logger.debug("Tesseract path set to: %s", pytesseract.pytesseract.tesseract_cmd)
+    +    logger.info("🌀 OCR service ready")
+    +
+    +@app.get("/health")
+    +async def health() -> dict[str, str]:
+    +    return {"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()}
+    +@app.post("/api/ocr/extract")
+    +async def extract_text(file: UploadFile = File(...)) -> dict[str, str]:
+    +    contents = await file.read()
+    +    if not contents:
+    +        raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+    +    try:
+    +        text = await run_in_threadpool(_ocr_bytes, contents)
+    +    except UnidentifiedImageError as exc:
+    +        raise HTTPException(status_code=400, detail="Invalid image payload.") from exc

@@ -1,0 +1,19 @@
+{
+  "editor.formatOnSave": true,
+  "python.formatting.provider": "black",
+  "python.defaultInterpreterPath": "/usr/local/bin/python3",
+  "files.trimTrailingWhitespace": true,
+  "editor.wordWrap": "on",
+  "remote.SSH.useLocalServer": false,
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "tailwindCSS.includeLanguages": {
+    "javascript": "javascript",
+    "javascriptreact": "javascriptreact",
+    "typescriptreact": "typescriptreact"
+  },
+  "python-envs.defaultEnvManager": "ms-python.python:system",
+  "python-envs.pythonProjects": [],
+  "git.autofetch": false,
+  "git.postCommitCommand": "none",
+  "git.enableSmartCommit": false
+}

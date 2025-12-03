@@ -1,0 +1,23 @@
+version: 1
+cli_commands:
+  translate: /reo/translate (exists)
+  review: /reo/review (exists)
+  pronounce: /reo/pronounce (exists)
+  ingest_file: /intake/process (not implemented)
+  vector_search: /vector/search (not implemented)
+  whakapapa_export: /whakapapa/export (not implemented; use /kitenga/whakapapa)
+  pro_activate: /pro/activate (not implemented)
+health_commands:
+  full: /health/full
+  ping: /health/ping (missing)
+guardians:
+  active_agent: kitenga
+  ruru_enabled: false
+environment:
+  API_BASE_URL: ${TE_PO_URL}
+  LANG: ${LANG}
+  LC_ALL: ${LC_ALL}
+manifests:
+  config: te_hau/config/hau_config.yaml
+deploy:
+  usage: "local CLI, no remote deploy; relies on TE_PO_URL"

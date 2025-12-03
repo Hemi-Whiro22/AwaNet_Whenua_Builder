@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: te-po-kitenga-backend
+    env: docker
+    plan: starter
+    branch: main
+    rootDir: .
+    dockerfilePath: docker/te_po.Dockerfile
+    numInstances: 1
+    healthCheckPath: /health/full
+    autoDeploy: true
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: LANG
+        value: mi_NZ.UTF-8
+      - key: LC_ALL
+        value: mi_NZ.UTF-8

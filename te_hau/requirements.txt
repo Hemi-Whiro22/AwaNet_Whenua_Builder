@@ -1,0 +1,7 @@
+click
+fastapi
+python-multipart
+requests
+rich
+supabase
+uvicorn[standard]

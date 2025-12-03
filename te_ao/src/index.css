@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn {
+  @apply w-full text-left py-3 px-4 bg-stone hover:bg-awa rounded-lg transition text-lg;
+}

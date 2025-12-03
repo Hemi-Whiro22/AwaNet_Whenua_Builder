@@ -1,0 +1,203 @@
+{
+  "timestamp": "2025-11-08T21:06:00.653489",
+  "project": "te_puna",
+  "description": "Te Puna Read-Only Knowledge Archive",
+  "access_level": "read-only",
+  "tables": {
+    "taonga_metadata": {
+      "description": "Metadata about taonga (treasures) - cultural artifacts, resources",
+      "column_count": 9,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid"
+        },
+        {
+          "name": "name",
+          "type": "text"
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "cultural_significance",
+          "type": "text"
+        },
+        {
+          "name": "source",
+          "type": "text"
+        },
+        {
+          "name": "iwi",
+          "type": "text"
+        },
+        {
+          "name": "category",
+          "type": "text"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp"
+        }
+      ],
+      "read_only": true
+    },
+    "summaries": {
+      "description": "Document summaries and abstracts from processed sources",
+      "column_count": 6,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid"
+        },
+        {
+          "name": "document_id",
+          "type": "uuid"
+        },
+        {
+          "name": "summary_text",
+          "type": "text"
+        },
+        {
+          "name": "keywords",
+          "type": "text"
+        },
+        {
+          "name": "language",
+          "type": "text"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp"
+        }
+      ],
+      "read_only": true
+    },
+    "ocr_logs": {
+      "description": "Archived OCR extraction records (read-only)",
+      "column_count": 8,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid"
+        },
+        {
+          "name": "file_name",
+          "type": "text"
+        },
+        {
+          "name": "file_url",
+          "type": "text"
+        },
+        {
+          "name": "text_content",
+          "type": "text"
+        },
+        {
+          "name": "language_detected",
+          "type": "text"
+        },
+        {
+          "name": "confidence_score",
+          "type": "numeric"
+        },
+        {
+          "name": "meta",
+          "type": "jsonb"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp"
+        }
+      ],
+      "read_only": true
+    },
+    "translations": {
+      "description": "Archived translation records (read-only)",
+      "column_count": 10,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid"
+        },
+        {
+          "name": "ocr_id",
+          "type": "uuid"
+        },
+        {
+          "name": "source_lang",
+          "type": "text"
+        },
+        {
+          "name": "target_lang",
+          "type": "text"
+        },
+        {
+          "name": "source_text",
+          "type": "text"
+        },
+        {
+          "name": "translated_text",
+          "type": "text"
+        },
+        {
+          "name": "model_used",
+          "type": "text"
+        },
+        {
+          "name": "confidence",
+          "type": "numeric"
+        },
+        {
+          "name": "meta",
+          "type": "jsonb"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp"
+        }
+      ],
+      "read_only": true
+    },
+    "memory_logs": {
+      "description": "Historical logs of memory and knowledge processing",
+      "column_count": 7,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid"
+        },
+        {
+          "name": "memory_type",
+          "type": "text"
+        },
+        {
+          "name": "content",
+          "type": "text"
+        },
+        {
+          "name": "embedding",
+          "type": "vector"
+        },
+        {
+          "name": "related_task",
+          "type": "uuid"
+        },
+        {
+          "name": "meta",
+          "type": "jsonb"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp"
+        }
+      ],
+      "read_only": true
+    }
+  }
+}
