@@ -187,6 +187,7 @@ export default function ChatPanel({ className = "" }) {
       const enhancedPrompt = `${guidance.join(" ")}\n\n${prompt}${ctx ? `\n\nContext:\n${ctx}` : ""}`;
 
       let reply;
+      const preferAssistantRoute = !file && !forcePipeline && !forceSummary;
       if (file) {
         const form = new FormData();
         form.append("file", file, fileName || file.name || `upload_${uuidv4()}.txt`);
@@ -207,24 +208,47 @@ export default function ChatPanel({ className = "" }) {
           timeoutMs: 180000,
         });
       } else {
-        const payload = {
-          whisper: enhancedPrompt,
-          session_id: sessionId,
-          thread_id: threadId,
-          use_retrieval: useRetrieval,
-          run_pipeline: forcePipeline,
-          save_vector: true,
-          use_openai_summary: forceSummary || useSummary,
-          use_openai_translation: useTranslation,
-          mode,
-          allow_taonga_store: mode === "taonga",
-          source: "ui-chat",
-        };
-        reply = await callApi("/kitenga/gpt-whisper", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        if (preferAssistantRoute) {
+          const payload = {
+            prompt: enhancedPrompt,
+            session_id: sessionId,
+            thread_id: threadId,
+            metadata: { mode, source: "ui-chat" },
+          };
+          const askResponse = await callApi("/kitenga/ask", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          reply = {
+            response: askResponse?.reply,
+            thread_id: askResponse?.thread_id,
+            run_id: askResponse?.run_id,
+            assistant_id: askResponse?.assistant_id,
+            tool_results: askResponse?.tool_results || [],
+            mode: "assistant",
+            source: "kitenga_ask",
+          };
+        } else {
+          const payload = {
+            whisper: enhancedPrompt,
+            session_id: sessionId,
+            thread_id: threadId,
+            use_retrieval: useRetrieval,
+            run_pipeline: forcePipeline,
+            save_vector: true,
+            use_openai_summary: forceSummary || useSummary,
+            use_openai_translation: useTranslation,
+            mode,
+            allow_taonga_store: mode === "taonga",
+            source: "ui-chat",
+          };
+          reply = await callApi("/kitenga/gpt-whisper", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+        }
       }
       if (reply?.thread_id) {
         setThreadId(reply.thread_id);

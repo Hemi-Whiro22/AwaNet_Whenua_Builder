@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     openai_vector_store_id: Optional[str] = Field(default=None, alias="OPENAI_VECTOR_STORE_ID")
     openai_assistant_id_qa: Optional[str] = Field(default=None, alias="OPENAI_ASSISTANT_ID_QA")
     openai_assistant_id_ops: Optional[str] = Field(default=None, alias="OPENAI_ASSISTANT_ID_OPS")
+    kitenga_assistant_id: Optional[str] = Field(default=None, alias="KITENGA_ASSISTANT_ID")
 
     # Locale
     lang: str = Field(default="en_NZ.UTF-8", alias="LANG")
