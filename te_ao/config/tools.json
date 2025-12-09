@@ -1,0 +1,13 @@
+{
+  "base_url_env": "TE_PO_BASE_URL",
+  "assistant_ids": {
+    "qa": "OPENAI_ASSISTANT_ID_QA",
+    "ops": "OPENAI_ASSISTANT_ID_OPS"
+  },
+  "tools_spec_path": "../../te_po/openai_tools.json",
+  "notes": [
+    "Load tools from the spec path and inject Authorization: Bearer $PIPELINE_TOKEN for protected endpoints.",
+    "Pass OPENAI_VECTOR_STORE_ID to the QA assistant so retrieval covers ingested documents.",
+    "Expose these tools in the chat UI as actions: pipeline run, vision OCR, assistant bridge, batch status."
+  ]
+}

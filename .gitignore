@@ -192,6 +192,7 @@ Thumbs.db
 #   PROJECT-LEVEL IGNORE
 ##############################
 
+te_po/
 SAFE_AWA_EXTRACT/
 AwaNet(fixing)/
 scratch/
@@ -233,3 +234,5 @@ projects/scripts/query_tables.py
 # Mauri private system state
 mauri/mauri.json
 storage/test_files/
+dist/
+# === End AwaNet Project Protection ===

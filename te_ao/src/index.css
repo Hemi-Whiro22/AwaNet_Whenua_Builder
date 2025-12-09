@@ -2,6 +2,270 @@
 @tailwind components;
 @tailwind utilities;
 
-.btn {
-  @apply w-full text-left py-3 px-4 bg-stone hover:bg-awa rounded-lg transition text-lg;
+@layer base {
+  :root {
+    --bg: #020617;
+    --panel-bg: rgba(15, 23, 42, 0.85);
+    --border: #1e293b;
+    --text: #e2e8f0;
+    --accent: #6ee7b7;
+
+    /* Bridge Tailwind palette into CSS variables */
+    --color-bg: var(--bg);
+    --color-panel: var(--panel-bg);
+    --color-border: var(--border);
+    --color-text-primary: var(--text);
+    --color-text-secondary: rgba(226, 232, 240, 0.75);
+    --color-glow: var(--accent);
+    --color-glow-rgb: 110 231 183;
+  }
+
+  html,
+  body {
+    @apply bg-night text-light font-ui;
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    min-height: 100%;
+  }
+
+  #root {
+    position: relative;
+    isolation: isolate;
+    min-height: 100vh;
+    z-index: 10;
+  }
+
+  .panel {
+    @apply bg-awa-panel border border-awa-border rounded-[9px] backdrop-blur-lg;
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.45),
+      inset 0 1px 3px rgba(255, 255, 255, 0.05);
+  }
+
+  .button {
+    @apply px-3 py-1 bg-awa-accent hover:bg-awa-accent text-awa-text rounded-full transition;
+  }
+
+  .glow {
+    box-shadow: 0 0 8px rgb(var(--color-glow-rgb) / 0.6);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    color: var(--text);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("/src/assets/stone-koru-lv9Nht-r.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 85%;
+    opacity: 0.18;
+    filter: contrast(1.15) brightness(0.92) saturate(0.85);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+        145deg,
+        rgba(10, 10, 10, 0.85) 20%,
+        rgba(40, 20, 20, 0.75) 50%,
+        rgba(5, 5, 5, 0.90) 80%
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .koru-bg {
+    background-color: #020617;
+    background-image:
+      linear-gradient(120deg, rgba(6, 78, 59, 0.6) 0%, rgba(2, 6, 23, 0.9) 50%, rgba(30, 64, 175, 0.55) 100%),
+      radial-gradient(circle at center, rgba(110, 231, 183, 0.08), transparent 65%);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+
+  .koru-bg::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.05), transparent 70%);
+  }
+
+  h1,
+  h2,
+  h3,
+  .accent {
+    color: #c2b59b;
+    text-shadow: 0 0 6px rgba(194, 181, 155, 0.35);
+  }
+
+  header::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 -3px 0;
+    height: 6px;
+    background-image: url("./assets/koru.svg");
+    background-size: 160%;
+    opacity: 0.25;
+    mix-blend-mode: soft-light;
+  }
+
+  * {
+    transition: all 120ms ease-in-out;
+  }
+
+  textarea:focus {
+    box-shadow: 0 0 12px rgb(var(--color-glow-rgb) / 0.4);
+    outline: none;
+  }
+
+  .sidebar {
+    background: rgb(15 23 42 / 0.75);
+    border-right: 1px solid rgb(30 41 59 / 0.45);
+    backdrop-filter: blur(3px);
+  }
+
+  /* Map Tailwind theme classes to CSS vars for consistent theming */
+  .bg-back {
+    background-color: var(--color-bg) !important;
+  }
+
+  .bg-panel,
+  .bg-surface,
+  .bg-surfaceAlt {
+    background-color: var(--color-panel) !important;
+  }
+
+  .text-koru1,
+  .text-text {
+    color: var(--color-text-primary) !important;
+  }
+
+  .text-koru2,
+  .text-muted {
+    color: var(--color-text-secondary) !important;
+  }
+
+  .border-border {
+    border-color: var(--color-border) !important;
+  }
+
+  .badge {
+    border-color: var(--color-border) !important;
+  }
+}
+
+@layer components {
+
+  .bg-input {
+    @apply bg-awa-panel border border-awa-border rounded-md text-awa-text placeholder:text-[color:var(--color-text-secondary)] focus:ring-2 focus:ring-awa-accent;
+  }
+
+  .panel {
+    @apply bg-awa-panel border border-awa-border rounded-[9px] backdrop-blur-lg p-4;
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.45),
+      inset 0 1px 3px rgba(255, 255, 255, 0.05);
+  }
+
+  .btn {
+    @apply bg-awa-accent text-awa-text font-bold rounded-md px-3 py-1 hover:bg-awa-accent;
+  }
+
+}
+
+@layer utilities {
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-thumb-rounded {
+    scrollbar-color: var(--tw-scrollbar-thumb) var(--tw-scrollbar-track);
+  }
+
+  .scrollbar-thumb-rounded::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-thumb-rounded::-webkit-scrollbar-thumb {
+    background-color: var(--tw-scrollbar-thumb);
+    border-radius: 9999px;
+    /* full round */
+  }
+
+  .scrollbar-thumb-rounded::-webkit-scrollbar-track {
+    background-color: var(--tw-scrollbar-track);
+  }
+
+  .btn-glow:hover {
+    box-shadow: 0 0 8px rgb(var(--color-glow-rgb) / 0.7);
+    transform: translateY(-1px);
+  }
+
+  .glow:hover {
+    box-shadow: 0 0 12px rgb(var(--color-glow-rgb) / 0.7);
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--tw-scrollbar-thumb, #6ee7b7);
+    border-radius: 9999px;
+  }
+}
+
+[class*="bg-teal"],
+[class^="bg-teal"],
+[class*="text-teal"],
+[class^="text-teal"],
+[class*="border-teal"],
+[class^="border-teal"] {
+  background-color: var(--panel-bg) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Thumb */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(21, 58, 76, 0.8), rgba(16, 22, 50, 0.8));
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Hover */
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(33, 95, 131, 1), rgba(22, 29, 70, 1));
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(21, 58, 76, 0.8) rgba(0, 0, 0, 0.2);
 }

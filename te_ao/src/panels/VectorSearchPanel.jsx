@@ -8,6 +8,7 @@ export default function VectorSearchPanel() {
   const [history, setHistory] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [recent, setRecent] = useState([]);
 
   const handleEmbed = async () => {
     setError("");
@@ -46,6 +47,19 @@ export default function VectorSearchPanel() {
       setHistory((prev) => [{ ...result, kind: "search" }, ...prev].slice(0, 10));
     } catch (err) {
       setError(err.message || "Search failed.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const loadRecent = async () => {
+    setError("");
+    setBusy(true);
+    try {
+      const result = await request("/vector/recent");
+      setRecent(result.entries || []);
+    } catch (err) {
+      setError(err.message || "Recent fetch failed.");
     } finally {
       setBusy(false);
     }
@@ -91,6 +105,13 @@ export default function VectorSearchPanel() {
           >
             Search
           </button>
+          <button
+            className="rounded-lg bg-slate-700 px-3 py-2 text-sm font-semibold text-white transition hover:bg-slate-600 disabled:opacity-60"
+            onClick={loadRecent}
+            disabled={busy}
+          >
+            Recent
+          </button>
         </div>
       </div>
       <div className="mt-4 space-y-3">
@@ -122,6 +143,24 @@ export default function VectorSearchPanel() {
           </div>
         ))}
         {!history.length && <p className="text-sm text-slate-500">No vector actions yet.</p>}
+      </div>
+
+      <div className="mt-6">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-400">Recent Vectors</h3>
+        <div className="mt-2 space-y-2">
+          {recent.map((m, idx) => (
+            <div key={idx} className="rounded border border-slate-800/70 bg-slate-900/60 p-2">
+              <div className="flex items-center justify-between text-xs text-slate-400">
+                <span>{m.id || m.entry_id || "vector"}</span>
+                <span className="text-emerald-300">{m.dimension ? `${m.dimension}d` : ""}</span>
+              </div>
+              <p className="mt-1 text-sm text-slate-100 whitespace-pre-wrap">
+                {m.text ? `${m.text.slice(0, 240)}${m.text.length > 240 ? "..." : ""}` : "(no text)"}
+              </p>
+            </div>
+          ))}
+          {!recent.length && <p className="text-sm text-slate-500">Load recent vectors to view.</p>}
+        </div>
       </div>
     </div>
   );

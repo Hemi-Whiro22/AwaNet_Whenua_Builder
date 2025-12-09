@@ -38,7 +38,7 @@ export default function OCRPanel() {
     <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/30">
       <h2 className="text-xl font-semibold text-emerald-200">OCR</h2>
       <p className="mt-2 text-sm text-slate-300">
-        Drop or select an image. Backend: /intake/ocr -> gpt-4o-mini-vision.
+        Drop or select an image. Backend: /intake/ocr → gpt-4o-mini-vision.
       </p>
       <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3">
         <div

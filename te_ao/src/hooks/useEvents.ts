@@ -6,8 +6,12 @@ export function useAwaEvents() {
 
   useEffect(() => {
     const tick = setInterval(async () => {
-      const res = await awa("/events");
-      setEvents(res);
+      try {
+        const res = await awa("/status/full");
+        setEvents(res ? [res] : []);
+      } catch {
+        setEvents([]);
+      }
     }, 2000);
 
     return () => clearInterval(tick);

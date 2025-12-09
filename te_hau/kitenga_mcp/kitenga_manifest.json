@@ -1,0 +1,11 @@
+{
+  "name": "kitenga",
+  "description": "MCP server exposing Supabase + file tools to GPT/Codex",
+  "entrypoint": "python3 start_kitenga.py",
+  "tools": [
+    "supabase_search",
+        "supabase_insert",
+        "read_file",
+        "list_files"
+    ]
+}

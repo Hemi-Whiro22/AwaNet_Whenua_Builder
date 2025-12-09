@@ -1,22 +1,39 @@
-import base64
+import subprocess
+from datetime import datetime
+from typing import Dict, Any, Optional
 
-from te_po.utils.openai_client import DEFAULT_VISION_MODEL, client
+from te_po.core.config import settings
+from te_po.pipeline.ocr.stealth_engine import StealthOCR
 
 
-def run_ocr(image_bytes: bytes) -> str:
-    if client is None:
-        return "[offline] OCR unavailable (missing OPENAI_API_KEY)."
-    b64 = base64.b64encode(image_bytes).decode()
-    response = client.chat.completions.create(
-        model=DEFAULT_VISION_MODEL,
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {"type": "input_image", "image_url": f"data:image/png;base64,{b64}"},
-                    {"type": "input_text", "text": "Extract all text from this image."},
-                ],
-            }
-        ],
-    )
-    return response.choices[0].message["content"]
+def _tesseract_available(path: Optional[str]) -> bool:
+    try:
+        subprocess.run(
+            [path or "tesseract", "-v"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        return True
+    except Exception:
+        return False
+
+
+def run_ocr(image_bytes: bytes, mode: str = "research", apply_encoding: bool = True) -> Dict[str, Any]:
+    """
+    Stealth OCR wrapper using the real scanner (tesseract + vision + cultural protection).
+    Returns dict with text_extracted/raw_text and metadata, plus timestamp and mode.
+    - mode: "research" or "taonga"
+    - apply_encoding: when False, bypass cultural encoding
+    """
+    try:
+        scanner = StealthOCR()
+        if not apply_encoding:
+            scanner.cultural_encoding_active = False
+
+        result = scanner.real_scan(image_bytes, prefer_offline=True)
+        result["timestamp"] = datetime.utcnow().isoformat() + "Z"
+        result["mode"] = mode
+        return result
+    except Exception as exc:
+        return {"text": "", "error": str(exc)}

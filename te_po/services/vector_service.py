@@ -1,11 +1,13 @@
 import json
 import os
+import tempfile
 import uuid
 from math import sqrt
 from pathlib import Path
 
 from te_po.mauri import MAURI
 from te_po.services.local_storage import list_files, load, save, timestamp
+from te_po.utils.audit import log_event
 from te_po.utils.openai_client import client, DEFAULT_EMBED_MODEL
 
 VECTOR_STORE_ID = os.getenv("OPENAI_VECTOR_STORE_ID")
@@ -25,38 +27,67 @@ def _cosine(a, b):
 def _push_remote_vector(entry_id: str, text: str, vector, metadata: dict | None = None):
     if client is None or not VECTOR_STORE_ID:
         return {"pushed": False, "reason": "vector store id missing or client offline"}
+    if not hasattr(client, "beta") or not hasattr(client.beta, "vector_stores"):
+        return {"pushed": False, "reason": "vector store API not available in this client"}
+
+    # GA vector store flow: upload a JSONL file and attach to the store.
+    tmp_path = Path(tempfile.gettempdir()) / f"{entry_id}.json"
+    record = {
+        "id": entry_id,
+        "text": text,
+        "metadata": metadata or {},
+    }
     try:
-        meta = {"text": text}
-        if metadata:
-            meta.update(metadata)
-        resp = client.beta.vector_stores.vectors.upsert(
+        tmp_path.write_text(json.dumps(record), encoding="utf-8")
+        with open(tmp_path, "rb") as fh:
+            file_resp = client.files.create(file=fh, purpose="assistants")
+        batch_resp = client.beta.vector_stores.file_batches.create(
             vector_store_id=VECTOR_STORE_ID,
-            vectors=[
-                {"id": entry_id, "metadata": meta, "values": vector},
-            ],
+            file_ids=[file_resp.id],
         )
         try:
-            resp_payload = (
-                resp.model_dump()
-                if hasattr(resp, "model_dump")
-                else resp.to_dict_recursive()
-                if hasattr(resp, "to_dict_recursive")
+            batch_payload = (
+                batch_resp.model_dump()
+                if hasattr(batch_resp, "model_dump")
+                else batch_resp.to_dict_recursive()
+                if hasattr(batch_resp, "to_dict_recursive")
                 else None
             )
         except Exception:
-            resp_payload = None
+            batch_payload = None
+
+        log_event(
+            "vector_batch_enqueued",
+            "File attached to vector store",
+            source="vector_service",
+            data={
+                "entry_id": entry_id,
+                "vector_store_id": VECTOR_STORE_ID,
+                "file_id": file_resp.id,
+                "batch_id": getattr(batch_resp, "id", None),
+                "status": getattr(batch_resp, "status", None),
+            },
+        )
 
         return {
             "pushed": True,
             "reason": None,
             "vector_store_id": VECTOR_STORE_ID,
-            "response": resp_payload,
+            "file_id": file_resp.id,
+            "batch_id": getattr(batch_resp, "id", None),
+            "batch_status": getattr(batch_resp, "status", None),
+            "response": batch_payload,
         }
     except Exception as exc:
         return {"pushed": False, "reason": str(exc)}
+    finally:
+        try:
+            tmp_path.unlink(missing_ok=True)
+        except Exception:
+            pass
 
 
-def embed_text(text: str):
+def embed_text(text: str, metadata: dict | None = None, record_type: str = "embedding"):
     if client is None:
         return {"id": None, "vector": [], "saved": False, "error": "OpenAI client not configured."}
     try:
@@ -67,7 +98,7 @@ def embed_text(text: str):
         vec = rsp.data[0].embedding
         entry_id = f"vec_{uuid.uuid4().hex}"
 
-        remote = _push_remote_vector(entry_id, text, vec)
+        remote = _push_remote_vector(entry_id, text, vec, metadata=metadata)
 
         save(
             "openai",
@@ -78,13 +109,14 @@ def embed_text(text: str):
                     "text": text,
                     "vector": vec,
                     "ts": timestamp(),
-                    "type": "embedding",
+                    "type": record_type,
+                    "metadata": metadata or {},
                     "remote": remote,
                 },
                 indent=2,
             ),
         )
-        _log_remote(entry_id, text, vec, remote)
+        _log_remote(entry_id, text, vec, remote, metadata=metadata)
         return {"id": entry_id, "vector": vec, "saved": True, "remote": remote}
     except Exception as exc:
         return {"id": None, "vector": [], "saved": False, "error": str(exc)}
@@ -135,6 +167,7 @@ def _log_remote(
     remote_result: dict,
     vector_store_id: str | None = None,
     chunk_id: str | None = None,
+    metadata: dict | None = None,
 ):
     log_dir = Path(__file__).resolve().parents[1] / "storage" / "openai"
     log_dir.mkdir(parents=True, exist_ok=True)
@@ -157,6 +190,7 @@ def _log_remote(
         "timestamp": timestamp(),
         "vector_store_id": vector_store_id or VECTOR_STORE_ID,
         "chunk_id": chunk_id,
+        "metadata": metadata or {},
     }
     existing.append(record)
     log_file.write_text(json.dumps(existing, indent=2), encoding="utf-8")

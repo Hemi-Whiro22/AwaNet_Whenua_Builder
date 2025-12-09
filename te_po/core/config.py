@@ -15,8 +15,15 @@ class Settings(BaseSettings):
         default=None, alias="SUPABASE_SERVICE_ROLE_KEY")
     supabase_anon_key: Optional[str] = None
     supabase_publishable_key: Optional[str] = None
+    supabase_bucket_storage: str = Field(default="tepo_storage", alias="SUPABASE_BUCKET_STORAGE")
+    supabase_table_files: str = Field(default="tepo_files", alias="SUPABASE_TABLE_FILES")
+    supabase_bucket_mauri: str = Field(default="mauri_state", alias="SUPABASE_BUCKET_MAURI")
+    supabase_table_mauri: str = Field(default="mauri_snapshots", alias="SUPABASE_TABLE_MAURI")
     # OpenAI
     openai_api_key: Optional[str] = Field(default=None, alias="OPENAI_API_KEY")
+    openai_vector_store_id: Optional[str] = Field(default=None, alias="OPENAI_VECTOR_STORE_ID")
+    openai_assistant_id_qa: Optional[str] = Field(default=None, alias="OPENAI_ASSISTANT_ID_QA")
+    openai_assistant_id_ops: Optional[str] = Field(default=None, alias="OPENAI_ASSISTANT_ID_OPS")
 
     # Locale
     lang: str = Field(default="en_NZ.UTF-8", alias="LANG")
@@ -26,6 +33,8 @@ class Settings(BaseSettings):
     offline_mode: bool = False
     database_url: Optional[str] = Field(default=None, alias="DATABASE_URL")
     memory_table: Optional[str] = None
+    pipeline_token: Optional[str] = Field(default=None, alias="PIPELINE_TOKEN")
+    te_po_base_url: Optional[str] = Field(default=None, alias="TE_PO_BASE_URL")
 
     # Models
     backend_model: str = Field(default="gpt-5.1", alias="OPENAI_BACKEND_MODEL")

@@ -85,3 +85,43 @@ def generate_embedding(text: str) -> Sequence[float]:
         input=text,
     )
     return response.data[0].embedding
+
+
+def generate_text(messages: list[dict], model: str | None = None, max_tokens: int = 500) -> str:
+    """
+    Create text with either the Responses API (if available) or fallback to chat.completions.
+    """
+    if client is None:
+        raise RuntimeError("OpenAI client not configured.")
+    use_model = model or DEFAULT_BACKEND_MODEL
+    if hasattr(client, "responses"):
+        resp = client.responses.create(
+            model=use_model,
+            input=messages,
+            max_output_tokens=max_tokens,
+        )
+        return (resp.output_text or "").strip()
+    if not hasattr(client, "chat") or not hasattr(client.chat, "completions"):
+        raise RuntimeError("OpenAI client missing responses and chat.completions APIs.")
+    chat_messages = [{"role": m.get("role", "user"), "content": m.get("content", "")} for m in messages]
+    # Prefer new parameter name for newer models; fallback to legacy if rejected.
+    last_exc = None
+    for token_param in (
+        {"max_output_tokens": max_tokens},
+        {"max_completion_tokens": max_tokens},
+        {"max_tokens": max_tokens},
+    ):
+        try:
+            resp = client.chat.completions.create(
+                model=use_model,
+                messages=chat_messages,
+                **token_param,
+            )
+            break
+        except Exception as exc:
+            last_exc = exc
+            resp = None
+    if resp is None:
+        raise last_exc or RuntimeError("chat.completions call failed.")
+    choice = resp.choices[0] if getattr(resp, "choices", None) else None
+    return (choice.message.content or "").strip() if choice else ""

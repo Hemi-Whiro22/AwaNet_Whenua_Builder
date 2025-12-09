@@ -5,7 +5,7 @@ from te_po.pipeline.cleaner.text_cleaner import clean_text
 from te_po.pipeline.ocr.ocr_engine import run_ocr
 from te_po.services.local_storage import save, load
 from te_po.services.summary_service import summarize_text
-from te_po.utils.openai_client import client
+from te_po.utils.openai_client import client, generate_text
 
 router = APIRouter(prefix="/dev", tags=["Dev"])
 
@@ -48,11 +48,11 @@ def dev_openai():
     chunks = [c for c in blob.split("\n") if c.strip()]
     results = []
     for chunk in chunks:
-        res = client.responses.create(
+        res = generate_text(
             model="gpt-4o-mini",
-            input=[{"role": "user", "content": f"Summarise this document snippet:\n{chunk}"}],
+            messages=[{"role": "user", "content": f"Summarise this document snippet:\n{chunk}"}],
         )
-        results.append(res.output_text.strip())
+        results.append(res)
     save("openai", "openai_results.txt", "\n\n".join(results))
     return {"openai": results}
 

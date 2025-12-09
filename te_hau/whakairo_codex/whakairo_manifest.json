@@ -1,0 +1,39 @@
+{
+  "description": "Codex/Kaitiaki carve context (non-taonga).",
+  "env_paths": [
+    "te_po/core/.env",
+    "mauri/state/te_po_state.json",
+    "mauri/state/supabase_tables.json"
+  ],
+  "key_tables": [
+    "tepo_files",
+    "tepo_pipeline_runs",
+    "tepo_chunks",
+    "tepo_vector_batches",
+    "tepo_logs",
+    "tepo_chat_logs",
+    "carver_context_memory"
+  ],
+  "modes": {
+    "research": "standard handling, OK to store in Supabase and vector stores",
+    "taonga": "private handling; skip public storage, block anon/auth via RLS"
+  },
+  "endpoints": {
+    "status": "/status/full",
+    "chat": "/kitenga/gpt-whisper",
+    "pipeline": "/pipeline/run",
+    "ocr": "/intake/ocr",
+    "summarize": "/intake/summarize",
+    "vector": ["/vector/embed", "/vector/search"],
+    "research": "/research/query",
+    "logs": "/logs/recent"
+  },
+  "auth": {
+    "bearer_env": "PIPELINE_TOKEN",
+    "note": "Token is stored in te_po/core/.env; do not commit secrets."
+  },
+  "logging": {
+    "mauri_carver_log": "mauri/state/carver_log.jsonl",
+    "supabase_table": "carver_context_memory"
+  }
+}

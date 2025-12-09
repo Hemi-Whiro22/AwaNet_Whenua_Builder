@@ -3,8 +3,35 @@ from datetime import datetime
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from te_po.routes import intake, reo, vector, status, ocr, research, dev, memory, pipeline, assistant
+from te_po.core.env_loader import load_env, enforce_utf8_locale
+
+from te_po.routes import (
+    intake,
+    reo,
+    vector,
+    status,
+    ocr,
+    research,
+    dev,
+    memory,
+    pipeline,
+    assistant,
+    kitenga_backend,
+    logs,
+    assistants_meta,
+    state,
+    documents,
+    chat,
+    cards,
+    roshi,
+    sell,
+    metrics,
+)
 from te_po.utils.middleware.utf8_enforcer import apply_utf8_middleware
+
+# Load environment early for local runs/tests
+load_env()
+enforce_utf8_locale()
 
 app = FastAPI(
     title="Kitenga Whiro — Māori Intelligence Engine",
@@ -49,6 +76,16 @@ app.include_router(dev.router)
 app.include_router(memory.router)
 app.include_router(pipeline.router)
 app.include_router(assistant.router)
+app.include_router(kitenga_backend.router)
+app.include_router(logs.router)
+app.include_router(assistants_meta.router)
+app.include_router(state.router)
+app.include_router(documents.router)
+app.include_router(chat.router)
+app.include_router(cards.router)
+app.include_router(roshi.router)
+app.include_router(sell.router)
+app.include_router(metrics.router)
 
 
 # For local launches only

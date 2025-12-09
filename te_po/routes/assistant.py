@@ -8,6 +8,7 @@ import httpx
 from fastapi import APIRouter, Body, Header, HTTPException, status
 
 from te_po.pipeline.orchestrator.pipeline_orchestrator import run_pipeline
+from te_po.utils.audit import log_event
 
 router = APIRouter(prefix="/assistant", tags=["Assistant"])
 PIPELINE_TOKEN = os.getenv("PIPELINE_TOKEN")
@@ -79,4 +80,10 @@ async def assistant_run(
 
     result = run_pipeline(data, filename, source=source)
     _log_assistant_call(payload, result, source)
+    log_event(
+        "assistant_run",
+        "Assistant bridge executed",
+        source=source,
+        data={"input_kind": "file_url" if file_url else "text", "result": result},
+    )
     return result

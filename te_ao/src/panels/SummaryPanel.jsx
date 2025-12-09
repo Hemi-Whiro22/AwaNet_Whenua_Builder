@@ -42,7 +42,7 @@ export default function SummaryPanel() {
     <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/30">
       <h2 className="text-xl font-semibold text-emerald-200">Summary</h2>
       <p className="mt-2 text-sm text-slate-300">
-        Text -> /intake/summarize with research or taonga tone.
+        Text → /intake/summarize with research or taonga tone.
       </p>
       <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3">
         <textarea

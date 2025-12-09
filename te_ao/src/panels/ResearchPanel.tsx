@@ -10,7 +10,7 @@ export default function ResearchPanel() {
       method: "POST",
       body: JSON.stringify({ query })
     });
-    setResults(res);
+    setResults(res || []);
   }
 
   return (
@@ -33,10 +33,11 @@ export default function ResearchPanel() {
       <div className="mt-4 space-y-2">
         {results.map((r, i) => (
           <div key={i} className="p-3 bg-gray-900 rounded">
-            <div><b>Score:</b> {r.similarity}</div>
-            <div>{r.chunk_text}</div>
+            <div><b>Score:</b> {r.similarity ?? "n/a"}</div>
+            <div>{r.chunk_text ?? "(no text)"}</div>
           </div>
         ))}
+        {!results.length && <p className="text-sm text-slate-500">No results yet.</p>}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ from te_po.utils.openai_client import (
     client,
     DEFAULT_BACKEND_MODEL,
     DEFAULT_TRANSLATION_MODEL,
+    generate_text,
 )
 
 
@@ -24,14 +25,13 @@ def translate_reo(text: str):
     if client is None:
         return _offline("translate", "[offline] OpenAI client not configured.")
     try:
-        rsp = client.responses.create(
+        out = generate_text(
             model=DEFAULT_TRANSLATION_MODEL,
-            input=[
+            messages=[
                 {"role": "system", "content": "Translate into te reo Māori with correct dialect + grammar."},
                 {"role": "user", "content": text},
             ],
         )
-        out = rsp.output_text.strip()
         return _build_entry(text, out, "translate")
     except Exception as exc:
         return _offline("translate", f"Reo translate failed: {exc}")
@@ -41,9 +41,9 @@ def explain_reo(text: str):
     if client is None:
         return _offline("explain", "[offline] OpenAI client not configured.")
     try:
-        rsp = client.responses.create(
+        out = generate_text(
             model=DEFAULT_BACKEND_MODEL,
-            input=[
+            messages=[
                 {
                     "role": "system",
                     "content": "Explain Māori kupu with gentle teaching tone. Include cultural context when relevant.",
@@ -51,7 +51,6 @@ def explain_reo(text: str):
                 {"role": "user", "content": text},
             ],
         )
-        out = rsp.output_text.strip()
         return _build_entry(text, out, "explain")
     except Exception as exc:
         return _offline("explain", f"Reo explain failed: {exc}")
@@ -61,9 +60,9 @@ def pronounce_reo(text: str):
     if client is None:
         return _offline("pronounce", "[offline] OpenAI client not configured.")
     try:
-        rsp = client.responses.create(
+        out = generate_text(
             model=DEFAULT_BACKEND_MODEL,
-            input=[
+            messages=[
                 {
                     "role": "system",
                     "content": (
@@ -74,7 +73,6 @@ def pronounce_reo(text: str):
                 {"role": "user", "content": text},
             ],
         )
-        out = rsp.output_text.strip()
         return _build_entry(text, out, "pronounce")
     except Exception as exc:
         return _offline("pronounce", f"Reo pronounce failed: {exc}")

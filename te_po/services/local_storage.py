@@ -1,6 +1,6 @@
-import os
-from pathlib import Path
+import json
 from datetime import datetime
+from pathlib import Path
 
 BASE = Path(__file__).resolve().parent.parent / "storage"
 
@@ -38,3 +38,14 @@ def list_files(stage: str):
 
 def timestamp():
     return datetime.now().strftime("%Y%m%d_%H%M%S")
+
+
+def append_audit(event: dict) -> None:
+    """Append a JSON event to the project audit log (best-effort)."""
+    try:
+        audit_path = DIRS["logs"] / "project_audit.jsonl"
+        audit_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(audit_path, "a", encoding="utf-8") as fh:
+            fh.write(json.dumps(event, ensure_ascii=False) + "\n")
+    except Exception:
+        return
