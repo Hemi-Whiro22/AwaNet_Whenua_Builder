@@ -21,6 +21,10 @@ export default function KitengaPanel() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [threadId, setThreadId] = useState(() => {
+    // Load threadId from localStorage if it exists
+    return localStorage.getItem("kitenga_thread_id") || null;
+  });
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -53,6 +57,7 @@ export default function KitengaPanel() {
         body: JSON.stringify({
           whisper: input,
           session_id: "ui-kitenga",
+          thread_id: threadId,
           use_retrieval: true,
           run_pipeline: false,
           save_vector: true,
@@ -63,6 +68,12 @@ export default function KitengaPanel() {
           source: "kitenga-ui",
         }),
       });
+
+      // Store the thread_id from response for next messages
+      if (response?.thread_id && !threadId) {
+        setThreadId(response.thread_id);
+        localStorage.setItem("kitenga_thread_id", response.thread_id);
+      }
 
       const assistantMessage = {
         role: "assistant",
@@ -172,6 +183,27 @@ export default function KitengaPanel() {
             Send
           </button>
         </form>
+
+        {/* Clear Thread Button */}
+        {threadId && (
+          <button
+            onClick={() => {
+              setThreadId(null);
+              localStorage.removeItem("kitenga_thread_id");
+              setMessages([
+                {
+                  role: "assistant",
+                  content:
+                    "Kia ora 👋 I'm Kitenga Whiro, the intelligence engine for this project. I have full context about The Awa Network architecture, te_po backend, te_ao frontend, te_hau CLI, realm systems, and Kaitiaki governance. Ask me anything about the project!",
+                  timestamp: new Date(),
+                },
+              ]);
+            }}
+            className="mb-3 w-full px-3 py-2 bg-red-900/30 hover:bg-red-900/50 border border-red-700 rounded text-xs text-red-300 transition"
+          >
+            🔄 Start New Conversation (Thread: {threadId.substring(0, 8)}...)
+          </button>
+        )}
 
         {/* Quick Prompts */}
         <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
