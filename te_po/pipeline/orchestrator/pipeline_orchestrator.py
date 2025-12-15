@@ -27,6 +27,7 @@ from te_po.services.supabase_logging import (
     log_chunks_metadata,
     log_vector_batch,
 )
+from te_po.pipeline.metrics import log_memory_usage
 
 IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 TEXT_EXT = {".txt", ".md", ".json", ".yaml", ".yml", ".html", ".htm"}
@@ -91,6 +92,8 @@ def run_pipeline(
     mode: str | None = None,
     allow_taonga_store: bool = False,
 ) -> dict[str, Any]:
+    log_memory_usage("start of pipeline")
+
     raw_file = _persist_raw(file_bytes, filename)
     name = (filename or "").lower()
     glyph = (
@@ -98,6 +101,8 @@ def run_pipeline(
         or MAURI.get("openai", {}).get("glyph_id")
         or "unknown"
     )
+
+    log_memory_usage("after raw file persistence")
 
     # Detect file type and extract text accordingly
     ext = ""
@@ -311,6 +316,7 @@ def run_pipeline(
             metadata={"source": source, "glyph": glyph},
         )
 
+    log_memory_usage("end of pipeline")
     return {
         "status": "ok",
         "glyph": meta["glyph"],
