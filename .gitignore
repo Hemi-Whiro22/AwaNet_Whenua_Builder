@@ -58,6 +58,19 @@ te_ao/build/
 **/.env.development
 **/.env.production
 
+# Sensitive OpenAI configs (te_po backend)
+te_po/openai_assistants.json
+te_po/openai_tools.json
+!te_po/openai_assistants.json.example
+!te_po/openai_tools.json.example
+
+# Runtime analysis reports (schema drift, etc)
+te_po/schema_drift_report.json
+
+# Unused OCR implementations (main ones elsewhere)
+te_po/stealth_ocr.py
+te_po/stealth_ocr_testit.py
+
 ##############################
 #          SUPABASE
 ##############################
@@ -191,8 +204,7 @@ Thumbs.db
 ##############################
 #   PROJECT-LEVEL IGNORE
 ##############################
-
-te_po/
+# Temporary and sensitive files
 SAFE_AWA_EXTRACT/
 AwaNet(fixing)/
 scratch/

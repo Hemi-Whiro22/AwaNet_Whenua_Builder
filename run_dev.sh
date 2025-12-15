@@ -5,16 +5,19 @@
 # - Starts uvicorn with --reload.
 # - Starts Vite dev server on 0.0.0.0:5173.
 # - Starts MCP server (te_po/kitenga) and optional awa_tunnel when present.
+# - Starts Redis + RQ workers only if QUEUE_MODE=rq (default: QUEUE_MODE=inline).
 #
 # Usage (from repo root):
 #   chmod +x run_dev.sh
-#   ./run_dev.sh
+#   ./run_dev.sh                    # Inline mode (no Redis/workers)
+#   QUEUE_MODE=rq ./run_dev.sh     # RQ mode (with Redis/workers)
 #
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV_BIN="${ROOT_DIR}/.venv/bin"
 PYTHON_BIN="${VENV_BIN}/python"
+QUEUE_MODE="${QUEUE_MODE:-inline}"  # Default to inline mode
 BACKEND_PORT=8000
 FRONTEND_PORT=5173
 BACKEND_LOG=/tmp/uvicorn.log
@@ -106,8 +109,16 @@ start_tunnel() {
 kill_port "${BACKEND_PORT}"
 kill_port "${FRONTEND_PORT}"
 
-start_redis
-start_worker
+# Report queue mode
+echo "Queue Mode: ${QUEUE_MODE}"
+if [[ "${QUEUE_MODE}" == "rq" ]]; then
+  echo "Starting with RQ mode (Redis + workers enabled)"
+  start_redis
+  start_worker
+else
+  echo "Starting with Inline mode (Redis + workers disabled)"
+fi
+
 start_mcp
 start_tunnel
 
@@ -131,5 +142,13 @@ MCP_PID=$(cat /tmp/kitenga_mcp.pid 2>/dev/null || true)
 TUNNEL_PID=$(cat /tmp/awa_tunnel.pid 2>/dev/null || true)
 
 echo "Backend PID: ${BACK_PID} | Frontend PID: ${FRONT_PID} | MCP PID: ${MCP_PID:-n/a} | Tunnel PID: ${TUNNEL_PID:-n/a}"
-echo "Logs: tail -f ${BACKEND_LOG} ${FRONTEND_LOG} ${MCP_LOG} ${TUNNEL_LOG} ${WORKER_URGENT_LOG} ${WORKER_DEFAULT_LOG} ${WORKER_SLOW_LOG}"
+if [[ "${QUEUE_MODE}" == "rq" ]]; then
+  WORKER_URGENT_PID=$(cat /tmp/kitenga_worker_urgent.pid 2>/dev/null || true)
+  WORKER_DEFAULT_PID=$(cat /tmp/kitenga_worker_default.pid 2>/dev/null || true)
+  WORKER_SLOW_PID=$(cat /tmp/kitenga_worker_slow.pid 2>/dev/null || true)
+  echo "Worker PIDs: urgent=${WORKER_URGENT_PID:-n/a} | default=${WORKER_DEFAULT_PID:-n/a} | slow=${WORKER_SLOW_PID:-n/a}"
+  echo "Logs: tail -f ${BACKEND_LOG} ${FRONTEND_LOG} ${MCP_LOG} ${TUNNEL_LOG} ${WORKER_URGENT_LOG} ${WORKER_DEFAULT_LOG} ${WORKER_SLOW_LOG}"
+else
+  echo "Logs: tail -f ${BACKEND_LOG} ${FRONTEND_LOG} ${MCP_LOG} ${TUNNEL_LOG}"
+fi
 echo "Stop: kill \$(cat /tmp/kitenga_backend.pid /tmp/kitenga_frontend.pid /tmp/kitenga_mcp.pid /tmp/awa_tunnel.pid /tmp/kitenga_worker_urgent.pid /tmp/kitenga_worker_default.pid /tmp/kitenga_worker_slow.pid 2>/dev/null)"

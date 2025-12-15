@@ -50,6 +50,14 @@ def enforce_utf8_locale() -> None:
             locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
         except locale.Error:
             pass
+
+
+def get_queue_mode() -> str:
+    """Get queue mode (inline or rq). Defaults to inline for solo development."""
+    mode = os.getenv("QUEUE_MODE", "inline").lower()
+    if mode not in ("inline", "rq"):
+        raise ValueError(f"QUEUE_MODE must be 'inline' or 'rq', got: {mode}")
+    return mode
     os.environ["LANG"] = lang
     os.environ["LC_ALL"] = lc_all
 
