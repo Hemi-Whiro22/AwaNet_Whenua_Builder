@@ -2,11 +2,13 @@ import { useState } from "react";
 import ApiTestPanel from "./panels/ApiTestPanel";
 import RealmStarterPanel from "./panels/RealmStarterPanel";
 import RealmHealthPanel from "./panels/RealmHealthPanel";
+import KitengaPanel from "./panels/KitengaPanel";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("api");
+  const [activeTab, setActiveTab] = useState("kitenga");
 
   const tabs = [
+    { id: "kitenga", label: "Kitenga Whiro", icon: "🧠" },
     { id: "api", label: "API & Health", icon: "⚡" },
     { id: "realms", label: "Realm Starter", icon: "🌍" },
     { id: "health", label: "Realm Events", icon: "📡" },
@@ -22,7 +24,7 @@ export default function App() {
             onClick={() => setActiveTab(tab.id)}
             className={`flex-1 px-4 py-3 text-center font-medium transition border-b-2 ${
               activeTab === tab.id
-                ? "border-emerald-500 text-emerald-400 bg-slate-800"
+                ? "border-sky-500 text-sky-400 bg-slate-800"
                 : "border-transparent text-slate-400 hover:text-slate-300"
             }`}
           >
@@ -34,6 +36,7 @@ export default function App() {
 
       {/* Content */}
       <div className="flex-1 overflow-hidden">
+        {activeTab === "kitenga" && <KitengaPanel />}
         {activeTab === "api" && <ApiTestPanel />}
         {activeTab === "realms" && <RealmStarterPanel />}
         {activeTab === "health" && <RealmHealthPanel />}
