@@ -82,6 +82,7 @@ app.add_middleware(
 
 
 @app.get("/", tags=["Root"])
+@app.head("/", tags=["Root"], include_in_schema=False)
 async def root():
     return {
         "status": "online",
@@ -91,6 +92,7 @@ async def root():
 
 
 @app.get("/heartbeat", tags=["Health"])
+@app.head("/heartbeat", tags=["Health"], include_in_schema=False)
 async def heartbeat():
     return {
         "status": "alive",
