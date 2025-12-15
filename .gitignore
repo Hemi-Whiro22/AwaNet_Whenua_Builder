@@ -25,8 +25,22 @@ te_po/**/.venv/
 tiwhanawhana/**/.venv/
 
 ##############################
+#      DOTFILES (sensitive)
+##############################
+
+# Ignore all dotfiles (secrets, configs, etc)
+.*
+# But track these specific dotfiles
+!.gitignore
+!.python-version
+!.env.example
+!**/.env.example
+!te_po/core/.env.example
+
+##############################
 #         NODE / REACT
 ##############################
+
 
 node_modules/
 npm-debug.log*
