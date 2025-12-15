@@ -1,3 +1,8 @@
+import os
+from fastapi import Request
+from fastapi.middleware.base import BaseHTTPMiddleware
+
+
 class BearerAuthMiddleware(BaseHTTPMiddleware):
     UNPROTECTED_PATHS = {"/", "/heartbeat", "/health", "/docs", "/openapi.json", "/redoc"}
     UNPROTECTED_PREFIXES = {"/static"}
