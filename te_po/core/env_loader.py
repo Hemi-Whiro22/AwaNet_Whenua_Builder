@@ -58,8 +58,6 @@ def get_queue_mode() -> str:
     if mode not in ("inline", "rq"):
         raise ValueError(f"QUEUE_MODE must be 'inline' or 'rq', got: {mode}")
     return mode
-    os.environ["LANG"] = lang
-    os.environ["LC_ALL"] = lc_all
 
 
 def enforce_maori_locale() -> str:
