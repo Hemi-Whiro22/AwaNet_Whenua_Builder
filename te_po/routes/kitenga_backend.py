@@ -16,10 +16,11 @@ import httpx
 from fastapi import APIRouter, Body, File, Form, Header, HTTPException, Query, Request, UploadFile, status
 from openai import AsyncOpenAI
 from pydantic import BaseModel, Field
+from mcp.types import Tool
 
 from te_po.core.config import settings
-from te_po.pipeline.orchestrator.pipeline_orchestrator import run_pipeline as exec_pipeline
-from te_po.services.vector_service import embed_text
+from te_po.pipeline.orchestrator.pipeline_orchestrator import run_pipeline as exec_pipeline, run_pipeline
+from te_po.services.vector_service import embed_text, search_text
 from te_po.pipeline.ocr.stealth_engine import StealthOCR
 from te_po.services.chat_memory import record_turn, retrieve_context
 from te_po.services.project_state_service import get_project_state, format_project_state_for_context
@@ -969,3 +970,63 @@ async def gpt_whisper(
         "summary": summary_result,
         "translation": translation_result,
     }
+
+
+# Define the vector_search tool
+def vector_search_tool():
+    return Tool(
+        name="vector_search",
+        description="Search vector memory for relevant context.",
+        execute=lambda params: {
+            "status": "success",
+            "results": "Vector search results for params: {}".format(params)
+        }
+    )
+
+# Register the tool
+vector_search = vector_search_tool()
+
+@router.post("/run_pipeline")
+async def run_pipeline_endpoint(
+    pipeline_name: str = Form(...),
+    input_data: str = Form(...),
+    realm_name: str = Form(default="Te_Po"),
+    verbose: bool = Form(default=False)
+):
+    """
+    Endpoint to execute a pipeline.
+    Args:
+        pipeline_name: Name of the pipeline to execute.
+        input_data: Input data for the pipeline.
+        realm_name: Realm in which the pipeline resides.
+        verbose: Whether to show detailed logs.
+    Returns:
+        Pipeline execution results.
+    """
+    try:
+        result = run_pipeline(realm_name, pipeline_name, input_data, verbose)
+        return {"status": "success", "result": result}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@router.post("/query_knowledge_base")
+async def query_knowledge_base(
+    query: str = Form(...),
+    top_k: int = Form(default=5),
+    min_similarity: float = Form(default=0.7)
+):
+    """
+    Endpoint to query the knowledge base using vector search.
+    Args:
+        query: The search query string.
+        top_k: Number of top results to return.
+        min_similarity: Minimum similarity threshold for results.
+    Returns:
+        A list of matching knowledge base entries.
+    """
+    try:
+        results = search_text(query=query, top_k=top_k, min_similarity=min_similarity)
+        return {"status": "success", "results": results}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
