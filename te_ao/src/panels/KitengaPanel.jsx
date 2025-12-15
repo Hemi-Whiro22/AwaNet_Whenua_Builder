@@ -53,9 +53,9 @@ export default function KitengaPanel() {
         body: JSON.stringify({
           whisper: input,
           session_id: "ui-kitenga",
-          use_retrieval: false,
+          use_retrieval: true,
           run_pipeline: false,
-          save_vector: false,
+          save_vector: true,
           use_openai_summary: false,
           use_openai_translation: false,
           mode: "research",
