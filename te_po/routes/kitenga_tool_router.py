@@ -14,8 +14,16 @@ router = APIRouter()
 
 # Load tool config
 TOOLS_PATH = Path(__file__).resolve().parents[1] / "openai_tools.json"
-with TOOLS_PATH.open() as f:
-    TOOL_REGISTRY = json.load(f)["tools"]
+TOOL_REGISTRY = []
+
+if TOOLS_PATH.exists():
+    try:
+        with TOOLS_PATH.open() as f:
+            TOOL_REGISTRY = json.load(f).get("tools", [])
+    except Exception as e:
+        print(f"Warning: Could not load openai_tools.json: {e}")
+else:
+    print(f"Warning: openai_tools.json not found at {TOOLS_PATH} (expected in production)")
 
 # Utility to route tool calls
 async def call_tool_endpoint(path: str, method: str, payload: Dict[str, Any], auth_env: str = None):
