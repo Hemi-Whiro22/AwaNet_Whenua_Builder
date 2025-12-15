@@ -4,7 +4,14 @@ import os
 
 
 class BearerAuthMiddleware(BaseHTTPMiddleware):
+    # Paths that don't require authentication
+    UNPROTECTED_PATHS = {"/", "/heartbeat", "/health"}
+
     async def dispatch(self, request: Request, call_next):
+        # Allow unprotected paths (health checks, root)
+        if request.url.path in self.UNPROTECTED_PATHS:
+            return await call_next(request)
+
         auth_header = request.headers.get("Authorization")
         expected_bearer = os.getenv(
             "HUMAN_BEARER_KEY") or os.getenv("PIPELINE_TOKEN")
