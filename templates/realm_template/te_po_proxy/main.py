@@ -17,6 +17,21 @@ te_po_url = os.getenv("TE_PO_URL", "http://localhost:5000")
 bearer_key = os.getenv("BEARER_KEY", "")
 realm_id = os.getenv("REALM_ID", "unknown")
 
+
+def get_cors_origins():
+    """Read CORS_ALLOW_ORIGINS from environment or use sensible defaults."""
+    env_origins = os.getenv("CORS_ALLOW_ORIGINS", "").strip()
+    if env_origins:
+        return [origin.strip() for origin in env_origins.split(",") if origin.strip()]
+    # Defaults for local development
+    return [
+        "http://localhost:5173",
+        "http://localhost:8100",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:8100",
+    ]
+
+
 app = FastAPI(
     title=f"Te Pó Proxy - {realm_id}",
     description="Thin proxy to main Te Pó backend"
@@ -25,7 +40,7 @@ app = FastAPI(
 # CORS for realm UI
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=get_cors_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

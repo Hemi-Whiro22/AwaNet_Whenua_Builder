@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -36,19 +37,48 @@ from te_po.utils.middleware.utf8_enforcer import apply_utf8_middleware
 load_env()
 enforce_utf8_locale()
 
+
+def get_cors_origins():
+    """
+    Read CORS_ALLOW_ORIGINS from environment as comma-separated list.
+    Fallback to sensible defaults for local development.
+    
+    Example env:
+        CORS_ALLOW_ORIGINS=http://localhost:5173,http://example.com,https://example.com
+    """
+    env_origins = os.getenv("CORS_ALLOW_ORIGINS", "").strip()
+    if env_origins:
+        return [origin.strip() for origin in env_origins.split(",") if origin.strip()]
+    
+    # Fallback defaults for local development
+    return [
+        "http://localhost:5173",
+        "http://localhost:8100",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:8100",
+    ]
+
+
 app = FastAPI(
     title="Kitenga Whiro — Māori Intelligence Engine",
     version="1.0.0",
 )
+
+# Middleware order matters: add in reverse order of desired execution
+# 1. UTF8 enforcer (runs after auth/CORS checks)
+apply_utf8_middleware(app)
+
+# 2. Bearer auth (runs after CORS, but auth checks happen before body processing)
 app.add_middleware(BearerAuthMiddleware)
-# CORS
+
+# 3. CORS (outermost, runs first - allows preflight OPTIONS to reach auth middleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=get_cors_origins(),
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_credentials=True,
 )
-apply_utf8_middleware(app)
 
 
 @app.get("/", tags=["Root"])
