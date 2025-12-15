@@ -46,3 +46,4 @@ supabase>=2.4.0
 redis
 rq
 prometheus-client
+psutil
