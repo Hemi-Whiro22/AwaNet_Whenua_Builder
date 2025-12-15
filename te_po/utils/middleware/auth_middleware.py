@@ -1,35 +1,35 @@
-from fastapi import Request, HTTPException
-from starlette.middleware.base import BaseHTTPMiddleware
-import os
-
-
 class BearerAuthMiddleware(BaseHTTPMiddleware):
-    # Paths that don't require authentication
-    UNPROTECTED_PATHS = {"/", "/heartbeat", "/health"}
+    UNPROTECTED_PATHS = {"/", "/heartbeat", "/health", "/docs", "/openapi.json", "/redoc"}
+    UNPROTECTED_PREFIXES = {"/static"}
 
     async def dispatch(self, request: Request, call_next):
-        # Allow unprotected paths (health checks, root)
-        if request.url.path in self.UNPROTECTED_PATHS:
+        if request.method in ("OPTIONS", "HEAD"):
             return await call_next(request)
 
-        auth_header = request.headers.get("Authorization")
-        expected_bearer = os.getenv(
-            "HUMAN_BEARER_KEY") or os.getenv("PIPELINE_TOKEN")
+        path = request.url.path
+        if path in self.UNPROTECTED_PATHS:
+            return await call_next(request)
 
-        if not auth_header or not auth_header.startswith("Bearer "):
-            raise HTTPException(
-                status_code=401, detail="Missing Bearer token.")
+        for p in self.UNPROTECTED_PREFIXES:
+            if path.startswith(p):
+                return await call_next(request)
 
-        token = auth_header.split("Bearer ")[1]
-        if not expected_bearer or token != expected_bearer:
-            raise HTTPException(
-                status_code=403, detail="Invalid Bearer token.")
+        auth_header = request.headers.get("authorization") or ""
+        expected_bearer = os.getenv("HUMAN_BEARER_KEY") or os.getenv("PIPELINE_TOKEN")
 
-        # Optional: store identity for logging/tracing
+        if not expected_bearer:
+            return await call_next(request)
+
+        if not auth_header.lower().startswith("bearer "):
+            raise HTTPException(status_code=401, detail="Missing Bearer token.")
+
+        token = auth_header.split(" ", 1)[1].strip()
+        if token != expected_bearer:
+            raise HTTPException(status_code=403, detail="Invalid Bearer token.")
+
         request.state.human_identity = os.getenv("HUMAN_IDENTITY")
         request.state.trace_id = os.getenv("TRACE_ID")
-
         return await call_next(request)
 
-
-"""Utility functions for Kitenga tool registration script."""
+def apply_bearer_middleware(app: ASGIApp) -> None:
+    app.add_middleware(BearerAuthMiddleware)

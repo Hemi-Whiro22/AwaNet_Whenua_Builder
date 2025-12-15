@@ -8,9 +8,10 @@ export default function ApiTestPanel() {
   const [error, setError] = useState("");
   const [testResults, setTestResults] = useState([]);
 
-  useEffect(() => {
-    loadStatus();
-  }, []);
+  // Only load status on manual refresh, not on mount
+  // useEffect(() => {
+  //   loadStatus();
+  // }, []);
 
   const loadStatus = async () => {
     setLoading(true);
