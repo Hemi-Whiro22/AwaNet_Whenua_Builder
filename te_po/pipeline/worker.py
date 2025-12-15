@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from rq import Worker
 
-from te_po.pipeline.queue import redis_conn
+from te_po.pipeline.custom_queue import redis_conn
 
 
 def main():
