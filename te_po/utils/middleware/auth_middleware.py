@@ -1,6 +1,6 @@
 import os
 from fastapi import Request
-from fastapi.middleware.base import BaseHTTPMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
 
 class BearerAuthMiddleware(BaseHTTPMiddleware):
