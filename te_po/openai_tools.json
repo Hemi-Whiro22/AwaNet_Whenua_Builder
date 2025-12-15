@@ -1,0 +1,74 @@
+{
+  "tools": [
+    {
+      "name": "kitenga_whisper",
+      "description": "Chat/processing endpoint",
+      "method": "POST",
+      "path": "/kitenga/gpt-whisper",
+      "ui": {
+        "label": "Kitenga Whisper"
+      },
+      "auth": null
+    },
+    {
+      "name": "ocr_tool",
+      "description": "OCR a remote image/PDF/text file",
+      "method": "POST",
+      "path": "/kitenga/tool/ocr",
+      "ui": {
+        "label": "Ocr Tool"
+      },
+      "auth": null
+    },
+    {
+      "name": "pipeline_run",
+      "description": "Run the ingestion pipeline",
+      "method": "POST",
+      "path": "/kitenga/pipeline/run",
+      "ui": {
+        "label": "Pipeline Run"
+      },
+      "auth": null
+    },
+    {
+      "name": "kitenga_vision_ocr",
+      "description": "OpenAI Vision-based OCR",
+      "method": "POST",
+      "path": "/kitenga/tool/vision-ocr",
+      "ui": {
+        "label": "Kitenga Vision Ocr"
+      },
+      "auth": null
+    },
+    {
+      "name": "chat_save_session",
+      "description": "Save a chat session to vector store",
+      "method": "POST",
+      "path": "/kitenga/chat/save-session",
+      "ui": {
+        "label": "Chat Save Session"
+      },
+      "auth": null
+    },
+    {
+      "name": "assistant_run",
+      "description": "Run an assistant thread",
+      "method": "POST",
+      "path": "/kitenga/assistant/run",
+      "ui": {
+        "label": "Assistant Run"
+      },
+      "auth": null
+    },
+    {
+      "name": "vector_batch_status",
+      "description": "Check vector batch status",
+      "method": "GET",
+      "path": "/kitenga/vector/batch-status",
+      "ui": {
+        "label": "Vector Batch Status"
+      },
+      "auth": null
+    }
+  ]
+}
