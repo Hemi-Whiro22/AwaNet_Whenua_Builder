@@ -22,6 +22,7 @@ from te_po.pipeline.orchestrator.pipeline_orchestrator import run_pipeline as ex
 from te_po.services.vector_service import embed_text
 from te_po.pipeline.ocr.stealth_engine import StealthOCR
 from te_po.services.chat_memory import record_turn, retrieve_context
+from te_po.services.project_state_service import get_project_state, format_project_state_for_context
 from te_po.utils.audit import log_event
 from te_po.services.supabase_logging import log_chat_entry
 from te_po.utils.supabase_client import get_client
@@ -808,10 +809,24 @@ async def gpt_whisper(
         try:
             inputs: list[dict[str, str]] = []
             ctx_block = _context_block()
+            
+            # Add system prompt
             if payload.system_prompt:
                 inputs.append({"role": "system", "content": payload.system_prompt})
+            
+            # Add project state context (live project snapshot)
+            try:
+                project_state = get_project_state()
+                if project_state and "error" not in project_state:
+                    state_context = format_project_state_for_context(project_state)
+                    inputs.append({"role": "system", "content": state_context})
+            except Exception:
+                pass  # If project state unavailable, continue without it
+            
+            # Add chat history context
             if ctx_block:
                 inputs.append({"role": "system", "content": f"Recent chat context:\n{ctx_block}"})
+            
             inputs.append({"role": "user", "content": payload.whisper})
             reply = generate_text(inputs, model=DEFAULT_BACKEND_MODEL, max_tokens=2000)
         except HTTPException:
