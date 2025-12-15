@@ -8,7 +8,7 @@ from typing import Any, Dict
 from rq import Retry
 
 from te_po.pipeline.orchestrator.pipeline_orchestrator import run_pipeline
-from te_po.pipeline.queue import (
+from te_po.pipeline.custom_queue import (
     urgent_queue,
     default_queue,
     slow_queue,

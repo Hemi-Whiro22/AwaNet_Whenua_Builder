@@ -8,7 +8,7 @@ import uuid
 import shutil
 from pathlib import Path
 
-from te_po.pipeline.queue import pipeline_queue
+from te_po.pipeline.custom_queue import redis_conn, urgent_queue, default_queue, slow_queue, dead_queue
 from te_po.pipeline.jobs import process_document, enqueue_for_pipeline
 from te_po.pipeline.job_tracking import get_job_status, get_recent_jobs
 from te_po.db import db_execute, db_fetchone
