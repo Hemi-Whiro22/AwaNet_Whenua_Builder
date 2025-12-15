@@ -1,0 +1,49 @@
+{
+  "placeholders": [
+    {
+      "key": "TemplateRealm",
+      "prompt": "Enter the new realm/project name",
+      "description": "Used across config/realm.json, workflows, and .env identifiers."
+    },
+    {
+      "key": "kitenga-template.example.com",
+      "prompt": "Enter Cloudflare hostname",
+      "description": "Public hostname served by Cloudflare Tunnel (config/proxy.toml, .env)."
+    },
+    {
+      "key": "te-ao-template",
+      "prompt": "Enter Cloudflare Pages project name",
+      "description": "The Pages project slug used in cloudflare-pages.yml and proxy.toml."
+    },
+    {
+      "key": "https://te-po-template.example.com",
+      "prompt": "Enter backend URL exposed by Render",
+      "description": "Public backend URL for mini_te_po (config/realm.json)."
+    }
+  ],
+  "secrets": [
+    {
+      "key": "HUMAN_BEARER_KEY",
+      "description": "Bearer token used by the UI and CLI to talk to Te Pō.",
+      "scopes": ["env", "cloudflare_pages"]
+    },
+    {
+      "key": "PIPELINE_TOKEN",
+      "description": "Internal Te Pō pipeline token (fallback auth).",
+      "scopes": ["env"]
+    },
+    {
+      "key": "SUPABASE_SERVICE_ROLE_KEY",
+      "description": "Service role key so the realm can write to Supabase.",
+      "scopes": ["env", "cloudflare_pages"]
+    },
+    {
+      "key": "OPENAI_API_KEY",
+      "description": "OpenAI key used for assistant + vector store actions.",
+      "scopes": ["env"]
+    }
+  ],
+  "deployment": {
+    "cloudflare_pages_workflow": ".github/workflows/cloudflare-pages.yml"
+  }
+}

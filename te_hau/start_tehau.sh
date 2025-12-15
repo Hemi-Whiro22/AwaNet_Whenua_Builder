@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-LOG_DIR="$SCRIPT_DIR/kitenga_mcp/logs"
+LOG_DIR="$ROOT_DIR/te_po/kitenga/logs"
 mkdir -p "$LOG_DIR"
 
 # Activate virtualenv if present so python/uvicorn use project deps
@@ -97,7 +97,7 @@ if [[ -n "$CF_TUNNEL_ID" && -n "$CF_TUNNEL_NAME" ]]; then
 fi
 
 echo "[kitenga] starting MCP server..."
-python "$SCRIPT_DIR/kitenga_mcp/start_kitenga.py" >>"$MCP_LOG" 2>&1 &
+python "$ROOT_DIR/te_po/kitenga/start_kitenga.py" >>"$MCP_LOG" 2>&1 &
 pids+=($!)
 
 echo "[te_po] starting FastAPI backend..."

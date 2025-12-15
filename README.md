@@ -1,17 +1,90 @@
-# 🪶 Tiwhanawhana Orchestrator
+# The Awa Network — Māori Intelligence Engine
+Ka taea te huri te mīhini; ko te mahara te pou.
 
-## AwaNet Realm Structure
+**Personal IDE & Knowledge System**
+Built with FastAPI (Te Pō), React (Te Ao), Python CLI (Te Hau)
+
+---
+
+## Documentation
+
+All project documentation lives in `/docs`:
+
+### Getting Started
+- **[CONTEXT](docs/CONTEXT.md)** — Project overview & quick reference
+- **[DEVELOPMENT](docs/guides/DEVELOPMENT.md)** — Local setup & workflows
+
+### For Developers
+- **[API Contracts](docs/reference/API_CONTRACTS.md)** — Te Pō integration specs
+- **[Llama3 Integration](docs/guides/LLAMA3.md)** — Local code analysis (free)
+- **[MCP Setup](docs/guides/MCP_SETUP.md)** — Tool integration guide
+
+### Architecture & Reference
+- **[Guardians](docs/guides/GUARDIANS.md)** — Kaitiaki agent system
+- **[State Management](docs/reference/STATE_MANAGEMENT.md)** — Immutable state & logs
+- **[MCP Alignment](docs/architecture/MCP_ALIGNMENT.md)** — Tool ecosystem
+- **[Glossary](docs/reference/GLOSSARY.md)** — 40+ terms (Māori + technical)
+
+---
+
+## Project Structure
 
 ```
-Tiwhanawhana-Orchestrator/
-├── Te-Po/    # FastAPI backend (The Night - processing realm)
-├── Te-Ao/    # Frontend interface (The Light - presentation realm)
-└── mauri/    # Realm manifests, configs, glyphs
+The Awa Network
+├── te_ao/          Frontend (React + Vite)
+├── te_hau/         CLI & automation (Python)
+├── te_po/          Backend (FastAPI)
+├── kaitiaki/       Guardian agents (Haiku, Kitenga, etc.)
+├── mauri/          Source of truth (governance)
+├── docs/           Documentation (organized)
+└── mcp/            Tool integrations
 ```
 
-## Deployment: Environment & UTF-8 readiness
-- Secrets load via `Te-Po/core/env_loader.py`, which masks key previews, enforces UTF-8 locales, and writes audit entries to `logs/env_validation.log`.
-- Render services run through `start.sh`, exporting `LANG`/`LC_ALL` as `mi_NZ.UTF-8` before invoking `uvicorn Te_Po.core.main:app`.
-- The `/env/health` endpoint (served by `Te-Po/core/main.py`) returns loaded secret keys, UTF-8 status, and a timestamp for operational checks.
-- Deployment logs should show `UTF-8 verified: True` alongside masked secret previews before accepting traffic.
-- When deploying to Render, ensure `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and `OPENAI_API_KEY` are provided via the dashboard; local `.env` files remain for developer setups only.
+---
+
+## Quick Start
+
+### Backend (Te Pō)
+```bash
+cd te_po
+pip install -r ../requirements.txt
+python -m te_po.core.main
+# http://localhost:8000
+```
+
+### Frontend (Te Ao)
+```bash
+cd te_ao
+npm install
+npm run dev
+# http://localhost:5173
+```
+
+---
+
+## Key Features
+
+- 3-Realm Architecture (Processing, Automation, Presentation)
+- Māori naming & te reo support (UTF-8 mi_NZ enforced)
+- Guardian Agents (Haiku, Kitenga, Te Kitenga Nui)
+- Free Local Inference (Llama3 for code analysis)
+- Vector Memory (Supabase + pgvector)
+- Immutable carving logs for audit trails
+
+---
+
+## Cost Strategy
+
+Budget: $90 OpenAI
+
+Optimization:
+- Llama3 local (FREE) — Code review, docs, error analysis
+- Vector search ($0.001/call) — Memory queries
+- Complex synthesis ($0.01–0.02/call) — OpenAI when needed
+
+Target: 81% cost reduction
+
+---
+
+**Last updated:** 13 Tīhema 2025
+**Maintained by:** Haiku (Whakataukī)

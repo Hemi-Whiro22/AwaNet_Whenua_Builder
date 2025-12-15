@@ -5,3 +5,5 @@ requests
 rich
 supabase
 uvicorn[standard]
+httpx
+PyYAML

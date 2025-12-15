@@ -2,7 +2,11 @@
 "name": "AwaNet Dev",
 "build": { "dockerfile": "Dockerfile" },
 "remoteUser": "vscode",
-
+"runArgs": [
+	"--dns=1.1.1.1",
+	"--dns=8.8.8.8"
+  ],
+"workspaceFolder": "${containerEnv:WORKDIR:/workspaces/The_Awa_Network}",
 "customizations": {
 	"vscode": {
 		"settings": {
@@ -11,7 +15,7 @@
 		}
 	}
 },
-"postCreateCommand": "pip install -r requirements.txt || true",
+"postCreateCommand": "./.devcontainer/post_create.sh",
 
 	"features": {
 	  "ghcr.io/devcontainers/features/common-utils:2": {},

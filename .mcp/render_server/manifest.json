@@ -1,0 +1,28 @@
+{
+  "name": "render",
+  "description": "Render MCP Server for AwaOS - Backend Deployment",
+  "version": "1.0.0",
+  "author": "AwaOS",
+  "capabilities": [
+    "service_deployment",
+    "env_var_management",
+    "health_checks",
+    "service_control"
+  ],
+  "environment": {
+    "RENDER_API_KEY": {
+      "description": "Render API key",
+      "required": true
+    }
+  },
+  "integration": {
+    "te_hau_cli": {
+      "tehau_deploy": "Deploy mini_te_po backends",
+      "tehau_new": "Create Render service for new realms"
+    },
+    "awaos_flow": {
+      "mini_te_po": "Deploy and manage mini_te_po proxies",
+      "health": "Monitor backend health"
+    }
+  }
+}

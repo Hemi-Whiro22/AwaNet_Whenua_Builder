@@ -1,0 +1,12 @@
+tunnel: kitenga_whiro_den
+credentials-file: .cloudflared/kitenga_whiro_den.json
+
+ingress:
+  - hostname: kitenga.den-of-the-pack.com
+    service: http://localhost:8000
+  - service: http_status:404
+
+warp-routing:
+  enabled: true
+metrics:
+  addr: 127.0.0.1:9091

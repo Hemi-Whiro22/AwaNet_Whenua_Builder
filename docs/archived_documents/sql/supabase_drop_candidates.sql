@@ -1,0 +1,33 @@
+-- Candidate drops (currently zero rows) – review before running.
+-- COMMENTED OUT to prevent accidental execution. Uncomment only after confirming.
+
+-- Legacy/unused tables with 0 rows at time of export:
+-- drop table if exists public.codex_entries;
+-- drop table if exists public.cultural_permissions;
+-- drop table if exists public.forge_heartbeat;
+-- drop table if exists public.future_us;
+-- drop table if exists public.kaitiaki_context_memory;
+-- drop table if exists public.key_rotor;
+-- drop table if exists public.kitenga_context_memory;
+-- drop table if exists public.koru_context_memory;
+-- drop table if exists public.mauri_documents;
+-- drop table if exists public.mauri_long_term;
+-- drop table if exists public.mauri_memory_index;
+-- drop table if exists public.mauri_mid_term;
+-- drop table if exists public.mauri_short_term;
+-- drop table if exists public.ocr_logs;
+-- drop table if exists public.pro_api_keys;
+-- drop table if exists public.pronunciation_logs;
+-- drop table if exists public.reo_logs;
+-- drop table if exists public.repo_state;
+-- drop table if exists public.sys_logs;
+-- drop table if exists public.tasks;
+-- drop table if exists public.translations;
+-- drop table if exists public.user_searches;
+-- drop table if exists public.user_summaries;
+-- drop table if exists public.whiro_context_memory;
+
+-- Keep canonical empty tables (we plan to populate): public.tepo_logs, public.tepo_chat_logs,
+-- public.tepo_chunks, public.tepo_vector_batches, public.tepo_pipeline_runs, public.mauri_snapshots.
+
+-- Auth/storage system tables should not be dropped.

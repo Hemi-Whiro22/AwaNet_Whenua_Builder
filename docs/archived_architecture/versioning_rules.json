@@ -1,0 +1,9 @@
+{
+  "semantic_versioning": true,
+  "release_steps": [
+    "Update mauri/realms entries",
+    "Sync state files",
+    "Document changes in te_kete/domain_map"
+  ],
+  "owners": ["mauri_guardians"]
+}

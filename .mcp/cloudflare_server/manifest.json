@@ -1,0 +1,32 @@
+{
+  "name": "cloudflare",
+  "description": "Cloudflare Pages MCP Server for AwaOS",
+  "version": "1.0.0",
+  "author": "AwaOS",
+  "capabilities": [
+    "pages_deployment",
+    "env_vars",
+    "custom_domains",
+    "cache_management"
+  ],
+  "environment": {
+    "CLOUDFLARE_API_TOKEN": {
+      "description": "Cloudflare API token with Pages permissions",
+      "required": true
+    },
+    "CLOUDFLARE_ACCOUNT_ID": {
+      "description": "Cloudflare account ID",
+      "required": true
+    }
+  },
+  "integration": {
+    "te_hau_cli": {
+      "tehau_deploy": "Triggered by tehau deploy command",
+      "tehau_new": "Auto-create Pages project for new realms"
+    },
+    "awaos_flow": {
+      "te_ao_frontend": "Deploy Te Ao frontends",
+      "domain_setup": "Configure realm-specific domains"
+    }
+  }
+}

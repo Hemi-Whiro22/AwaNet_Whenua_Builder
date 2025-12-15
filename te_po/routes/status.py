@@ -1,5 +1,6 @@
 from datetime import datetime
 import platform
+import requests
 
 from fastapi import APIRouter
 from te_po.core.config import settings
@@ -65,6 +66,15 @@ async def status_full():
     except Exception as exc:
         vector_ok = str(exc)
 
+    ollama_ok = False
+    if settings.ollama_base_url:
+        try:
+            resp = requests.get(f"{settings.ollama_base_url.rstrip('/')}/api/tags", timeout=5)
+            resp.raise_for_status()
+            ollama_ok = True
+        except Exception:
+            ollama_ok = False
+
     return {
         "realm": "te_po",
         "status": "online",
@@ -75,4 +85,6 @@ async def status_full():
         "vector_status": vector_ok,
         "supabase_ok": supabase_ok,
         "supabase_reason": supabase_reason,
+        "ollama_ok": ollama_ok,
+        "ollama_model": settings.ollama_model,
     }

@@ -1,0 +1,7 @@
+tunnel: kitenga_whiro_public
+credentials-file: .cloudflared/kitenga_whiro_public.json
+
+ingress:
+  - hostname: kitenga-whiro.awanet-kaitiaki.net
+    service: http://localhost:8000
+  - service: http_status:404

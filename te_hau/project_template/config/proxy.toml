@@ -1,0 +1,13 @@
+[tunnels.primary]
+id = ""
+hostname = "kitenga-template.example.com"
+service = "http://localhost:8000"
+
+[render]
+service_name = "mini-te-po"
+health_url = "/status/full"
+
+[frontend]
+pages_project = "te-ao-template"
+build_command = "npm run build"
+output_dir = "te_ao/dist"

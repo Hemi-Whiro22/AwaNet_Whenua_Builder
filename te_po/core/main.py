@@ -2,6 +2,7 @@ from datetime import datetime
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from te_po.utils.middleware.auth_middleware import BearerAuthMiddleware
 
 from te_po.core.env_loader import load_env, enforce_utf8_locale
 
@@ -26,6 +27,8 @@ from te_po.routes import (
     roshi,
     sell,
     metrics,
+    awa_protocol,
+    llama3,
 )
 from te_po.utils.middleware.utf8_enforcer import apply_utf8_middleware
 
@@ -37,7 +40,7 @@ app = FastAPI(
     title="Kitenga Whiro — Māori Intelligence Engine",
     version="1.0.0",
 )
-
+app.add_middleware(BearerAuthMiddleware)
 # CORS
 app.add_middleware(
     CORSMiddleware,
@@ -86,6 +89,8 @@ app.include_router(cards.router)
 app.include_router(roshi.router)
 app.include_router(sell.router)
 app.include_router(metrics.router)
+app.include_router(awa_protocol.router)  # Model Context Protocol routes
+app.include_router(llama3.router)  # Llama3 local inference routes
 
 
 # For local launches only

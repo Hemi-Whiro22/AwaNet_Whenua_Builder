@@ -1,0 +1,17 @@
+name: Realm Health Check
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ping /status/full
+        env:
+          API_URL: ${{ secrets.REALM_STATUS_URL }}
+          BEARER: ${{ secrets.HUMAN_BEARER_KEY }}
+        run: |
+          curl -fsS -H "Authorization: Bearer ${BEARER}" "${API_URL:-https://example.com/status/full}"

@@ -44,6 +44,11 @@ class Settings(BaseSettings):
     vision_model: str = Field(default="gpt-4o-mini", alias="OPENAI_VISION_MODEL")
     embedding_model: str = Field(default="text-embedding-3-small", alias="OPENAI_EMBED_MODEL")
 
+    # Ollama / local models
+    ollama_base_url: str = Field(default="http://127.0.0.1:11434", alias="OLLAMA_BASE_URL")
+    ollama_model: str = Field(default="llama3:latest", alias="OLLAMA_MODEL")
+    ollama_timeout: int = Field(default=60, alias="OLLAMA_TIMEOUT")
+
     # OCR
     tesseract_path: Optional[str] = Field(default=None, alias="TESSERACT_PATH")
 

@@ -1,0 +1,12 @@
+{
+  "prefixes": {
+    "test_files": "test_",
+    "pipelines": "pipeline_*",
+    "storage": "storage/*"
+  },
+  "guidelines": [
+    "Use lowercase realm names",
+    "Use underscores for multi-word file names",
+    "Guardians and manifests live under mauri"
+  ]
+}

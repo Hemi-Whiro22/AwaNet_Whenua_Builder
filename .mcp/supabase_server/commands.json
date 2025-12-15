@@ -1,0 +1,121 @@
+{
+  "name": "supabase",
+  "version": "1.0.0",
+  "description": "Supabase MCP Server commands for AwaOS",
+  "commands": {
+    "select": {
+      "description": "Select rows from a table",
+      "usage": "@supabase.select(table=\"pdf_summaries\", limit=5)",
+      "params": {
+        "table": {"type": "string", "required": true},
+        "columns": {"type": "string", "default": "*"},
+        "limit": {"type": "integer", "default": 20},
+        "filters": {"type": "object", "description": "Key-value equality filters"}
+      },
+      "returns": "Array of matching rows"
+    },
+    "insert": {
+      "description": "Insert a row into a table",
+      "usage": "@supabase.insert(table=\"translations\", data={...})",
+      "params": {
+        "table": {"type": "string", "required": true},
+        "data": {"type": "object", "required": true}
+      },
+      "returns": "Inserted row"
+    },
+    "update": {
+      "description": "Update rows matching criteria",
+      "usage": "@supabase.update(table=\"realms\", data={status: \"inactive\"}, match={realm_id: \"...\"})",
+      "params": {
+        "table": {"type": "string", "required": true},
+        "data": {"type": "object", "required": true},
+        "match": {"type": "object", "required": true}
+      },
+      "returns": "Updated rows"
+    },
+    "delete": {
+      "description": "Delete rows matching criteria",
+      "usage": "@supabase.delete(table=\"logs\", match={id: \"...\"})",
+      "params": {
+        "table": {"type": "string", "required": true},
+        "match": {"type": "object", "required": true}
+      },
+      "returns": "Deleted rows"
+    },
+    "upsert": {
+      "description": "Insert or update on conflict",
+      "usage": "@supabase.upsert(table=\"glossary\", data={...})",
+      "params": {
+        "table": {"type": "string", "required": true},
+        "data": {"type": "object", "required": true}
+      },
+      "returns": "Upserted row"
+    },
+    "rpc": {
+      "description": "Call a Supabase RPC function",
+      "usage": "@supabase.rpc(function=\"match_memories\", params={...})",
+      "params": {
+        "function": {"type": "string", "required": true},
+        "params": {"type": "object", "default": {}}
+      },
+      "returns": "RPC result"
+    },
+    "match_memories": {
+      "description": "Vector similarity search in realm memory",
+      "usage": "@supabase.match_memories(query_embedding=[...], realm_id=\"te_ao\")",
+      "params": {
+        "query_embedding": {"type": "array", "required": true},
+        "realm_id": {"type": "string", "required": true},
+        "threshold": {"type": "number", "default": 0.7},
+        "count": {"type": "integer", "default": 5},
+        "include_tapu": {"type": "boolean", "default": false}
+      },
+      "returns": "Array of matching memories with similarity scores"
+    },
+    "list_buckets": {
+      "description": "List all storage buckets",
+      "usage": "@supabase.list_buckets()",
+      "params": {},
+      "returns": "Array of bucket metadata"
+    },
+    "list_files": {
+      "description": "List files in a bucket",
+      "usage": "@supabase.list_files(bucket=\"taonga-uploads\", path=\"\")",
+      "params": {
+        "bucket": {"type": "string", "required": true},
+        "path": {"type": "string", "default": ""}
+      },
+      "returns": "Array of file metadata"
+    },
+    "upload_file": {
+      "description": "Upload a file to storage",
+      "usage": "@supabase.upload_file(bucket=\"pdfs\", path=\"doc.pdf\", content_base64=\"...\")",
+      "params": {
+        "bucket": {"type": "string", "required": true},
+        "path": {"type": "string", "required": true},
+        "content_base64": {"type": "string", "required": true},
+        "content_type": {"type": "string", "default": "application/octet-stream"}
+      },
+      "returns": "Upload result with path"
+    },
+    "register_realm": {
+      "description": "Register a new realm in the registry",
+      "usage": "@supabase.register_realm(realm_id=\"...\", realm_name=\"Te Puna\")",
+      "params": {
+        "realm_id": {"type": "string", "required": true},
+        "realm_name": {"type": "string", "required": true},
+        "glyph": {"type": "string", "default": "koru_blue"},
+        "kaitiaki": {"type": "string"}
+      },
+      "returns": "Registered realm record"
+    },
+    "list_realms": {
+      "description": "List all registered realms",
+      "usage": "@supabase.list_realms(limit=50)",
+      "params": {
+        "limit": {"type": "integer", "default": 50}
+      },
+      "returns": "Array of realm records"
+    }
+  }
+}

@@ -6,6 +6,7 @@ from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 
 from te_hau.services.awa_bus import emit, latest
 from te_hau.services.tepo_api import MAURI, te_po_get, te_po_post, te_po_request
+from te_hau.services.kaitiaki_store import list_kaitiaki, save_kaitiaki
 from shared.awa_bus.awa_events import AwaEvent
 
 app = FastAPI(title="Te Hau API Bridge", version="1.0.0")
@@ -27,6 +28,18 @@ async def ocr_proxy(file: UploadFile = File(...)):
     """Proxy OCR requests to Te Pō."""
     result = te_po_post("/ocr/scan", files={"file": (file.filename, await file.read())})
     emit(AwaEvent(realm="te_hau", type="ocr", payload={"file": file.filename, "saved": result.get("saved")}))
+    return result
+
+
+@app.get("/api/kaitiaki")
+def kaitiaki_list():
+    return list_kaitiaki()
+
+
+@app.post("/api/kaitiaki")
+def kaitiaki_create(payload: dict):
+    result = save_kaitiaki(payload)
+    emit(AwaEvent(realm="te_hau", type="kaitiaki_create", payload=result))
     return result
 
 

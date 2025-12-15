@@ -1,0 +1,91 @@
+{
+  "name": "render",
+  "version": "1.0.0",
+  "description": "Render MCP Server commands for AwaOS",
+  "commands": {
+    "list_services": {
+      "description": "List all Render services",
+      "usage": "@render.list_services(limit=20)",
+      "params": {
+        "limit": {"type": "integer", "default": 20}
+      },
+      "returns": "Array of service summaries"
+    },
+    "get_service": {
+      "description": "Get detailed info for a service",
+      "usage": "@render.get_service(service_id=\"srv-xxx\")",
+      "params": {
+        "service_id": {"type": "string", "required": true}
+      },
+      "returns": "Full service configuration"
+    },
+    "deploy": {
+      "description": "Trigger a deployment for a service",
+      "usage": "@render.deploy(service_id=\"srv-xxx\")",
+      "params": {
+        "service_id": {"type": "string", "required": true},
+        "clear_cache": {"type": "boolean", "default": false}
+      },
+      "returns": "Deployment ID and status"
+    },
+    "list_deploys": {
+      "description": "List recent deployments for a service",
+      "usage": "@render.list_deploys(service_id=\"srv-xxx\", limit=5)",
+      "params": {
+        "service_id": {"type": "string", "required": true},
+        "limit": {"type": "integer", "default": 10}
+      },
+      "returns": "Array of deployment records"
+    },
+    "list_env_vars": {
+      "description": "List environment variables for a service",
+      "usage": "@render.list_env_vars(service_id=\"srv-xxx\")",
+      "params": {
+        "service_id": {"type": "string", "required": true}
+      },
+      "returns": "Array of env var keys (values may be hidden)"
+    },
+    "set_env_vars": {
+      "description": "Set environment variables for a service",
+      "usage": "@render.set_env_vars(service_id=\"srv-xxx\", env_vars={\"KEY\": \"value\"})",
+      "params": {
+        "service_id": {"type": "string", "required": true},
+        "env_vars": {"type": "object", "required": true}
+      },
+      "returns": "Update confirmation"
+    },
+    "suspend_service": {
+      "description": "Suspend (pause) a service",
+      "usage": "@render.suspend_service(service_id=\"srv-xxx\")",
+      "params": {
+        "service_id": {"type": "string", "required": true}
+      },
+      "returns": "Suspension confirmation"
+    },
+    "resume_service": {
+      "description": "Resume a suspended service",
+      "usage": "@render.resume_service(service_id=\"srv-xxx\")",
+      "params": {
+        "service_id": {"type": "string", "required": true}
+      },
+      "returns": "Resume confirmation"
+    },
+    "deploy_mini_te_po": {
+      "description": "Deploy mini_te_po backend (AwaOS standard)",
+      "usage": "@render.deploy_mini_te_po(service_id=\"srv-xxx\", env_vars={\"TEPO_URL\": \"...\"})",
+      "params": {
+        "service_id": {"type": "string", "required": true},
+        "env_vars": {"type": "object", "description": "Optional env vars to set before deploy"}
+      },
+      "returns": "Env update and deployment results"
+    },
+    "health_check": {
+      "description": "Check service health status",
+      "usage": "@render.health_check(service_id=\"srv-xxx\")",
+      "params": {
+        "service_id": {"type": "string", "required": true}
+      },
+      "returns": "Health status (healthy/suspended)"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "name": "cloudflare",
+  "version": "1.0.0",
+  "description": "Cloudflare Pages MCP Server commands for AwaOS",
+  "commands": {
+    "deploy_pages": {
+      "description": "Deploy a build directory to Cloudflare Pages",
+      "usage": "@cloudflare.deploy_pages(dist_path=\"./dist\", project=\"my-realm\")",
+      "params": {
+        "dist_path": {"type": "string", "required": true},
+        "project": {"type": "string", "required": true},
+        "branch": {"type": "string", "default": "main"},
+        "commit_message": {"type": "string"}
+      },
+      "returns": "Deployment status and URL"
+    },
+    "deploy_te_ao": {
+      "description": "Build and deploy Te Ao frontend (AwaOS standard flow)",
+      "usage": "@cloudflare.deploy_te_ao(project_path=\"./my-realm\", project_name=\"my-realm-pages\")",
+      "params": {
+        "project_path": {"type": "string", "required": true},
+        "project_name": {"type": "string", "required": true}
+      },
+      "returns": "Build and deployment results"
+    },
+    "create_project": {
+      "description": "Create a new Cloudflare Pages project",
+      "usage": "@cloudflare.create_project(name=\"my-realm-pages\")",
+      "params": {
+        "name": {"type": "string", "required": true},
+        "production_branch": {"type": "string", "default": "main"}
+      },
+      "returns": "Project details with subdomain"
+    },
+    "list_projects": {
+      "description": "List all Cloudflare Pages projects",
+      "usage": "@cloudflare.list_projects()",
+      "params": {},
+      "returns": "Array of project summaries"
+    },
+    "get_project": {
+      "description": "Get detailed info for a Pages project",
+      "usage": "@cloudflare.get_project(name=\"my-realm-pages\")",
+      "params": {
+        "name": {"type": "string", "required": true}
+      },
+      "returns": "Full project configuration"
+    },
+    "set_env_vars": {
+      "description": "Set environment variables for a project",
+      "usage": "@cloudflare.set_env_vars(project=\"my-realm\", env_vars={\"API_URL\": \"...\"})",
+      "params": {
+        "project": {"type": "string", "required": true},
+        "env_vars": {"type": "object", "required": true},
+        "preview": {"type": "boolean", "default": false}
+      },
+      "returns": "Update confirmation"
+    },
+    "list_deployments": {
+      "description": "List recent deployments for a project",
+      "usage": "@cloudflare.list_deployments(project=\"my-realm\", limit=5)",
+      "params": {
+        "project": {"type": "string", "required": true},
+        "limit": {"type": "integer", "default": 10}
+      },
+      "returns": "Array of deployment records"
+    },
+    "add_custom_domain": {
+      "description": "Add a custom domain to a Pages project",
+      "usage": "@cloudflare.add_custom_domain(project=\"my-realm\", domain=\"realm.awanet.io\")",
+      "params": {
+        "project": {"type": "string", "required": true},
+        "domain": {"type": "string", "required": true}
+      },
+      "returns": "Domain setup result"
+    },
+    "purge_cache": {
+      "description": "Purge cache for a Cloudflare zone",
+      "usage": "@cloudflare.purge_cache(zone_id=\"...\")",
+      "params": {
+        "zone_id": {"type": "string", "required": true}
+      },
+      "returns": "Cache purge confirmation"
+    }
+  }
+}

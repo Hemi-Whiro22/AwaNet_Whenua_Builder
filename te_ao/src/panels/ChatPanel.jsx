@@ -460,11 +460,38 @@ export default function ChatPanel({ className = "" }) {
     if (entry.reply?.translation) badges.push("translation");
     if (entry.reply?.thread_id) badges.push(`thread ${entry.reply.thread_id}`);
     if (entry.reply?.source) badges.push(entry.reply.source);
+    const toolResults = Array.isArray(entry.reply?.tool_results)
+      ? entry.reply.tool_results.filter(Boolean)
+      : [];
+    const renderToolResult = (tool, idx) => {
+      const label = tool?.tool || tool?.name || tool?.function?.name || `tool_${idx + 1}`;
+      const status = (tool?.status || "ok").toString();
+      const payload = tool?.result ?? tool?.output ?? tool?.reason ?? "";
+      const textOutput = (() => {
+        if (payload == null) return "";
+        if (typeof payload === "string") return payload;
+        try {
+          return JSON.stringify(payload, null, 2);
+        } catch {
+          return String(payload);
+        }
+      })();
+      return (
+        <div key={idx} className="rounded-lg border border-border/60 bg-panel/70 px-3 py-2 text-xs text-koru1">
+          <div className="flex flex-wrap gap-2 text-[11px] font-semibold text-primary">
+            <span>{label}</span>
+            <span className="uppercase tracking-wide text-koru2">{status}</span>
+          </div>
+          {textOutput && <pre className="mt-1 whitespace-pre-wrap break-words text-[11px] text-koru2">{textOutput}</pre>}
+        </div>
+      );
+    };
     if (isChat) {
       return (
         <div key={entry.id} className="space-y-1">
           <ChatMessage role="user" content={entry.prompt} />
           <ChatMessage role="assistant" content={replyText} />
+          {toolResults.length > 0 && <div className="space-y-2">{toolResults.map(renderToolResult)}</div>}
           {!!badges.length && (
             <div className="flex flex-wrap gap-2 text-[11px] text-koru2">
               {badges.map((b, idx) => (

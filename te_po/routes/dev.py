@@ -6,6 +6,8 @@ from te_po.pipeline.ocr.ocr_engine import run_ocr
 from te_po.services.local_storage import save, load
 from te_po.services.summary_service import summarize_text
 from te_po.utils.openai_client import client, generate_text
+from te_po.utils.ollama_client import generate_llama_response
+from te_po.core.config import settings
 
 router = APIRouter(prefix="/dev", tags=["Dev"])
 
@@ -61,3 +63,21 @@ def dev_openai():
 def dev_summarise(text: str = Form(...), mode: str = Form("research")):
     summary = summarize_text(text, mode=mode)
     return summary
+
+
+@router.post("/ollama")
+def dev_ollama(
+    prompt: str = Form(...),
+    system_prompt: str = Form("You are a helpful Māori research assistant."),
+    model: str = Form(None),
+):
+    """Quick chat endpoint for the local Ollama (Llama 3) runtime."""
+    try:
+        reply = generate_llama_response(prompt=prompt, system_prompt=system_prompt, model=model)
+        return {
+            "model": model or settings.ollama_model,
+            "prompt": prompt,
+            "reply": reply,
+        }
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail=f"Ollama error: {exc}") from exc

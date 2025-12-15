@@ -1,0 +1,11 @@
+{
+  "checks": [
+    "Compare realm manifests with actual directories",
+    "Alert if storage appears outside te_po/storage",
+    "Fail build if new backend folders are created outside te_po"
+  ],
+  "enforcement": {
+    "managed_by": "Whiro",
+    "frequency": "per commit"
+  }
+}

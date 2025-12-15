@@ -4,7 +4,7 @@
 # - Kills anything already bound to ports 8000 (backend) and 5173 (frontend).
 # - Starts uvicorn with --reload.
 # - Starts Vite dev server on 0.0.0.0:5173.
-# - Starts MCP server (te_hau/kitenga_mcp) and optional awa_tunnel when present.
+# - Starts MCP server (te_po/kitenga) and optional awa_tunnel when present.
 #
 # Usage (from repo root):
 #   chmod +x run_dev.sh
@@ -83,7 +83,7 @@ start_worker() {
 }
 
 start_mcp() {
-  local mcp_entry="${ROOT_DIR}/te_hau/kitenga_mcp/start_kitenga.py"
+  local mcp_entry="${ROOT_DIR}/te_po/kitenga/start_kitenga.py"
   if [[ ! -f "${mcp_entry}" ]]; then
     echo "MCP entrypoint not found at ${mcp_entry}; skipping MCP start."
     return

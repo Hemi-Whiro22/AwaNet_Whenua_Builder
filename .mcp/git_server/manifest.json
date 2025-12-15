@@ -1,0 +1,40 @@
+{
+  "name": "git",
+  "description": "Git/GitHub MCP Server for AwaOS",
+  "version": "1.0.0",
+  "author": "AwaOS",
+  "repository_type": "git",
+  "capabilities": [
+    "local_git",
+    "github_api",
+    "versioning",
+    "deployment_tags"
+  ],
+  "environment": {
+    "GITHUB_TOKEN": {
+      "description": "GitHub personal access token",
+      "required": false,
+      "scopes": ["repo", "workflow"]
+    },
+    "GIT_USER_NAME": {
+      "description": "Git commit user name",
+      "default": "AwaOS"
+    },
+    "GIT_USER_EMAIL": {
+      "description": "Git commit email",
+      "default": "awaos@local"
+    }
+  },
+  "integration": {
+    "te_hau_cli": {
+      "new_project": "Auto-init repo after tehau new",
+      "deploy": "Auto-tag on deployment",
+      "seal": "Commit seal changes"
+    },
+    "workflows": {
+      "pr_on_evolve": "Create PR when realm evolves",
+      "tag_on_deploy": "Tag releases on deployment",
+      "versioning": "Semantic versioning for realms"
+    }
+  }
+}

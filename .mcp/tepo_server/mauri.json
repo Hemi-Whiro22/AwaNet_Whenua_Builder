@@ -1,0 +1,49 @@
+{
+  "name": "tepo",
+  "version": "1.0.0",
+  "description": "Te Pō Mauri Configuration - Spiritual and Technical Alignment",
+  "mauri_rules": {
+    "lineage_enforcement": true,
+    "seal_validation": true,
+    "glyph_consistency": true,
+    "tapu_protection": true
+  },
+  "lineage": {
+    "root": "Kitenga_Whiro",
+    "children": [
+      "Awanui",
+      "Ruru",
+      "Mataroa",
+      "Te_Puna",
+      "Te_Ao_Kura"
+    ]
+  },
+  "tapu_levels": {
+    "0": "NOA - Public, unrestricted",
+    "1": "AHI - Internal use",
+    "2": "TAPU - Restricted access",
+    "3": "WHAKAHAERE - Admin only",
+    "4": "ABSOLUTE - Te Pō only"
+  },
+  "mana_types": {
+    "WHENUA": "Land/realm authority",
+    "TANGATA": "Person/user authority",
+    "ATUA": "System/divine authority"
+  },
+  "seal_components": [
+    "glyph",
+    "rune",
+    "lineage",
+    "realm_id",
+    "manifest_hash",
+    "timestamp"
+  ],
+  "validation_sequence": [
+    "realm_identity_check",
+    "glyph_integrity_check",
+    "seal_verification",
+    "environment_match",
+    "lineage_validation",
+    "tapu_enforcement"
+  ]
+}

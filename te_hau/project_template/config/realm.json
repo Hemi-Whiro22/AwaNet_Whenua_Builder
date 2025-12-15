@@ -1,0 +1,19 @@
+{
+  "realm": "TemplateRealm",
+  "korowai": "te_po",
+  "panels": [
+    "chat",
+    "vector",
+    "ocr"
+  ],
+  "features": {
+    "taonga_mode": true,
+    "research_mode": true,
+    "translations": false
+  },
+  "default_backend_url": "https://te-po-template.example.com",
+  "cloudflare": {
+    "tunnel_id": "",
+    "hostname": ""
+  }
+}

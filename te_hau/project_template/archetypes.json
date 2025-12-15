@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "research",
+    "title": "Kitenga Research Kaitiaki",
+    "description": "Focuses on research, summaries, and vector recall for taonga intelligence.",
+    "panels": ["chat", "vector", "research", "summary"],
+    "features": {
+      "taonga_mode": false,
+      "research_mode": true,
+      "translations": true
+    },
+    "tools": ["ocr_tool", "translate_tool", "supabase_logger"]
+  },
+  {
+    "slug": "taonga",
+    "title": "Taonga Guardian",
+    "description": "Protects sensitive taonga, defaulting to taonga mode with limited surface area.",
+    "panels": ["chat", "ocr", "vector"],
+    "features": {
+      "taonga_mode": true,
+      "research_mode": false,
+      "translations": false
+    },
+    "tools": ["ocr_tool", "supabase_logger"]
+  },
+  {
+    "slug": "translator",
+    "title": "Reo Translator",
+    "description": "Specialises in translation workflows (English ↔ Māori).",
+    "panels": ["chat", "reo", "translation"],
+    "features": {
+      "taonga_mode": false,
+      "research_mode": false,
+      "translations": true
+    },
+    "tools": ["translate_tool", "supabase_logger"]
+  }
+]

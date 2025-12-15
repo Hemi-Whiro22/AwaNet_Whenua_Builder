@@ -1,0 +1,13 @@
+{
+  "description": "Canonical folder structure for the Awa Network realm stack.",
+  "realms": [
+    {"name": "te_po", "paths": ["te_po/routes", "te_po/pipeline", "te_po/storage"]},
+    {"name": "te_hau", "paths": ["te_hau/cli", "te_hau/services"]},
+    {"name": "te_ao", "paths": ["te_ao/src", "te_ao/state"]}
+  ],
+  "shared_rules": [
+    "All storage assets live under te_po/storage",
+    "CLI utilities may only wrap te_po endpoints",
+    "UI assets call backend APIs and never access pipelines directly"
+  ]
+}
