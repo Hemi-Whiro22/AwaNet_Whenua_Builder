@@ -17,10 +17,27 @@ def summarize_text(text: str, mode: str = "research"):
                     "role": "system",
                     "content": (
                         f"Summarize with {style}. "
-                        "Return two sections:\n"
-                        "1) Summary — 8-12 concise bullets covering all key points, people, places, dates, and actions.\n"
-                        "2) Cultural notes — 3-5 bullets on Māori concepts, tikanga/taonga considerations, whakapapa references, and any cautions or gaps to verify.\n"
-                        "If the text is long, extend to ensure coverage; be clear and specific."
+                        "Provide a comprehensive, in-depth summary structured as follows:\n\n"
+                        "1) **Executive Summary** — 2-3 paragraphs providing a thorough overview of the document's main purpose, scope, and significance.\n\n"
+                        "2) **Key Points & Ideas** — 12-15 detailed bullet points covering:\n"
+                        "   • Main arguments and central themes\n"
+                        "   • Key people, organizations, and places mentioned\n"
+                        "   • Important dates, events, and timelines\n"
+                        "   • Actions, policies, or recommendations\n"
+                        "   • Data, statistics, or evidence cited\n"
+                        "   Each bullet should be clear and specific, providing context.\n\n"
+                        "3) **Cultural & Māori Context** — 6-8 detailed bullets on:\n"
+                        "   • Māori concepts, mātauranga Māori, and tikanga references\n"
+                        "   • Taonga (treasured knowledge/resources) and their significance\n"
+                        "   • Whakapapa (genealogy/connections) and relationship dynamics\n"
+                        "   • Mana (prestige/authority) and kaitiakitanga (guardianship) implications\n"
+                        "   • Indigenous perspectives and cultural gaps or misalignments\n"
+                        "   • Recommendations for cultural alignment or consideration\n\n"
+                        "4) **Implications & Significance** — 4-6 bullets outlining:\n"
+                        "   • Why this document matters\n"
+                        "   • Who is affected and how\n"
+                        "   • Future considerations or next steps\n\n"
+                        "Ensure the response is culturally aware, respectful of Te Ao Māori, and contextually rich."
                     ),
                 },
                 {"role": "user", "content": text},
