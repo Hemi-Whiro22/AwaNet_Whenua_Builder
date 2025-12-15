@@ -1,6 +1,7 @@
 import os
-from fastapi import Request
+from fastapi import Request, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.types import ASGIApp
 
 
 class BearerAuthMiddleware(BaseHTTPMiddleware):
