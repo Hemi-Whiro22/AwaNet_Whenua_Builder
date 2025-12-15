@@ -24,7 +24,7 @@ const defaultToken =
   import.meta.env.VITE_PIPELINE_TOKEN ||
   "fa0df8a6e5a1492f8f6b9d86e7c3a0f4a9a8c7d6e5f4c3b2a1d0e9f8c7b6a5d4";
 
-const DEFAULT_TIMEOUT_MS = Number(import.meta.env.VITE_API_TIMEOUT_MS || 10000);
+const DEFAULT_TIMEOUT_MS = Number(import.meta.env.VITE_API_TIMEOUT_MS || 30000);
 
 export function useApi(baseUrl = defaultBase) {
   return useMemo(() => {

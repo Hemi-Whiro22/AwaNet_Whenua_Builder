@@ -6,24 +6,45 @@ from __future__ import annotations
 
 import os
 from typing import Any, Dict, Optional
+from functools import lru_cache
+import logging
+from dotenv import load_dotenv
+from pathlib import Path
 
 try:
     from supabase import create_client  # type: ignore
 except Exception:
     create_client = None  # type: ignore
 
+# Load environment variables from .env file
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(env_path)
+
 SUPABASE_URL = os.getenv("SUPABASE_URL") or os.getenv("DEN_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_ANON_KEY") or os.getenv("DEN_API_KEY")
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger("supabase_client")
+
+# Debugging Supabase client initialization
+logger.debug(f"SUPABASE_URL: {SUPABASE_URL}")
+logger.debug(f"SUPABASE_KEY: {'Provided' if SUPABASE_KEY else 'Not Provided'}")
 
 supabase = None
 if create_client and SUPABASE_URL and SUPABASE_KEY:
     try:
         supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-    except Exception:
+        logger.debug("Supabase client initialized successfully.")
+    except Exception as e:
+        logger.error(f"Failed to initialize Supabase client: {e}")
         supabase = None
+else:
+    logger.warning("Supabase client not initialized. Missing URL or Key.")
 
 
 def get_client():
+    if supabase is None:
+        logger.error("Supabase client is not configured.")
     return supabase
 
 
@@ -65,6 +86,12 @@ def fetch_records(
         return {"data": None, "error": str(exc)}
 
 
+@lru_cache(maxsize=128)
+def cached_fetch_records(table: str, filters: Optional[Dict[str, Any]] = None, limit: int = 100, order_by: Optional[str] = None, desc: bool = True):
+    """Cached version of fetch_records to reduce latency."""
+    return fetch_records(table, filters, limit, order_by, desc)
+
+
 def fetch_latest(table: str, order_by: str = "created_at"):
     return fetch_records(table, limit=1, order_by=order_by, desc=True)
 
@@ -96,6 +123,7 @@ __all__ = [
     "get_client",
     "insert_record",
     "fetch_records",
+    "cached_fetch_records",
     "fetch_latest",
     "update_record",
     "delete_record",

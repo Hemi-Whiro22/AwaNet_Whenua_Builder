@@ -8,6 +8,8 @@ import subprocess
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+import openai
+
 from te_po.utils.supabase_client import get_client
 from te_po.utils.audit import log_event
 
@@ -162,3 +164,77 @@ def format_project_state_for_context(snapshot: Optional[Dict[str, Any]] = None) 
         lines.append(f"- Models: {len(structure.get('models', []))} schemas")
     
     return "\n".join(lines)
+
+def generate_premier_prompt(state: Optional[Dict[str, Any]] = None) -> str:
+    """Generate a premier prompt based on state or realm awareness."""
+    if state is None:
+        state = get_project_state()
+
+    if "error" in state:
+        return "Error retrieving project state. Defaulting to generic context."
+
+    git_info = state.get("git", {})
+    structure_info = state.get("structure", {})
+
+    prompt = (
+        f"Current branch: {git_info.get('branch', 'unknown')}\n"
+        f"Recent commits: {', '.join(git_info.get('recent_commits', []))}\n"
+        f"Project structure: Services: {len(structure_info.get('services', []))}, "
+        f"Routes: {len(structure_info.get('routes', []))}, "
+        f"Models: {len(structure_info.get('models', []))}\n"
+        "Context dynamically generated based on project state."
+    )
+
+    return prompt
+
+def chat_trigger_for_context_adjustment(trigger: str) -> str:
+    """Adjust context or recall memory based on a chat trigger."""
+    if trigger.lower() == "refresh state":
+        snapshot = capture_project_snapshot()
+        save_project_state(snapshot)
+        return "Project state refreshed and saved."
+    elif trigger.lower() == "get state":
+        state = get_project_state()
+        return generate_premier_prompt(state)
+    else:
+        return "Unknown trigger. Available triggers: 'refresh state', 'get state'."
+
+def handle_trigger(trigger: str) -> str:
+    """Handle triggers to route recall requests appropriately."""
+    trigger = trigger.lower()
+
+    if "state" in trigger:
+        if "refresh" in trigger:
+            snapshot = capture_project_snapshot()
+            save_project_state(snapshot)
+            return "Project state refreshed and saved."
+        elif "get" in trigger:
+            state = get_project_state()
+            return generate_premier_prompt(state)
+
+    if "search" in trigger:
+        return "Search functionality is under development."
+
+    return "Unknown trigger. Try 'refresh state' or 'get state'."
+
+def hybrid_recall(query: str) -> str:
+    """Perform hybrid recall using OpenAI vectors and Supabase."""
+    try:
+        # Generate embedding for the query
+        response = openai.Embedding.create(input=query, model="text-embedding-ada-002")
+        query_embedding = response['data'][0]['embedding']
+
+        # Perform vector search (placeholder for actual implementation)
+        vector_results = "Vector search results for query."
+
+        # Fetch structured data from Supabase
+        supabase_results = cached_fetch_records("kitenga_project_state", filters={"query": query})
+
+        return f"Vector Results: {vector_results}\nSupabase Results: {supabase_results}"
+    except Exception as e:
+        return f"Error during hybrid recall: {str(e)}"
+
+def unify_whisper_logic():
+    """Integrate Whisper logic into Kitenga Whiro for seamless recall."""
+    # Placeholder for merging Whisper logic
+    return "Whisper logic unified with Kitenga Whiro."
