@@ -38,10 +38,10 @@ class Settings(BaseSettings):
     te_po_base_url: Optional[str] = Field(default=None, alias="TE_PO_BASE_URL")
 
     # Models
-    backend_model: str = Field(default="gpt-5.1", alias="OPENAI_BACKEND_MODEL")
+    backend_model: str = Field(default="gpt-4o", alias="OPENAI_BACKEND_MODEL")
     translation_model: str = Field(default="gpt-4o-mini", alias="OPENAI_TRANSLATION_MODEL")
     ui_model: str = Field(default="gpt-4o", alias="OPENAI_UI_MODEL")
-    vision_model: str = Field(default="gpt-4o-mini", alias="OPENAI_VISION_MODEL")
+    vision_model: str = Field(default="gpt-4o", alias="OPENAI_VISION_MODEL")
     embedding_model: str = Field(default="text-embedding-3-small", alias="OPENAI_EMBED_MODEL")
 
     # Ollama / local models
