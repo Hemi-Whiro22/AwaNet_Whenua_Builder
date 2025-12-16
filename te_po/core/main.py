@@ -19,6 +19,7 @@ from te_po.routes import (
     pipeline,
     assistant,
     kitenga_backend,
+    kitenga_db,
     logs,
     assistants_meta,
     state,
@@ -113,6 +114,7 @@ app.include_router(memory.router)
 app.include_router(pipeline.router)
 app.include_router(assistant.router)
 app.include_router(kitenga_backend.router)
+app.include_router(kitenga_db.router)  # Kitenga schema database routes
 app.include_router(logs.router)
 app.include_router(assistants_meta.router)
 app.include_router(state.router)
