@@ -34,6 +34,10 @@ export default function RealmStarterPanel() {
   // Created realms
   const [createdRealms, setCreatedRealms] = useState([]);
   
+  // SQL preview
+  const [showSql, setShowSql] = useState(false);
+  const [sqlPreview, setSqlPreview] = useState("");
+  
   // Available APIs to include in realm
   const availableApis = [
     { id: "vector", name: "Vector Search", desc: "Semantic search via OpenAI embeddings" },
@@ -126,17 +130,29 @@ export default function RealmStarterPanel() {
 
       if (res.success) {
         const config = res.data?.config || {};
-        setSuccess(`✓ Realm "${realmName}" created at ${res.data?.realm_path}`);
+        const mode = res.data?.mode || "unknown";
+        const tablesCreated = res.data?.tables_created || [];
+        
+        setSuccess(`✓ Realm "${realmName}" created (${mode} mode)${tablesCreated.length ? ` - ${tablesCreated.length} tables` : ""}`);
+        
+        // If SQL was generated, store it for display
+        if (config.migration_sql) {
+          setSqlPreview(config.migration_sql);
+          setShowSql(true);
+        }
         
         setCreatedRealms(prev => [{
           name: realmName,
-          kaitiaki: kaitiakiName,
+          kaitiaki: { name: kaitiakiName, role: kaitiakiRole },
           realm_path: res.data?.realm_path,
+          realm_id: res.data?.realm_id,
           assistant_id: config.openai?.assistant_id,
           vector_store_id: config.openai?.vector_store_id,
           urls: config.urls,
           created_at: config.created_at || new Date().toISOString(),
-          apis: selectedApis
+          apis: selectedApis,
+          mode: mode,
+          tables_created: tablesCreated
         }, ...prev]);
 
         // Clear form
@@ -313,7 +329,7 @@ export default function RealmStarterPanel() {
               </button>
               
               <p className="text-xs text-slate-500 text-center">
-                Creates: OpenAI Assistant, Vector Store, Devcontainer, Full project scaffold
+                Creates: OpenAI Assistant, Vector Store, Database Tables (cloud) or Project Files (local)
               </p>
             </form>
           </div>
@@ -342,13 +358,37 @@ export default function RealmStarterPanel() {
                       <div>
                         <h3 className="font-bold text-cyan-300 text-lg">🏰 {realm.name}</h3>
                         {realm.kaitiaki && (
-                          <p className="text-sm text-emerald-400">🛡️ {realm.kaitiaki}</p>
+                          <p className="text-sm text-emerald-400">
+                            🛡️ {typeof realm.kaitiaki === 'object' ? realm.kaitiaki.name : realm.kaitiaki}
+                            {realm.kaitiaki?.role && <span className="text-slate-400"> - {realm.kaitiaki.role}</span>}
+                          </p>
                         )}
                       </div>
-                      <span className="text-[10px] text-slate-500">
-                        {realm.created_at ? new Date(realm.created_at).toLocaleDateString() : ''}
-                      </span>
+                      <div className="text-right">
+                        {realm.mode && (
+                          <span className={`text-[10px] px-2 py-0.5 rounded ${realm.mode === 'cloud' ? 'bg-purple-800 text-purple-200' : 'bg-green-800 text-green-200'}`}>
+                            {realm.mode}
+                          </span>
+                        )}
+                        <p className="text-[10px] text-slate-500 mt-1">
+                          {realm.created_at ? new Date(realm.created_at).toLocaleDateString() : ''}
+                        </p>
+                      </div>
                     </div>
+                    
+                    {/* Tables created (cloud mode) */}
+                    {realm.tables_created && realm.tables_created.length > 0 && (
+                      <div className="bg-slate-800 rounded p-2 mb-2">
+                        <p className="text-[10px] text-slate-400 mb-1">🗄️ Database Tables:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {realm.tables_created.map(table => (
+                            <span key={table} className="text-[10px] bg-purple-900 text-purple-300 px-2 py-0.5 rounded font-mono">
+                              {table}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     
                     {realm.realm_path && (
                       <div className="bg-slate-800 rounded p-2 mb-2">
@@ -388,7 +428,11 @@ export default function RealmStarterPanel() {
                     )}
                     
                     <div className="mt-2 pt-2 border-t border-cyan-800">
-                      <p className="text-slate-500 text-[10px]">💡 Open folder in VS Code → Reopen in Container</p>
+                      <p className="text-slate-500 text-[10px]">
+                        {realm.mode === 'cloud' 
+                          ? '💡 Realm stored in database. Use API to interact.' 
+                          : '💡 Open folder in VS Code → Reopen in Container'}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -403,6 +447,39 @@ export default function RealmStarterPanel() {
           </div>
         </div>
       </div>
+      
+      {/* SQL Preview Modal */}
+      {showSql && sqlPreview && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-cyan-700 rounded-lg max-w-4xl w-full max-h-[80vh] flex flex-col">
+            <div className="border-b border-slate-700 p-4 flex justify-between items-center">
+              <h2 className="text-lg font-bold text-cyan-400">🗄️ Database Tables SQL</h2>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => navigator.clipboard.writeText(sqlPreview)}
+                  className="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-sm"
+                >
+                  📋 Copy
+                </button>
+                <button
+                  onClick={() => setShowSql(false)}
+                  className="px-3 py-1 bg-slate-700 hover:bg-red-700 rounded text-sm"
+                >
+                  ✕ Close
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-auto p-4">
+              <p className="text-amber-400 text-sm mb-3">
+                ⚠️ Run this SQL in your Supabase SQL Editor to create the realm tables:
+              </p>
+              <pre className="bg-slate-950 border border-slate-700 rounded p-4 text-xs text-green-400 font-mono overflow-x-auto whitespace-pre">
+                {sqlPreview}
+              </pre>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

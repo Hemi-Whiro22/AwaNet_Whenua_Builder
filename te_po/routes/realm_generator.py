@@ -126,6 +126,96 @@ async def get_realm_info(realm_slug: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get("/{realm_slug}/sql")
+async def get_realm_sql(realm_slug: str, kaitiaki_name: str = "Kaitiaki"):
+    """
+    Get the SQL migration script for a realm's tables
+    
+    Args:
+        realm_slug: The slug identifier for the realm
+        kaitiaki_name: Name of the kaitiaki guardian
+    """
+    from datetime import datetime
+    
+    # Table names for this realm
+    config_table = f"{realm_slug}_config"
+    kaitiaki_table = f"{realm_slug}_kaitiaki"
+    artifacts_table = f"{realm_slug}_artifacts"
+    logs_table = f"{realm_slug}_logs"
+    
+    sql = f"""-- =====================================================
+-- Realm: {realm_slug}
+-- Kaitiaki: {kaitiaki_name}
+-- Generated: {datetime.utcnow().isoformat()}
+-- =====================================================
+
+-- Config table for {realm_slug}
+CREATE TABLE IF NOT EXISTS {config_table} (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    key TEXT UNIQUE NOT NULL,
+    value JSONB,
+    description TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Kaitiaki table for {realm_slug}
+CREATE TABLE IF NOT EXISTS {kaitiaki_table} (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    role TEXT,
+    instructions TEXT,
+    assistant_id TEXT,
+    vector_store_id TEXT,
+    thread_id TEXT,
+    mauri_status TEXT DEFAULT 'active',
+    metadata JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Artifacts table for {realm_slug} (documents, embeddings, files)
+CREATE TABLE IF NOT EXISTS {artifacts_table} (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    type TEXT NOT NULL,
+    name TEXT,
+    content TEXT,
+    metadata JSONB,
+    embedding vector(1536),
+    kaitiaki_id UUID REFERENCES {kaitiaki_table}(id),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Logs table for {realm_slug}
+CREATE TABLE IF NOT EXISTS {logs_table} (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    event TEXT NOT NULL,
+    detail TEXT,
+    source TEXT,
+    metadata JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Create indexes for performance
+CREATE INDEX IF NOT EXISTS idx_{realm_slug}_config_key ON {config_table}(key);
+CREATE INDEX IF NOT EXISTS idx_{realm_slug}_artifacts_type ON {artifacts_table}(type);
+CREATE INDEX IF NOT EXISTS idx_{realm_slug}_logs_event ON {logs_table}(event);
+CREATE INDEX IF NOT EXISTS idx_{realm_slug}_logs_created ON {logs_table}(created_at DESC);
+
+-- Insert initial kaitiaki record (uncomment and fill in)
+-- INSERT INTO {kaitiaki_table} (name, role, instructions, assistant_id, vector_store_id)
+-- VALUES ('{kaitiaki_name}', 'Guardian of {realm_slug}', 'Your instructions here', 'asst_xxx', 'vs_xxx');
+"""
+    
+    return {
+        "success": True,
+        "realm_slug": realm_slug,
+        "kaitiaki_name": kaitiaki_name,
+        "tables": [config_table, kaitiaki_table, artifacts_table, logs_table],
+        "sql": sql
+    }
+
+
 @router.get("/template/info")
 async def get_template_info():
     """

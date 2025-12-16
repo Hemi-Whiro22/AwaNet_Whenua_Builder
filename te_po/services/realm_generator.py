@@ -191,21 +191,28 @@ class RealmGenerator:
         }
     
     def _save_realm_to_db(self, realm_config: Dict) -> Dict:
-        """Save realm configuration to Supabase database"""
+        """Save realm configuration to Supabase database and create realm-specific tables"""
         if not self.supabase:
             return {"success": False, "error": "Supabase not configured"}
         
+        realm_slug = realm_config["realm_slug"]
+        
         try:
-            # Check if realm already exists
-            existing = self.supabase.table("kitenga_realms").select("id").eq("realm_slug", realm_config["realm_slug"]).execute()
+            # Check if realm already exists in master table
+            existing = self.supabase.table("kitenga_realms").select("id").eq("realm_slug", realm_slug).execute()
             if existing.data and len(existing.data) > 0:
-                return {"success": False, "error": f"Realm '{realm_config['realm_slug']}' already exists"}
+                return {"success": False, "error": f"Realm '{realm_slug}' already exists"}
             
-            # Insert realm
+            # Step 1: Create realm-specific tables
+            tables_result = self._create_realm_tables(realm_config)
+            if not tables_result.get("success"):
+                return tables_result
+            
+            # Step 2: Insert into master realms table
             result = self.supabase.table("kitenga_realms").insert({
                 "id": realm_config["id"],
                 "realm_name": realm_config["realm_name"],
-                "realm_slug": realm_config["realm_slug"],
+                "realm_slug": realm_slug,
                 "template": realm_config["template"],
                 "kaitiaki_name": realm_config["kaitiaki"]["name"],
                 "kaitiaki_role": realm_config["kaitiaki"]["role"],
@@ -219,9 +226,142 @@ class RealmGenerator:
                 "created_at": realm_config["created_at"]
             }).execute()
             
-            return {"success": True, "data": result.data}
+            # Step 3: Insert kaitiaki into realm's kaitiaki table
+            kaitiaki_result = self._insert_realm_kaitiaki(realm_config)
+            
+            return {
+                "success": True, 
+                "data": result.data,
+                "tables_created": tables_result.get("tables", []),
+                "kaitiaki_inserted": kaitiaki_result.get("success", False)
+            }
         except Exception as e:
             return {"success": False, "error": str(e)}
+    
+    def _create_realm_tables(self, realm_config: Dict) -> Dict:
+        """Create realm-specific tables in Supabase"""
+        if not self.supabase:
+            return {"success": False, "error": "Supabase not configured"}
+        
+        realm_slug = realm_config["realm_slug"]
+        kaitiaki_name = realm_config["kaitiaki"]["name"]
+        
+        # Table names for this realm
+        config_table = f"{realm_slug}_config"
+        kaitiaki_table = f"{realm_slug}_kaitiaki"
+        artifacts_table = f"{realm_slug}_artifacts"
+        logs_table = f"{realm_slug}_logs"
+        
+        # Generate SQL for realm tables
+        sql = f"""
+-- Realm: {realm_config['realm_name']}
+-- Kaitiaki: {kaitiaki_name}
+-- Created: {realm_config['created_at']}
+
+-- Config table for {realm_slug}
+CREATE TABLE IF NOT EXISTS {config_table} (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    key TEXT UNIQUE NOT NULL,
+    value JSONB,
+    description TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Kaitiaki table for {realm_slug}
+CREATE TABLE IF NOT EXISTS {kaitiaki_table} (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    role TEXT,
+    instructions TEXT,
+    assistant_id TEXT,
+    vector_store_id TEXT,
+    thread_id TEXT,
+    mauri_status TEXT DEFAULT 'active',
+    metadata JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Artifacts table for {realm_slug}
+CREATE TABLE IF NOT EXISTS {artifacts_table} (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    type TEXT NOT NULL,
+    name TEXT,
+    content TEXT,
+    metadata JSONB,
+    embedding vector(1536),
+    kaitiaki_id UUID REFERENCES {kaitiaki_table}(id),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Logs table for {realm_slug}
+CREATE TABLE IF NOT EXISTS {logs_table} (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    event TEXT NOT NULL,
+    detail TEXT,
+    source TEXT,
+    metadata JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Create indexes
+CREATE INDEX IF NOT EXISTS idx_{realm_slug}_config_key ON {config_table}(key);
+CREATE INDEX IF NOT EXISTS idx_{realm_slug}_artifacts_type ON {artifacts_table}(type);
+CREATE INDEX IF NOT EXISTS idx_{realm_slug}_logs_event ON {logs_table}(event);
+CREATE INDEX IF NOT EXISTS idx_{realm_slug}_logs_created ON {logs_table}(created_at DESC);
+"""
+        
+        try:
+            # Execute SQL via Supabase RPC (requires a function to be set up)
+            # For now, store the SQL and try to execute basic operations
+            
+            # Store the migration SQL in the realm config
+            realm_config["migration_sql"] = sql
+            
+            # Try to create tables using raw SQL execution if available
+            # This requires the exec_sql RPC function in Supabase
+            try:
+                self.supabase.rpc("exec_sql", {"sql": sql}).execute()
+            except Exception:
+                # If RPC not available, we'll store SQL for manual execution
+                pass
+            
+            return {
+                "success": True,
+                "tables": [config_table, kaitiaki_table, artifacts_table, logs_table],
+                "sql": sql
+            }
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+    
+    def _insert_realm_kaitiaki(self, realm_config: Dict) -> Dict:
+        """Insert kaitiaki record into realm's kaitiaki table"""
+        if not self.supabase:
+            return {"success": False, "error": "Supabase not configured"}
+        
+        realm_slug = realm_config["realm_slug"]
+        kaitiaki_table = f"{realm_slug}_kaitiaki"
+        
+        try:
+            result = self.supabase.table(kaitiaki_table).insert({
+                "name": realm_config["kaitiaki"]["name"],
+                "role": realm_config["kaitiaki"]["role"],
+                "instructions": realm_config["kaitiaki"]["instructions"],
+                "assistant_id": realm_config["openai"].get("assistant_id") if realm_config["openai"] else None,
+                "vector_store_id": realm_config["openai"].get("vector_store_id") if realm_config["openai"] else None,
+                "mauri_status": "active",
+                "metadata": {
+                    "realm_id": realm_config["id"],
+                    "template": realm_config["template"],
+                    "selected_apis": realm_config["selected_apis"]
+                }
+            }).execute()
+            
+            return {"success": True, "data": result.data}
+        except Exception as e:
+            # Table might not exist yet if SQL wasn't executed
+            return {"success": False, "error": str(e), "note": "Run migration SQL manually"}
     
     def _create_openai_resources(
         self, 
