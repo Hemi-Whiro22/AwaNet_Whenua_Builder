@@ -22,8 +22,12 @@ router = APIRouter(prefix="/realms", tags=["realms"])
 class RealmCreateRequest(BaseModel):
     """Request to create a new realm"""
     realm_name: str = Field(..., description="Name of the realm (e.g., Te Wai)")
-    kaitiaki_name: str = Field(..., description="Name of the guardian")
+    kaitiaki_name: Optional[str] = Field(None, description="Name of the guardian")
+    kaitiaki_role: Optional[str] = Field(None, description="Role/title of the guardian")
+    kaitiaki_instructions: Optional[str] = Field(None, description="Custom instructions for the AI assistant")
     description: Optional[str] = Field(None, description="Description of the realm and its purpose")
+    selected_apis: Optional[list] = Field(None, description="List of APIs to enable")
+    template: Optional[str] = Field("basic", description="Template type: basic, with-kaitiaki, with-storage, full")
     cloudflare_hostname: Optional[str] = Field(None, description="Custom Cloudflare hostname")
     pages_project: Optional[str] = Field(None, description="Cloudflare Pages project name")
     backend_url: Optional[str] = Field(None, description="Custom backend URL")
@@ -51,8 +55,12 @@ async def create_realm(request: RealmCreateRequest):
     try:
         result = generate_realm(
             realm_name=request.realm_name,
-            kaitiaki_name=request.kaitiaki_name,
+            kaitiaki_name=request.kaitiaki_name or "",
+            kaitiaki_role=request.kaitiaki_role or "",
+            kaitiaki_instructions=request.kaitiaki_instructions or "",
             description=request.description or "",
+            selected_apis=request.selected_apis,
+            template=request.template or "basic",
             cloudflare_hostname=request.cloudflare_hostname,
             pages_project=request.pages_project,
             backend_url=request.backend_url

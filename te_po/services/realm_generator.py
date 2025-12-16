@@ -29,6 +29,10 @@ class RealmGenerator:
         self.base_path = Path(base_path or os.environ.get("WORKSPACE_ROOT", "/workspaces/The_Awa_Network"))
         self.template_path = self.base_path / "te_hau" / "project_template"
         self.realms_path = self.base_path / "realms"
+        
+        # For cloud deployments (Render), use templates folder in te_po
+        self.cloud_template_path = Path(__file__).parent.parent / "templates" / "realm_template"
+        
         self.client = None
         
         if OPENAI_AVAILABLE and os.environ.get("OPENAI_API_KEY"):
@@ -37,8 +41,12 @@ class RealmGenerator:
     def generate_realm(
         self,
         realm_name: str,
-        kaitiaki_name: str,
+        kaitiaki_name: str = "",
+        kaitiaki_role: str = "",
+        kaitiaki_instructions: str = "",
         description: str = "",
+        selected_apis: Optional[list] = None,
+        template: str = "basic",
         cloudflare_hostname: Optional[str] = None,
         pages_project: Optional[str] = None,
         backend_url: Optional[str] = None
@@ -49,7 +57,11 @@ class RealmGenerator:
         Args:
             realm_name: Name of the realm (e.g., te_wai)
             kaitiaki_name: Name of the guardian (e.g., Te Taniwha)
+            kaitiaki_role: Role description for the guardian
+            kaitiaki_instructions: Custom instructions for the AI assistant
             description: Description for the realm
+            selected_apis: List of APIs to enable (vector, memory, assistant, etc.)
+            template: Template type (basic, with-kaitiaki, with-storage, full)
             cloudflare_hostname: Optional custom hostname
             pages_project: Optional Cloudflare Pages project name
             backend_url: Optional custom backend URL
@@ -61,6 +73,10 @@ class RealmGenerator:
         realm_slug = re.sub(r'[^a-z0-9_]', '_', realm_name.lower())
         realm_path = self.realms_path / realm_slug
         
+        # Default APIs if none selected
+        if selected_apis is None:
+            selected_apis = ["vector", "memory", "assistant"]
+        
         # Check if realm already exists
         if realm_path.exists():
             return {
@@ -68,8 +84,16 @@ class RealmGenerator:
                 "error": f"Realm '{realm_slug}' already exists at {realm_path}"
             }
         
-        # Step 1: Create OpenAI resources
-        openai_result = self._create_openai_resources(realm_slug, kaitiaki_name, description)
+        # Step 1: Create OpenAI resources (if assistant API is enabled)
+        openai_result = {}
+        if "assistant" in selected_apis:
+            openai_result = self._create_openai_resources(
+                realm_slug, 
+                kaitiaki_name or f"{realm_name} Guardian",
+                kaitiaki_role,
+                kaitiaki_instructions,
+                description
+            )
         
         # Step 2: Copy template
         try:
@@ -94,8 +118,14 @@ class RealmGenerator:
         realm_config = {
             "realm_name": realm_name,
             "realm_slug": realm_slug,
-            "kaitiaki": kaitiaki_name,
+            "template": template,
+            "kaitiaki": {
+                "name": kaitiaki_name,
+                "role": kaitiaki_role,
+                "instructions": kaitiaki_instructions
+            },
             "description": description,
+            "selected_apis": selected_apis,
             "created_at": datetime.utcnow().isoformat(),
             "openai": openai_result.get("openai", {}),
             "urls": {
@@ -119,7 +149,14 @@ class RealmGenerator:
             "config": realm_config
         }
     
-    def _create_openai_resources(self, realm_slug: str, kaitiaki_name: str, description: str) -> Dict:
+    def _create_openai_resources(
+        self, 
+        realm_slug: str, 
+        kaitiaki_name: str, 
+        kaitiaki_role: str = "",
+        kaitiaki_instructions: str = "",
+        description: str = ""
+    ) -> Dict:
         """Create OpenAI assistant and vector store for the realm"""
         if not self.client:
             return {"openai": None, "note": "OpenAI not configured"}
@@ -135,12 +172,14 @@ class RealmGenerator:
                 }
             )
             
-            # Create assistant with file_search tool
-            assistant = self.client.beta.assistants.create(
-                name=f"Kaitiaki: {kaitiaki_name}",
-                instructions=f"""You are {kaitiaki_name}, the guardian (kaitiaki) of the {realm_slug} realm.
+            # Build assistant instructions
+            base_instructions = kaitiaki_instructions or f"""You are {kaitiaki_name}, the guardian (kaitiaki) of the {realm_slug} realm.
 
-{description or f"You protect and guide the {realm_slug} realm, answering questions and providing wisdom from your vector store."}
+{kaitiaki_role or f"You protect and guide the {realm_slug} realm, answering questions and providing wisdom from your vector store."}
+
+{description}"""
+
+            full_instructions = f"""{base_instructions}
 
 When answering questions:
 1. First search your vector store for relevant context
@@ -148,7 +187,12 @@ When answering questions:
 3. Be helpful but maintain your role as guardian
 4. If you don't have relevant information, say so clearly
 
-Tū māia, tū kaha - Stand with courage, stand with strength.""",
+Tū māia, tū kaha - Stand with courage, stand with strength."""
+
+            # Create assistant with file_search tool
+            assistant = self.client.beta.assistants.create(
+                name=f"Kaitiaki: {kaitiaki_name}",
+                instructions=full_instructions,
                 model="gpt-4o-mini",
                 tools=[{"type": "file_search"}],
                 tool_resources={
@@ -179,12 +223,29 @@ Tū māia, tū kaha - Stand with courage, stand with strength.""",
     
     def _copy_template(self, dest_path: Path):
         """Copy template directory to destination"""
-        if not self.template_path.exists():
-            raise FileNotFoundError(f"Template not found at {self.template_path}")
+        # Try multiple template locations
+        template = None
+        
+        # 1. Check local workspace template (dev)
+        if self.template_path.exists():
+            template = self.template_path
+        # 2. Check cloud template in te_po (production)
+        elif self.cloud_template_path.exists():
+            template = self.cloud_template_path
+        # 3. Check templates folder in workspace root
+        else:
+            root_template = self.base_path / "templates" / "realm_template"
+            if root_template.exists():
+                template = root_template
+        
+        if template is None:
+            # No template found - create minimal structure instead
+            self._create_minimal_realm(dest_path)
+            return
         
         # Copy entire template
         shutil.copytree(
-            self.template_path,
+            template,
             dest_path,
             ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '.git')
         )
@@ -194,6 +255,26 @@ Tū māia, tū kaha - Stand with courage, stand with strength.""",
         env_file = dest_path / ".env"
         if env_template.exists():
             shutil.copy(env_template, env_file)
+    
+    def _create_minimal_realm(self, dest_path: Path):
+        """Create a minimal realm structure when no template is available"""
+        dest_path.mkdir(parents=True, exist_ok=True)
+        
+        # Create basic directories
+        (dest_path / "mauri").mkdir(exist_ok=True)
+        (dest_path / "config").mkdir(exist_ok=True)
+        (dest_path / "docs").mkdir(exist_ok=True)
+        
+        # Create basic mauri state
+        mauri_state = {
+            "realm": dest_path.name,
+            "created_at": datetime.utcnow().isoformat(),
+            "mauri_status": "active",
+            "initialized": True
+        }
+        (dest_path / "mauri" / "state.json").write_text(
+            json.dumps(mauri_state, indent=2), encoding='utf-8'
+        )
     
     def _replace_placeholders(self, realm_path: Path, replacements: Dict[str, str]):
         """Replace template placeholders in all files"""
