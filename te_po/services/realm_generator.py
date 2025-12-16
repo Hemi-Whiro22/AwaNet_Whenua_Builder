@@ -3,6 +3,7 @@ Realm Generator Service
 
 Spawns new realms from te_hau/project_template into /realms/
 Creates OpenAI assistant + vector store for each realm
+For cloud deployments (Render), stores realm config in Supabase instead of filesystem
 """
 
 import os
@@ -10,7 +11,7 @@ import json
 import shutil
 import re
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 from datetime import datetime
 import uuid
 
@@ -20,6 +21,18 @@ try:
     OPENAI_AVAILABLE = True
 except ImportError:
     OPENAI_AVAILABLE = False
+
+# Supabase client
+try:
+    from te_po.utils.supabase_client import get_client as get_supabase
+    SUPABASE_AVAILABLE = True
+except ImportError:
+    SUPABASE_AVAILABLE = False
+
+
+def is_cloud_environment() -> bool:
+    """Check if running in cloud (Render) vs local development"""
+    return os.environ.get("RENDER", "") == "true" or os.environ.get("RENDER_ENV") == "production"
 
 
 class RealmGenerator:
@@ -33,10 +46,17 @@ class RealmGenerator:
         # For cloud deployments (Render), use templates folder in te_po
         self.cloud_template_path = Path(__file__).parent.parent / "templates" / "realm_template"
         
+        # Check if we're in cloud environment
+        self.is_cloud = is_cloud_environment()
+        
         self.client = None
+        self.supabase = None
         
         if OPENAI_AVAILABLE and os.environ.get("OPENAI_API_KEY"):
             self.client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        
+        if SUPABASE_AVAILABLE:
+            self.supabase = get_supabase()
     
     def generate_realm(
         self,
@@ -95,27 +115,9 @@ class RealmGenerator:
                 description
             )
         
-        # Step 2: Copy template
-        try:
-            self._copy_template(realm_path)
-        except Exception as e:
-            return {
-                "success": False,
-                "error": f"Failed to copy template: {e}"
-            }
-        
-        # Step 3: Replace placeholders
-        replacements = {
-            "TemplateRealm": realm_name,
-            "kitenga-template.example.com": cloudflare_hostname or f"{realm_slug}.den-of-the-pack.com",
-            "te-ao-template": pages_project or f"te-ao-{realm_slug}",
-            "https://te-po-template.example.com": backend_url or f"https://{realm_slug}-backend.onrender.com"
-        }
-        
-        self._replace_placeholders(realm_path, replacements)
-        
-        # Step 4: Create realm config
+        # Build realm config
         realm_config = {
+            "id": str(uuid.uuid4()),
             "realm_name": realm_name,
             "realm_slug": realm_slug,
             "template": template,
@@ -129,25 +131,97 @@ class RealmGenerator:
             "created_at": datetime.utcnow().isoformat(),
             "openai": openai_result.get("openai", {}),
             "urls": {
-                "cloudflare": replacements["kitenga-template.example.com"],
-                "pages": replacements["te-ao-template"],
-                "backend": replacements["https://te-po-template.example.com"]
+                "cloudflare": cloudflare_hostname or f"{realm_slug}.den-of-the-pack.com",
+                "pages": pages_project or f"te-ao-{realm_slug}",
+                "backend": backend_url or f"https://{realm_slug}-backend.onrender.com"
             }
         }
+        
+        # Cloud mode: Store in database
+        if self.is_cloud:
+            try:
+                db_result = self._save_realm_to_db(realm_config)
+                if not db_result.get("success"):
+                    return db_result
+                
+                return {
+                    "success": True,
+                    "mode": "cloud",
+                    "realm_id": realm_config["id"],
+                    "config": realm_config
+                }
+            except Exception as e:
+                return {
+                    "success": False,
+                    "error": f"Failed to save realm to database: {e}"
+                }
+        
+        # Local mode: Create filesystem structure
+        try:
+            self._copy_template(realm_path)
+        except Exception as e:
+            return {
+                "success": False,
+                "error": f"Failed to copy template: {e}"
+            }
+        
+        # Replace placeholders
+        replacements = {
+            "TemplateRealm": realm_name,
+            "kitenga-template.example.com": realm_config["urls"]["cloudflare"],
+            "te-ao-template": realm_config["urls"]["pages"],
+            "https://te-po-template.example.com": realm_config["urls"]["backend"]
+        }
+        
+        self._replace_placeholders(realm_path, replacements)
         
         # Write realm config
         config_path = realm_path / "realm.config.json"
         with open(config_path, 'w', encoding='utf-8') as f:
             json.dump(realm_config, f, indent=2)
         
-        # Step 5: Create initial README
+        # Create initial README
         self._create_realm_readme(realm_path, realm_config)
         
         return {
             "success": True,
+            "mode": "local",
             "realm_path": str(realm_path),
             "config": realm_config
         }
+    
+    def _save_realm_to_db(self, realm_config: Dict) -> Dict:
+        """Save realm configuration to Supabase database"""
+        if not self.supabase:
+            return {"success": False, "error": "Supabase not configured"}
+        
+        try:
+            # Check if realm already exists
+            existing = self.supabase.table("kitenga_realms").select("id").eq("realm_slug", realm_config["realm_slug"]).execute()
+            if existing.data and len(existing.data) > 0:
+                return {"success": False, "error": f"Realm '{realm_config['realm_slug']}' already exists"}
+            
+            # Insert realm
+            result = self.supabase.table("kitenga_realms").insert({
+                "id": realm_config["id"],
+                "realm_name": realm_config["realm_name"],
+                "realm_slug": realm_config["realm_slug"],
+                "template": realm_config["template"],
+                "kaitiaki_name": realm_config["kaitiaki"]["name"],
+                "kaitiaki_role": realm_config["kaitiaki"]["role"],
+                "kaitiaki_instructions": realm_config["kaitiaki"]["instructions"],
+                "description": realm_config["description"],
+                "selected_apis": realm_config["selected_apis"],
+                "openai_assistant_id": realm_config["openai"].get("assistant_id") if realm_config["openai"] else None,
+                "openai_vector_store_id": realm_config["openai"].get("vector_store_id") if realm_config["openai"] else None,
+                "urls": realm_config["urls"],
+                "config": realm_config,
+                "created_at": realm_config["created_at"]
+            }).execute()
+            
+            return {"success": True, "data": result.data}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
     
     def _create_openai_resources(
         self, 
@@ -353,52 +427,89 @@ cd te_ao && npm run dev
         readme_path = realm_path / "README.md"
         readme_path.write_text(readme_content, encoding='utf-8')
     
-    def list_realms(self) -> list:
-        """List all spawned realms"""
+    def list_realms(self) -> List[Dict]:
+        """List all spawned realms from database and/or filesystem"""
         realms = []
-        if not self.realms_path.exists():
-            return realms
         
-        for item in self.realms_path.iterdir():
-            if item.is_dir() and not item.name.startswith('.'):
-                config_path = item / "realm.config.json"
-                if config_path.exists():
-                    try:
-                        with open(config_path, 'r', encoding='utf-8') as f:
-                            config = json.load(f)
-                        realms.append({
-                            "path": str(item),
-                            "config": config
-                        })
-                    except json.JSONDecodeError:
-                        realms.append({
-                            "path": str(item),
-                            "config": None,
-                            "error": "Invalid config"
-                        })
-                else:
+        # Cloud mode: Query database
+        if self.is_cloud and self.supabase:
+            try:
+                result = self.supabase.table("kitenga_realms").select("*").order("created_at", desc=True).execute()
+                for row in result.data or []:
                     realms.append({
-                        "path": str(item),
-                        "config": None
+                        "id": row.get("id"),
+                        "source": "database",
+                        "config": row.get("config") or {
+                            "realm_name": row.get("realm_name"),
+                            "realm_slug": row.get("realm_slug"),
+                            "kaitiaki": {
+                                "name": row.get("kaitiaki_name"),
+                                "role": row.get("kaitiaki_role")
+                            },
+                            "description": row.get("description"),
+                            "selected_apis": row.get("selected_apis"),
+                            "openai": {
+                                "assistant_id": row.get("openai_assistant_id"),
+                                "vector_store_id": row.get("openai_vector_store_id")
+                            },
+                            "urls": row.get("urls"),
+                            "created_at": row.get("created_at")
+                        }
                     })
+            except Exception as e:
+                print(f"Error listing realms from database: {e}")
+        
+        # Local mode: Also check filesystem
+        if self.realms_path.exists():
+            for item in self.realms_path.iterdir():
+                if item.is_dir() and not item.name.startswith('.'):
+                    config_path = item / "realm.config.json"
+                    if config_path.exists():
+                        try:
+                            with open(config_path, 'r', encoding='utf-8') as f:
+                                config = json.load(f)
+                            # Don't duplicate if already in database results
+                            slug = config.get("realm_slug", item.name)
+                            if not any(r.get("config", {}).get("realm_slug") == slug for r in realms):
+                                realms.append({
+                                    "path": str(item),
+                                    "source": "filesystem",
+                                    "config": config
+                                })
+                        except json.JSONDecodeError:
+                            realms.append({
+                                "path": str(item),
+                                "source": "filesystem",
+                                "config": None,
+                                "error": "Invalid config"
+                            })
         
         return realms
     
     def get_realm(self, realm_slug: str) -> Optional[Dict]:
-        """Get a specific realm by slug"""
-        realm_path = self.realms_path / realm_slug
-        if not realm_path.exists():
-            return None
-        
-        config_path = realm_path / "realm.config.json"
-        if config_path.exists():
+        """Get a specific realm by slug from database or filesystem"""
+        # Cloud mode: Check database first
+        if self.is_cloud and self.supabase:
             try:
-                with open(config_path, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-            except json.JSONDecodeError:
-                return {"error": "Invalid config"}
+                result = self.supabase.table("kitenga_realms").select("*").eq("realm_slug", realm_slug).single().execute()
+                if result.data:
+                    return result.data.get("config") or result.data
+            except Exception:
+                pass
         
-        return {"path": str(realm_path), "config": None}
+        # Check filesystem
+        realm_path = self.realms_path / realm_slug
+        if realm_path.exists():
+            config_path = realm_path / "realm.config.json"
+            if config_path.exists():
+                try:
+                    with open(config_path, 'r', encoding='utf-8') as f:
+                        return json.load(f)
+                except json.JSONDecodeError:
+                    return {"error": "Invalid config"}
+            return {"path": str(realm_path), "config": None}
+        
+        return None
 
 
 # Convenience functions
