@@ -262,3 +262,4 @@ mauri/mauri.json
 storage/test_files/
 dist/
 # === End AwaNet Project Protection ===
+mauri/encrypted_keys/
