@@ -3,12 +3,14 @@ import ApiTestPanel from "./panels/ApiTestPanel";
 import RealmStarterPanel from "./panels/RealmStarterPanel";
 import RealmHealthPanel from "./panels/RealmHealthPanel";
 import KitengaPanel from "./panels/KitengaPanel";
+import KitengaDevHub from "./panels/KitengaDevHub";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("kitenga");
+  const [activeTab, setActiveTab] = useState("devhub");
 
   const tabs = [
-    { id: "kitenga", label: "Kitenga Whiro", icon: "🧠" },
+    { id: "devhub", label: "DevHub", icon: "🐺" },
+    { id: "kitenga", label: "Kitenga Chat", icon: "💬" },
     { id: "api", label: "API & Health", icon: "⚡" },
     { id: "realms", label: "Realm Starter", icon: "🌍" },
     { id: "health", label: "Realm Events", icon: "📡" },
@@ -36,6 +38,7 @@ export default function App() {
 
       {/* Content */}
       <div className="flex-1 overflow-hidden">
+        {activeTab === "devhub" && <KitengaDevHub />}
         {activeTab === "kitenga" && <KitengaPanel />}
         {activeTab === "api" && <ApiTestPanel />}
         {activeTab === "realms" && <RealmStarterPanel />}
