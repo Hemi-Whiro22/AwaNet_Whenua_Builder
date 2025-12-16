@@ -62,6 +62,16 @@
 │   └── te_kitenga_nui/
 │       └── te_kitenga_nui_manifest.json
 ├── LICENSE
+├── realms/                         # ← Spawned realms live here
+│   ├── .gitkeep
+│   ├── README.md
+│   └── {realm_slug}/               # Generated realm folders
+│       ├── .devcontainer/
+│       ├── .env
+│       ├── mauri/
+│       ├── realm.config.json
+│       ├── README.md
+│       └── te_po_proxy/
 ├── mauri/
 │   ├── archived/
 │   │   ├── kaitiaki-intake/

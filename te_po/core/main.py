@@ -31,6 +31,8 @@ from te_po.routes import (
     metrics,
     awa_protocol,
     llama3,
+    realm_generator,
+    cors_manager,
 )
 from te_po.utils.middleware.utf8_enforcer import apply_utf8_middleware
 
@@ -53,9 +55,11 @@ def get_cors_origins():
     # Fallback defaults for local development
     return [
         "http://localhost:5000",
+        "http://localhost:5001",
         "http://localhost:5173",
         "http://localhost:8100",
         "http://127.0.0.1:5000",
+        "http://127.0.0.1:5001",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:8100",
     ]
@@ -126,6 +130,8 @@ app.include_router(sell.router)
 app.include_router(metrics.router)
 app.include_router(awa_protocol.router)  # Model Context Protocol routes
 app.include_router(llama3.router)  # Llama3 local inference routes
+app.include_router(realm_generator.router)  # Realm spawner routes
+app.include_router(cors_manager.router)  # Dynamic CORS management
 
 
 # For local launches only

@@ -2,13 +2,11 @@ import { useState, useEffect } from "react";
 import { useApi } from "../hooks/useApi.js";
 
 /**
- * KitengaDevHub - Master dev panel for Kitenga Whiro
+ * KitengaDevHub - Research & Ingestion Hub
  * Features:
  * - Live vector recall across all vector stores
- * - Web search integration
+ * - Web search + save to vector
  * - Document ingestion (PDF, MD, images)
- * - Realm generator with OpenAI assistant + vector store creation
- * - Kitenga schema database access
  */
 
 const Spinner = ({ text = "Loading..." }) => (
@@ -23,34 +21,19 @@ export default function KitengaDevHub() {
   const [activeSection, setActiveSection] = useState("vector");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [results, setResults] = useState(null);
 
   // Vector Search state
   const [vectorQuery, setVectorQuery] = useState("");
   const [topK, setTopK] = useState(5);
   const [vectorResults, setVectorResults] = useState([]);
 
-  // Web Search state
-  const [webQuery, setWebQuery] = useState("");
-  const [webResults, setWebResults] = useState([]);
-
-  // Ingestion state
+  // Research & Ingest state (combined)
+  const [researchQuery, setResearchQuery] = useState("");
+  const [researchResults, setResearchResults] = useState([]);
+  const [saveToVector, setSaveToVector] = useState(true);
   const [file, setFile] = useState(null);
   const [ingestText, setIngestText] = useState("");
-  const [ingestType, setIngestType] = useState("text");
   const [ingestResults, setIngestResults] = useState([]);
-
-  // Realm Generator state
-  const [realmName, setRealmName] = useState("");
-  const [realmDescription, setRealmDescription] = useState("");
-  const [kaitiakiName, setKaitiakiName] = useState("");
-  const [kaitiakiRole, setKaitiakiRole] = useState("");
-  const [kaitiakiInstructions, setKaitiakiInstructions] = useState("");
-  const [createdRealms, setCreatedRealms] = useState([]);
-
-  // Database state
-  const [dbStats, setDbStats] = useState(null);
-  const [dbLogs, setDbLogs] = useState([]);
 
   // ==================== VECTOR SEARCH ====================
   const handleVectorSearch = async () => {
@@ -89,18 +72,32 @@ export default function KitengaDevHub() {
     }
   };
 
-  // ==================== WEB SEARCH ====================
+  // ==================== RESEARCH (Web + Save) ====================
   const handleWebSearch = async () => {
-    if (!webQuery.trim()) return;
+    if (!researchQuery.trim()) return;
     setLoading(true);
     setError("");
     try {
       const res = await request("/research/web_search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: webQuery, num_results: 10 }),
+        body: JSON.stringify({ query: researchQuery, num_results: 10 }),
       });
-      setWebResults(res.results || res || []);
+      const results = res.results || res || [];
+      setResearchResults(results);
+      
+      // Auto-save to vector if enabled
+      if (saveToVector && results.length > 0) {
+        const combinedText = results.map(r => `${r.title || ''}: ${r.snippet || r.description || ''}`).join('\n\n');
+        await request("/vector/embed", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            text: combinedText, 
+            metadata: { source: "web_search", query: researchQuery }
+          }),
+        });
+      }
     } catch (err) {
       setError(String(err));
     } finally {
@@ -109,16 +106,38 @@ export default function KitengaDevHub() {
   };
 
   const handleStackedSearch = async () => {
-    if (!webQuery.trim()) return;
+    if (!researchQuery.trim()) return;
     setLoading(true);
     setError("");
     try {
       const res = await request("/research/stacked", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: webQuery }),
+        body: JSON.stringify({ query: researchQuery }),
       });
-      setWebResults(res.results || [res]);
+      setResearchResults(res.results || [res]);
+    } catch (err) {
+      setError(String(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveResultToVector = async (result) => {
+    setLoading(true);
+    try {
+      await request("/vector/embed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          text: `${result.title || ''}\n\n${result.snippet || result.description || result.content || ''}`,
+          metadata: { source: result.url || "research", title: result.title }
+        }),
+      });
+      setError("");
+      setResearchResults(prev => prev.map(r => 
+        r === result ? { ...r, saved: true } : r
+      ));
     } catch (err) {
       setError(String(err));
     } finally {
@@ -158,7 +177,6 @@ export default function KitengaDevHub() {
       const formData = new FormData();
       formData.append("file", file);
       
-      // Determine endpoint based on file type
       const ext = file.name.split('.').pop()?.toLowerCase();
       let endpoint = "/intake/ocr";
       if (ext === "pdf") endpoint = "/kitenga/tool/ocr";
@@ -176,135 +194,11 @@ export default function KitengaDevHub() {
     }
   };
 
-  // ==================== REALM GENERATOR ====================
-  const handleCreateRealm = async () => {
-    if (!realmName.trim() || !kaitiakiName.trim()) {
-      setError("Realm name and Kaitiaki name are required");
-      return;
-    }
-    setLoading(true);
-    setError("");
-    try {
-      // Step 1: Create OpenAI Assistant with vector store
-      const assistantRes = await request("/kitenga/db/whakapapa", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: `realm-${realmName.toLowerCase().replace(/\s+/g, '_')}-${Date.now()}`,
-          title: `Realm: ${realmName}`,
-          category: "realm_creation",
-          summary: `Created realm ${realmName} with kaitiaki ${kaitiakiName}`,
-          content_type: "realm",
-          data: {
-            realm_name: realmName,
-            description: realmDescription,
-            kaitiaki: {
-              name: kaitiakiName,
-              role: kaitiakiRole,
-              instructions: kaitiakiInstructions,
-            },
-            created_at: new Date().toISOString(),
-            status: "initialized"
-          },
-          author: "kitenga_whiro"
-        }),
-      });
-
-      // Step 2: Log to memory
-      await request("/kitenga/db/memory", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          content: `Created realm "${realmName}" with kaitiaki "${kaitiakiName}". Role: ${kaitiakiRole}`,
-          metadata: { realm: realmName, kaitiaki: kaitiakiName, type: "realm_creation" }
-        }),
-      });
-
-      // Step 3: Create actual OpenAI assistant (if endpoint exists)
-      try {
-        const openaiRes = await request("/assistant/run", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "create_assistant",
-            name: kaitiakiName,
-            instructions: kaitiakiInstructions || `You are ${kaitiakiName}, the kaitiaki (guardian) of the ${realmName} realm. ${kaitiakiRole}`,
-            model: "gpt-4o",
-            tools: [{ type: "file_search" }],
-            create_vector_store: true,
-            vector_store_name: `${realmName}_vector_store`
-          }),
-        });
-        
-        setCreatedRealms(prev => [{
-          name: realmName,
-          kaitiaki: kaitiakiName,
-          assistant_id: openaiRes.assistant_id,
-          vector_store_id: openaiRes.vector_store_id,
-          created_at: new Date().toISOString()
-        }, ...prev]);
-      } catch {
-        // Assistant creation endpoint might not exist yet
-        setCreatedRealms(prev => [{
-          name: realmName,
-          kaitiaki: kaitiakiName,
-          logged_to: "whakapapa",
-          created_at: new Date().toISOString()
-        }, ...prev]);
-      }
-
-      // Clear form
-      setRealmName("");
-      setRealmDescription("");
-      setKaitiakiName("");
-      setKaitiakiRole("");
-      setKaitiakiInstructions("");
-      
-    } catch (err) {
-      setError(String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ==================== DATABASE ====================
-  const loadDbStats = async () => {
-    setLoading(true);
-    try {
-      const stats = await request("/kitenga/db/stats");
-      setDbStats(stats);
-    } catch (err) {
-      setError(String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadDbLogs = async () => {
-    setLoading(true);
-    try {
-      const logs = await request("/kitenga/db/logs/recent?limit=20");
-      setDbLogs(logs.logs || []);
-    } catch (err) {
-      setError(String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (activeSection === "database") {
-      loadDbStats();
-    }
-  }, [activeSection]);
-
   // ==================== RENDER ====================
   const sections = [
     { id: "vector", label: "Vector Recall", icon: "🔍" },
-    { id: "web", label: "Web Search", icon: "🌐" },
+    { id: "research", label: "Research & Save", icon: "🌐" },
     { id: "ingest", label: "Ingestion", icon: "📥" },
-    { id: "realm", label: "Realm Generator", icon: "🏰" },
-    { id: "database", label: "Kitenga DB", icon: "🗄️" },
   ];
 
   return (
@@ -314,7 +208,7 @@ export default function KitengaDevHub() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-emerald-400">🐺 Kitenga DevHub</h1>
-            <p className="text-xs text-slate-400">Vector recall • Web search • Ingestion • Realm generator</p>
+            <p className="text-xs text-slate-400">Vector recall • Web research • Document ingestion</p>
           </div>
           <span className="text-xs text-slate-500">{baseUrl}</span>
         </div>
@@ -355,7 +249,7 @@ export default function KitengaDevHub() {
               <>
                 <textarea
                   className="w-full min-h-[120px] rounded border border-slate-700 bg-slate-950 p-2 text-sm"
-                  placeholder="Enter query or text to embed..."
+                  placeholder="Enter query to search vector stores or text to embed..."
                   value={vectorQuery}
                   onChange={(e) => setVectorQuery(e.target.value)}
                 />
@@ -376,187 +270,96 @@ export default function KitengaDevHub() {
                     disabled={loading}
                     className="flex-1 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 rounded text-sm font-medium"
                   >
-                    Search
+                    🔍 Search
                   </button>
                   <button
                     onClick={handleVectorEmbed}
                     disabled={loading}
                     className="flex-1 px-3 py-2 bg-sky-600 hover:bg-sky-700 disabled:bg-slate-600 rounded text-sm font-medium"
                   >
-                    Embed
+                    💾 Embed
                   </button>
                 </div>
               </>
             )}
 
-            {/* WEB SEARCH SECTION */}
-            {activeSection === "web" && (
+            {/* RESEARCH SECTION */}
+            {activeSection === "research" && (
               <>
                 <textarea
                   className="w-full min-h-[100px] rounded border border-slate-700 bg-slate-950 p-2 text-sm"
                   placeholder="Enter search query..."
-                  value={webQuery}
-                  onChange={(e) => setWebQuery(e.target.value)}
+                  value={researchQuery}
+                  onChange={(e) => setResearchQuery(e.target.value)}
                 />
+                <label className="flex items-center gap-2 text-xs text-slate-400">
+                  <input
+                    type="checkbox"
+                    checked={saveToVector}
+                    onChange={(e) => setSaveToVector(e.target.checked)}
+                  />
+                  Auto-save results to vector store
+                </label>
                 <div className="flex gap-2">
                   <button
                     onClick={handleWebSearch}
                     disabled={loading}
                     className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 rounded text-sm font-medium"
                   >
-                    Web Search
+                    🌐 Web Search
                   </button>
                   <button
                     onClick={handleStackedSearch}
                     disabled={loading}
                     className="flex-1 px-3 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-600 rounded text-sm font-medium"
                   >
-                    Stacked
+                    📚 Stacked
                   </button>
                 </div>
-                <p className="text-xs text-slate-500">Stacked = Vector + Web combined</p>
+                <p className="text-xs text-slate-500">Stacked = Vector + Web combined for rich context</p>
               </>
             )}
 
             {/* INGESTION SECTION */}
             {activeSection === "ingest" && (
               <>
-                <div className="flex gap-2 mb-2">
-                  <button
-                    onClick={() => setIngestType("text")}
-                    className={`px-3 py-1 rounded text-xs ${ingestType === "text" ? "bg-emerald-600" : "bg-slate-700"}`}
-                  >
-                    Text
-                  </button>
-                  <button
-                    onClick={() => setIngestType("file")}
-                    className={`px-3 py-1 rounded text-xs ${ingestType === "file" ? "bg-emerald-600" : "bg-slate-700"}`}
-                  >
-                    File
-                  </button>
-                </div>
-                
-                {ingestType === "text" ? (
-                  <>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs text-slate-400 block mb-1">Paste Text</label>
                     <textarea
-                      className="w-full min-h-[150px] rounded border border-slate-700 bg-slate-950 p-2 text-sm"
-                      placeholder="Paste text to ingest and summarize..."
+                      className="w-full min-h-[100px] rounded border border-slate-700 bg-slate-950 p-2 text-sm"
+                      placeholder="Paste text to ingest and embed..."
                       value={ingestText}
                       onChange={(e) => setIngestText(e.target.value)}
                     />
                     <button
                       onClick={handleIngestText}
-                      disabled={loading}
-                      className="w-full px-3 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 rounded text-sm font-medium"
+                      disabled={loading || !ingestText.trim()}
+                      className="w-full mt-2 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 rounded text-sm font-medium"
                     >
-                      Ingest & Summarize
+                      📝 Ingest Text
                     </button>
-                  </>
-                ) : (
-                  <>
+                  </div>
+                  
+                  <div className="border-t border-slate-700 pt-3">
+                    <label className="text-xs text-slate-400 block mb-1">Or Upload File</label>
                     <input
                       type="file"
                       accept=".pdf,.md,.txt,.png,.jpg,.jpeg"
                       onChange={(e) => setFile(e.target.files?.[0] || null)}
                       className="w-full text-sm text-slate-400 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:bg-slate-700 file:text-slate-200"
                     />
-                    {file && <p className="text-xs text-slate-400">Selected: {file.name}</p>}
+                    {file && <p className="text-xs text-slate-400 mt-1">Selected: {file.name}</p>}
                     <button
                       onClick={handleIngestFile}
                       disabled={loading || !file}
-                      className="w-full px-3 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 rounded text-sm font-medium"
+                      className="w-full mt-2 px-3 py-2 bg-sky-600 hover:bg-sky-700 disabled:bg-slate-600 rounded text-sm font-medium"
                     >
-                      Upload & Process
+                      📄 Upload & Process
                     </button>
-                    <p className="text-xs text-slate-500">Supports: PDF, MD, TXT, PNG, JPG</p>
-                  </>
-                )}
-              </>
-            )}
-
-            {/* REALM GENERATOR SECTION */}
-            {activeSection === "realm" && (
-              <>
-                <div className="space-y-2">
-                  <input
-                    type="text"
-                    placeholder="Realm Name (e.g., Te Wai)"
-                    value={realmName}
-                    onChange={(e) => setRealmName(e.target.value)}
-                    className="w-full rounded border border-slate-700 bg-slate-950 p-2 text-sm"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Realm Description"
-                    value={realmDescription}
-                    onChange={(e) => setRealmDescription(e.target.value)}
-                    className="w-full rounded border border-slate-700 bg-slate-950 p-2 text-sm"
-                  />
-                  <hr className="border-slate-700 my-2" />
-                  <p className="text-xs text-emerald-400 font-medium">Kaitiaki (Guardian)</p>
-                  <input
-                    type="text"
-                    placeholder="Kaitiaki Name"
-                    value={kaitiakiName}
-                    onChange={(e) => setKaitiakiName(e.target.value)}
-                    className="w-full rounded border border-slate-700 bg-slate-950 p-2 text-sm"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Kaitiaki Role"
-                    value={kaitiakiRole}
-                    onChange={(e) => setKaitiakiRole(e.target.value)}
-                    className="w-full rounded border border-slate-700 bg-slate-950 p-2 text-sm"
-                  />
-                  <textarea
-                    placeholder="System Instructions (optional)"
-                    value={kaitiakiInstructions}
-                    onChange={(e) => setKaitiakiInstructions(e.target.value)}
-                    className="w-full min-h-[80px] rounded border border-slate-700 bg-slate-950 p-2 text-sm"
-                  />
-                </div>
-                <button
-                  onClick={handleCreateRealm}
-                  disabled={loading}
-                  className="w-full px-3 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-slate-600 rounded text-sm font-medium"
-                >
-                  🏰 Create Realm + Assistant + Vector Store
-                </button>
-                <p className="text-xs text-slate-500">Creates OpenAI assistant with dedicated vector store</p>
-              </>
-            )}
-
-            {/* DATABASE SECTION */}
-            {activeSection === "database" && (
-              <>
-                <button
-                  onClick={loadDbStats}
-                  disabled={loading}
-                  className="w-full px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded text-sm font-medium"
-                >
-                  Refresh Stats
-                </button>
-                <button
-                  onClick={loadDbLogs}
-                  disabled={loading}
-                  className="w-full px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded text-sm font-medium"
-                >
-                  Load Recent Logs
-                </button>
-                {dbStats && (
-                  <div className="mt-2 p-2 bg-slate-800 rounded text-xs">
-                    <p className="text-emerald-400 font-medium mb-1">Schema: {dbStats.schema}</p>
-                    <p className="text-slate-400">Total records: {dbStats.total_records}</p>
-                    <div className="mt-2 space-y-1">
-                      {Object.entries(dbStats.table_counts || {}).map(([table, count]) => (
-                        <div key={table} className="flex justify-between">
-                          <span className="text-slate-400">{table}</span>
-                          <span className="text-sky-400">{count}</span>
-                        </div>
-                      ))}
-                    </div>
+                    <p className="text-xs text-slate-500 mt-1">Supports: PDF, MD, TXT, PNG, JPG</p>
                   </div>
-                )}
+                </div>
               </>
             )}
 
@@ -571,9 +374,8 @@ export default function KitengaDevHub() {
             <button
               onClick={() => {
                 setVectorResults([]);
-                setWebResults([]);
+                setResearchResults([]);
                 setIngestResults([]);
-                setDbLogs([]);
               }}
               className="text-xs text-slate-400 hover:text-slate-200"
             >
@@ -587,7 +389,7 @@ export default function KitengaDevHub() {
               <div key={idx} className="border border-slate-700 rounded p-2 bg-slate-800 text-xs">
                 {result.type === "embedded" ? (
                   <div>
-                    <span className="text-emerald-400">✓ Embedded</span>
+                    <span className="text-emerald-400">✓ Embedded to vector store</span>
                     <p className="text-slate-400 mt-1">ID: {result.id || result.file_id || "N/A"}</p>
                   </div>
                 ) : (
@@ -601,12 +403,25 @@ export default function KitengaDevHub() {
               </div>
             ))}
 
-            {/* Web Results */}
-            {activeSection === "web" && webResults.map((result, idx) => (
+            {/* Research Results */}
+            {activeSection === "research" && researchResults.map((result, idx) => (
               <div key={idx} className="border border-slate-700 rounded p-2 bg-slate-800 text-xs">
-                <p className="text-blue-400 font-medium">{result.title || "Result"}</p>
+                <div className="flex justify-between items-start mb-1">
+                  <p className="text-blue-400 font-medium flex-1">{result.title || "Result"}</p>
+                  {!result.saved ? (
+                    <button
+                      onClick={() => handleSaveResultToVector(result)}
+                      className="text-emerald-400 hover:text-emerald-300 ml-2"
+                      title="Save to vector"
+                    >
+                      💾
+                    </button>
+                  ) : (
+                    <span className="text-emerald-400 ml-2">✓</span>
+                  )}
+                </div>
                 <p className="text-slate-400 mt-1">{result.snippet || result.description || result.content?.slice(0, 200)}</p>
-                {result.url && <a href={result.url} target="_blank" rel="noopener" className="text-sky-500 hover:underline text-[10px]">{result.url}</a>}
+                {result.url && <a href={result.url} target="_blank" rel="noopener" className="text-sky-500 hover:underline text-[10px] block mt-1">{result.url}</a>}
               </div>
             ))}
 
@@ -617,39 +432,14 @@ export default function KitengaDevHub() {
                   <span className="text-emerald-400">{result.type === "file" ? `📄 ${result.filename}` : "📝 Text"}</span>
                   <span className="text-slate-500">{result.ts}</span>
                 </div>
-                <p className="text-slate-300">{result.summary || result.text || result.extracted_text?.slice(0, 300) || "Processed"}</p>
-              </div>
-            ))}
-
-            {/* Created Realms */}
-            {activeSection === "realm" && createdRealms.map((realm, idx) => (
-              <div key={idx} className="border border-cyan-800 rounded p-2 bg-cyan-950 text-xs">
-                <p className="text-cyan-400 font-medium">🏰 {realm.name}</p>
-                <p className="text-slate-300">Kaitiaki: {realm.kaitiaki}</p>
-                {realm.assistant_id && <p className="text-slate-400">Assistant: {realm.assistant_id}</p>}
-                {realm.vector_store_id && <p className="text-slate-400">Vector Store: {realm.vector_store_id}</p>}
-                <p className="text-slate-500 text-[10px]">{realm.created_at}</p>
-              </div>
-            ))}
-
-            {/* Database Logs */}
-            {activeSection === "database" && dbLogs.map((log, idx) => (
-              <div key={idx} className="border border-slate-700 rounded p-2 bg-slate-800 text-xs">
-                <div className="flex justify-between mb-1">
-                  <span className="text-amber-400">{log.event}</span>
-                  <span className="text-slate-500">{log.created_at}</span>
-                </div>
-                <p className="text-slate-300">{log.detail}</p>
-                <p className="text-slate-500 text-[10px]">Source: {log.source}</p>
+                <p className="text-slate-300">{result.summary || result.text || result.extracted_text?.slice(0, 300) || "Processed & embedded"}</p>
               </div>
             ))}
 
             {/* Empty state */}
             {((activeSection === "vector" && !vectorResults.length) ||
-              (activeSection === "web" && !webResults.length) ||
-              (activeSection === "ingest" && !ingestResults.length) ||
-              (activeSection === "realm" && !createdRealms.length) ||
-              (activeSection === "database" && !dbLogs.length)) && (
+              (activeSection === "research" && !researchResults.length) ||
+              (activeSection === "ingest" && !ingestResults.length)) && (
               <p className="text-slate-500 text-sm text-center py-8">No results yet. Use the controls on the left.</p>
             )}
           </div>

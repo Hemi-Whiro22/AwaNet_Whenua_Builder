@@ -22,10 +22,15 @@ export default function KitengaPanel() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [threadId, setThreadId] = useState(() => {
-    // Load threadId from localStorage if it exists
     return localStorage.getItem("kitenga_thread_id") || null;
   });
   const messagesEndRef = useRef(null);
+  
+  // Context enrichment options
+  const [useVectorContext, setUseVectorContext] = useState(true);
+  const [useMemoryContext, setUseMemoryContext] = useState(true);
+  const [vectorContext, setVectorContext] = useState([]);
+  const [showContext, setShowContext] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -34,6 +39,36 @@ export default function KitengaPanel() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Fetch vector context for query
+  const fetchVectorContext = async (query) => {
+    if (!useVectorContext) return [];
+    try {
+      const res = await request("/vector/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query, top_k: 3, rerank: true }),
+      });
+      return res.matches || res.results || [];
+    } catch {
+      return [];
+    }
+  };
+
+  // Fetch memory context
+  const fetchMemoryContext = async (query) => {
+    if (!useMemoryContext) return [];
+    try {
+      const res = await request("/memory/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query, limit: 3 }),
+      });
+      return res.results || res.memories || [];
+    } catch {
+      return [];
+    }
+  };
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -51,11 +86,29 @@ export default function KitengaPanel() {
     setError("");
 
     try {
+      // Fetch context in parallel
+      const [vectorResults, memoryResults] = await Promise.all([
+        fetchVectorContext(input),
+        fetchMemoryContext(input),
+      ]);
+
+      // Store context for display
+      setVectorContext([...vectorResults, ...memoryResults]);
+
+      // Build context string
+      let contextStr = "";
+      if (vectorResults.length > 0) {
+        contextStr += "Vector Context:\n" + vectorResults.map(r => r.text || r.content || r.chunk_text || "").join("\n---\n") + "\n\n";
+      }
+      if (memoryResults.length > 0) {
+        contextStr += "Memory Context:\n" + memoryResults.map(r => r.content || r.text || "").join("\n---\n") + "\n\n";
+      }
+
       const response = await request("/kitenga/gpt-whisper", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          whisper: input,
+          whisper: contextStr ? `Context:\n${contextStr}\n\nQuestion: ${input}` : input,
           session_id: "ui-kitenga",
           thread_id: threadId,
           use_retrieval: true,
@@ -69,7 +122,6 @@ export default function KitengaPanel() {
         }),
       });
 
-      // Store the thread_id from response for next messages
       if (response?.thread_id && !threadId) {
         setThreadId(response.thread_id);
         localStorage.setItem("kitenga_thread_id", response.thread_id);
@@ -84,6 +136,7 @@ export default function KitengaPanel() {
           "No response received",
         timestamp: new Date(),
         metadata: response,
+        hasContext: vectorResults.length > 0 || memoryResults.length > 0,
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
@@ -114,10 +167,50 @@ export default function KitengaPanel() {
               </span>
             </h1>
             <p className="text-sm text-slate-400">
-              Māori Intelligence Engine with complete architecture knowledge
+              Māori Intelligence Engine with vector + memory context
             </p>
           </div>
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-1 text-xs text-slate-400">
+              <input
+                type="checkbox"
+                checked={useVectorContext}
+                onChange={(e) => setUseVectorContext(e.target.checked)}
+                className="w-3 h-3"
+              />
+              🔍 Vector
+            </label>
+            <label className="flex items-center gap-1 text-xs text-slate-400">
+              <input
+                type="checkbox"
+                checked={useMemoryContext}
+                onChange={(e) => setUseMemoryContext(e.target.checked)}
+                className="w-3 h-3"
+              />
+              🧠 Memory
+            </label>
+            {vectorContext.length > 0 && (
+              <button
+                onClick={() => setShowContext(!showContext)}
+                className="text-xs text-sky-400 hover:text-sky-300"
+              >
+                {showContext ? "Hide" : "Show"} Context ({vectorContext.length})
+              </button>
+            )}
+          </div>
         </div>
+        
+        {/* Context Display */}
+        {showContext && vectorContext.length > 0 && (
+          <div className="mt-3 p-2 bg-slate-800 rounded border border-slate-700 max-h-32 overflow-y-auto">
+            <p className="text-xs text-slate-400 mb-1">Context used in last query:</p>
+            {vectorContext.map((ctx, idx) => (
+              <p key={idx} className="text-xs text-slate-300 truncate">
+                {ctx.text || ctx.content || ctx.chunk_text || JSON.stringify(ctx).slice(0, 100)}
+              </p>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Chat Messages */}

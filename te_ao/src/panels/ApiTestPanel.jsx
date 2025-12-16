@@ -6,6 +6,10 @@ export default function ApiTestPanel() {
   const [status, setStatus] = useState(null);
   const [routes, setRoutes] = useState(null);
   const [kitengaStatus, setKitengaStatus] = useState(null);
+  const [dbStats, setDbStats] = useState(null);
+  const [dbLogs, setDbLogs] = useState([]);
+  const [corsOrigins, setCorsOrigins] = useState([]);
+  const [newOrigin, setNewOrigin] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [testResults, setTestResults] = useState([]);
@@ -15,18 +19,73 @@ export default function ApiTestPanel() {
     setLoading(true);
     setError("");
     try {
-      const [statusRes, routesRes, kitengaRes] = await Promise.all([
+      const [statusRes, routesRes, kitengaRes, dbStatsRes] = await Promise.all([
         request("/status/full").catch(() => null),
         request("/dev/routes").catch(() => null),
         request("/dev/kitenga-status").catch(() => null),
+        request("/kitenga/db/stats").catch(() => null),
       ]);
       setStatus(statusRes);
       setRoutes(routesRes);
       setKitengaStatus(kitengaRes);
+      setDbStats(dbStatsRes);
     } catch (err) {
       setError(String(err));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadDbLogs = async () => {
+    try {
+      const logs = await request("/kitenga/db/logs/recent?limit=20");
+      setDbLogs(logs.logs || []);
+    } catch (err) {
+      console.log("Could not load logs:", err);
+    }
+  };
+
+  const loadCorsOrigins = async () => {
+    try {
+      const data = await request("/cors/origins");
+      setCorsOrigins(data.origins || []);
+    } catch (err) {
+      console.log("Could not load CORS origins:", err);
+    }
+  };
+
+  const addCorsOrigin = async () => {
+    if (!newOrigin.trim()) return;
+    try {
+      const data = await request("/cors/origins/add", {
+        method: "POST",
+        body: JSON.stringify({ origin: newOrigin.trim() }),
+      });
+      setCorsOrigins(data.origins || []);
+      setNewOrigin("");
+    } catch (err) {
+      setError(`Failed to add origin: ${err}`);
+    }
+  };
+
+  const removeCorsOrigin = async (origin) => {
+    try {
+      const data = await request("/cors/origins/remove", {
+        method: "POST",
+        body: JSON.stringify({ origin }),
+      });
+      setCorsOrigins(data.origins || []);
+    } catch (err) {
+      setError(`Failed to remove origin: ${err}`);
+    }
+  };
+
+  const resetCorsOrigins = async () => {
+    try {
+      const data = await request("/cors/origins/reset", { method: "POST" });
+      setCorsOrigins(data.origins || []);
+    } catch (err) {
+      setError(`Failed to reset origins: ${err}`);
     }
   };
 
@@ -71,9 +130,9 @@ export default function ApiTestPanel() {
     { path: "/status/openai", method: "GET", label: "OpenAI Status" },
     { path: "/pipeline/jobs/recent?limit=5", method: "GET", label: "Recent Jobs" },
     { path: "/kitenga/tools/list", method: "GET", label: "Kitenga Tools" },
-    { path: "/intake/status", method: "GET", label: "Intake Status" },
+    { path: "/kitenga/db/stats", method: "GET", label: "DB Stats" },
+    { path: "/realms/list", method: "GET", label: "List Realms" },
     { path: "/memory/stats", method: "GET", label: "Memory Stats" },
-    { path: "/metrics/", method: "GET", label: "Metrics" },
   ];
 
   const renderStatusValue = (value) => {
@@ -114,17 +173,23 @@ export default function ApiTestPanel() {
 
       {/* Section Tabs */}
       <div className="flex border-b border-slate-700 bg-slate-900">
-        {["status", "routes", "kitenga", "tests"].map((section) => (
+        {["status", "routes", "kitenga", "database", "cors", "tests"].map((section) => (
           <button
             key={section}
-            onClick={() => setActiveSection(section)}
+            onClick={() => {
+              setActiveSection(section);
+              if (section === "database") loadDbLogs();
+              if (section === "cors") loadCorsOrigins();
+            }}
             className={`px-4 py-2 text-sm font-medium transition ${
               activeSection === section
                 ? "border-b-2 border-emerald-500 text-emerald-400"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            {section.charAt(0).toUpperCase() + section.slice(1)}
+            {section === "database" ? "🗄️ DB" : 
+             section === "cors" ? "🔒 CORS" :
+             section.charAt(0).toUpperCase() + section.slice(1)}
           </button>
         ))}
       </div>
@@ -138,6 +203,8 @@ export default function ApiTestPanel() {
               {activeSection === "status" && "Service Status"}
               {activeSection === "routes" && `Routes (${routes?.total_routes || 0})`}
               {activeSection === "kitenga" && "Kitenga Whiro Config"}
+              {activeSection === "database" && "Database Stats & Logs"}
+              {activeSection === "cors" && "CORS Origin Manager"}
               {activeSection === "tests" && "Quick Tests"}
             </h2>
           </div>
@@ -221,7 +288,136 @@ export default function ApiTestPanel() {
               </div>
             )}
 
-            {!status && !routes && !kitengaStatus && activeSection !== "tests" && (
+            {activeSection === "database" && (
+              <div className="space-y-3">
+                {/* DB Stats */}
+                {dbStats && (
+                  <div className="border border-slate-700 rounded p-3 bg-slate-800">
+                    <h3 className="text-emerald-400 font-bold text-sm mb-2">📊 Kitenga Schema Stats</h3>
+                    <p className="text-slate-300 text-xs mb-2">Schema: <span className="text-sky-400">{dbStats.schema}</span></p>
+                    <p className="text-slate-300 text-xs mb-2">Total Records: <span className="text-yellow-400">{dbStats.total_records?.toLocaleString()}</span></p>
+                    {dbStats.tables && (
+                      <div className="space-y-1 mt-2">
+                        <p className="text-xs text-slate-400 font-medium">Tables:</p>
+                        {Object.entries(dbStats.tables).map(([table, count]) => (
+                          <div key={table} className="flex justify-between text-xs">
+                            <span className="text-slate-300 font-mono">{table}</span>
+                            <span className="text-slate-400">{count}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                {/* Recent Logs */}
+                <div className="border border-slate-700 rounded p-3 bg-slate-800">
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="text-amber-400 font-bold text-sm">📝 Recent Logs</h3>
+                    <button 
+                      onClick={loadDbLogs}
+                      className="text-xs text-slate-400 hover:text-slate-200"
+                    >
+                      Refresh
+                    </button>
+                  </div>
+                  {dbLogs.length > 0 ? (
+                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                      {dbLogs.map((log, idx) => (
+                        <div key={idx} className="border-b border-slate-700 pb-2 last:border-0">
+                          <div className="flex justify-between text-xs">
+                            <span className="text-amber-400">{log.event}</span>
+                            <span className="text-slate-500">{log.created_at}</span>
+                          </div>
+                          <p className="text-slate-300 text-xs mt-1">{log.detail}</p>
+                          <p className="text-slate-500 text-[10px]">Source: {log.source}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-slate-400 text-xs">No logs loaded</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {activeSection === "cors" && (
+              <div className="space-y-3">
+                <div className="border border-slate-700 rounded p-3 bg-slate-800">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-emerald-400 font-bold text-sm">🔒 CORS Allowed Origins</h3>
+                    <button 
+                      onClick={resetCorsOrigins}
+                      className="text-xs text-slate-400 hover:text-red-400"
+                    >
+                      Reset to defaults
+                    </button>
+                  </div>
+                  
+                  {/* Add new origin */}
+                  <div className="flex gap-2 mb-3">
+                    <input
+                      type="text"
+                      value={newOrigin}
+                      onChange={(e) => setNewOrigin(e.target.value)}
+                      placeholder="http://localhost:5002"
+                      className="flex-1 bg-slate-900 border border-slate-600 rounded px-2 py-1 text-sm focus:outline-none focus:border-emerald-500"
+                      onKeyDown={(e) => e.key === "Enter" && addCorsOrigin()}
+                    />
+                    <button
+                      onClick={addCorsOrigin}
+                      className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 rounded text-sm font-medium"
+                    >
+                      Add
+                    </button>
+                  </div>
+
+                  {/* Origins list */}
+                  <div className="space-y-1 max-h-64 overflow-y-auto">
+                    {corsOrigins.length > 0 ? (
+                      corsOrigins.map((origin, idx) => (
+                        <div key={idx} className="flex justify-between items-center bg-slate-900 rounded px-2 py-1 group">
+                          <span className="text-slate-300 text-xs font-mono">{origin}</span>
+                          <button
+                            onClick={() => removeCorsOrigin(origin)}
+                            className="text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-slate-400 text-xs">Click CORS tab to load origins</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="border border-amber-800 rounded p-3 bg-amber-950/30">
+                  <p className="text-amber-400 text-xs">
+                    ⚠️ <strong>Note:</strong> Runtime CORS changes only persist until server restart. 
+                    For permanent changes, update <code className="bg-slate-800 px-1 rounded">CORS_ALLOW_ORIGINS</code> env var on Render.
+                  </p>
+                </div>
+
+                {/* Quick add common ports */}
+                <div className="border border-slate-700 rounded p-3 bg-slate-800">
+                  <h4 className="text-slate-400 text-xs font-medium mb-2">Quick Add Common Ports</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {["3000", "4000", "5000", "5001", "5173", "8080", "8100"].map((port) => (
+                      <button
+                        key={port}
+                        onClick={() => setNewOrigin(`http://localhost:${port}`)}
+                        className="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs"
+                      >
+                        :{port}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {!status && !routes && !kitengaStatus && activeSection !== "tests" && activeSection !== "database" && activeSection !== "cors" && (
               <p className="text-slate-400 text-sm">Click "Refresh All" to load data</p>
             )}
           </div>
