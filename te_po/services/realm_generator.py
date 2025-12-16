@@ -3,13 +3,14 @@ Realm Generator Service
 
 Spawns new realms from te_hau/project_template into /realms/
 Creates OpenAI assistant + vector store for each realm
-For cloud deployments (Render), stores realm config in Supabase instead of filesystem
+Can push to GitHub as its own repository
 """
 
 import os
 import json
 import shutil
 import re
+import subprocess
 from pathlib import Path
 from typing import Dict, Optional, List
 from datetime import datetime
@@ -69,7 +70,9 @@ class RealmGenerator:
         template: str = "basic",
         cloudflare_hostname: Optional[str] = None,
         pages_project: Optional[str] = None,
-        backend_url: Optional[str] = None
+        backend_url: Optional[str] = None,
+        github_org: Optional[str] = None,
+        push_to_github: bool = False
     ) -> Dict:
         """
         Generate a new realm from template
@@ -89,15 +92,16 @@ class RealmGenerator:
         Returns:
             Dict with realm info including assistant_id and vector_store_id
         """
-        # Normalize realm name (lowercase, underscores)
+        # Normalize realm name (lowercase, underscores for internal, hyphens for git)
         realm_slug = re.sub(r'[^a-z0-9_]', '_', realm_name.lower())
+        repo_name = re.sub(r'[^a-z0-9-]', '-', realm_name.lower())  # GitHub-friendly name
         realm_path = self.realms_path / realm_slug
         
         # Default APIs if none selected
         if selected_apis is None:
             selected_apis = ["vector", "memory", "assistant"]
         
-        # Check if realm already exists
+        # Check if realm already exists locally
         if realm_path.exists():
             return {
                 "success": False,
@@ -120,6 +124,7 @@ class RealmGenerator:
             "id": str(uuid.uuid4()),
             "realm_name": realm_name,
             "realm_slug": realm_slug,
+            "repo_name": repo_name,
             "template": template,
             "kaitiaki": {
                 "name": kaitiaki_name,
@@ -134,29 +139,11 @@ class RealmGenerator:
                 "cloudflare": cloudflare_hostname or f"{realm_slug}.den-of-the-pack.com",
                 "pages": pages_project or f"te-ao-{realm_slug}",
                 "backend": backend_url or f"https://{realm_slug}-backend.onrender.com"
-            }
+            },
+            "github": None
         }
         
-        # Cloud mode: Store in database
-        if self.is_cloud:
-            try:
-                db_result = self._save_realm_to_db(realm_config)
-                if not db_result.get("success"):
-                    return db_result
-                
-                return {
-                    "success": True,
-                    "mode": "cloud",
-                    "realm_id": realm_config["id"],
-                    "config": realm_config
-                }
-            except Exception as e:
-                return {
-                    "success": False,
-                    "error": f"Failed to save realm to database: {e}"
-                }
-        
-        # Local mode: Create filesystem structure
+        # Step 2: Create local filesystem structure (always do this first)
         try:
             self._copy_template(realm_path)
         except Exception as e:
@@ -168,6 +155,7 @@ class RealmGenerator:
         # Replace placeholders
         replacements = {
             "TemplateRealm": realm_name,
+            "template_realm": realm_slug,
             "kitenga-template.example.com": realm_config["urls"]["cloudflare"],
             "te-ao-template": realm_config["urls"]["pages"],
             "https://te-po-template.example.com": realm_config["urls"]["backend"]
@@ -183,13 +171,241 @@ class RealmGenerator:
         # Create initial README
         self._create_realm_readme(realm_path, realm_config)
         
+        # Step 3: Push to GitHub if requested
+        github_result = None
+        if push_to_github:
+            github_result = self._push_to_github(
+                realm_path=realm_path,
+                repo_name=repo_name,
+                description=description or f"Realm: {realm_name} - Kaitiaki: {kaitiaki_name}",
+                github_org=github_org
+            )
+            realm_config["github"] = github_result
+            
+            # Update config with GitHub info
+            with open(config_path, 'w', encoding='utf-8') as f:
+                json.dump(realm_config, f, indent=2)
+        
+        # Step 4: Also store in database if available
+        db_result = None
+        if self.supabase:
+            try:
+                db_result = self._save_realm_to_db(realm_config)
+            except Exception as e:
+                db_result = {"success": False, "error": str(e)}
+        
         return {
             "success": True,
             "mode": "local",
             "realm_path": str(realm_path),
-            "config": realm_config
+            "config": realm_config,
+            "github": github_result,
+            "database": db_result
         }
     
+    def _push_to_github(
+        self,
+        realm_path: Path,
+        repo_name: str,
+        description: str = "",
+        github_org: Optional[str] = None,
+        private: bool = False
+    ) -> Dict:
+        """
+        Initialize git repo and push to GitHub
+        
+        Args:
+            realm_path: Local path to the realm
+            repo_name: Name for the GitHub repository
+            description: Repository description
+            github_org: GitHub organization (uses personal account if None)
+            private: Whether the repo should be private
+            
+        Returns:
+            Dict with repo URL and status
+        """
+        try:
+            # Get GitHub token from environment
+            github_token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+            if not github_token:
+                return {
+                    "success": False,
+                    "error": "No GitHub token found. Set GITHUB_TOKEN environment variable."
+                }
+            
+            # Initialize git repo
+            subprocess.run(
+                ["git", "init"],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            
+            # Configure git
+            subprocess.run(
+                ["git", "config", "user.email", "kaitiaki@awa.network"],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            subprocess.run(
+                ["git", "config", "user.name", "Kitenga Whiro"],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            
+            # Add all files
+            subprocess.run(
+                ["git", "add", "."],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            
+            # Initial commit
+            subprocess.run(
+                ["git", "commit", "-m", f"🌊 Initial spawn: {repo_name}\n\nCreated by Kitenga Whiro realm generator"],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            
+            # Create GitHub repo using gh CLI or API
+            # Try gh CLI first (simpler)
+            create_cmd = ["gh", "repo", "create", repo_name, "--source", str(realm_path), "--push"]
+            if github_org:
+                create_cmd = ["gh", "repo", "create", f"{github_org}/{repo_name}", "--source", str(realm_path), "--push"]
+            
+            if private:
+                create_cmd.append("--private")
+            else:
+                create_cmd.append("--public")
+            
+            if description:
+                create_cmd.extend(["--description", description])
+            
+            result = subprocess.run(
+                create_cmd,
+                cwd=realm_path,
+                capture_output=True,
+                text=True
+            )
+            
+            if result.returncode != 0:
+                # Fallback: try creating via API and pushing manually
+                return self._push_to_github_api(
+                    realm_path, repo_name, description, github_org, private, github_token
+                )
+            
+            # Parse repo URL from output
+            repo_url = f"https://github.com/{github_org or 'user'}/{repo_name}"
+            
+            return {
+                "success": True,
+                "repo_name": repo_name,
+                "repo_url": repo_url,
+                "method": "gh_cli"
+            }
+            
+        except subprocess.CalledProcessError as e:
+            return {
+                "success": False,
+                "error": f"Git command failed: {e.stderr.decode() if e.stderr else str(e)}"
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    def _push_to_github_api(
+        self,
+        realm_path: Path,
+        repo_name: str,
+        description: str,
+        github_org: Optional[str],
+        private: bool,
+        github_token: str
+    ) -> Dict:
+        """Fallback: Create repo via GitHub API and push"""
+        import urllib.request
+        import urllib.error
+        
+        try:
+            # Create repo via API
+            api_url = "https://api.github.com/user/repos"
+            if github_org:
+                api_url = f"https://api.github.com/orgs/{github_org}/repos"
+            
+            data = json.dumps({
+                "name": repo_name,
+                "description": description,
+                "private": private,
+                "auto_init": False
+            }).encode()
+            
+            req = urllib.request.Request(
+                api_url,
+                data=data,
+                headers={
+                    "Authorization": f"token {github_token}",
+                    "Accept": "application/vnd.github.v3+json",
+                    "Content-Type": "application/json"
+                },
+                method="POST"
+            )
+            
+            with urllib.request.urlopen(req) as response:
+                repo_data = json.loads(response.read().decode())
+            
+            clone_url = repo_data["clone_url"]
+            html_url = repo_data["html_url"]
+            
+            # Add remote and push
+            # Use token in URL for auth
+            auth_url = clone_url.replace("https://", f"https://{github_token}@")
+            
+            subprocess.run(
+                ["git", "remote", "add", "origin", auth_url],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            
+            subprocess.run(
+                ["git", "branch", "-M", "main"],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            
+            subprocess.run(
+                ["git", "push", "-u", "origin", "main"],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            
+            return {
+                "success": True,
+                "repo_name": repo_name,
+                "repo_url": html_url,
+                "method": "api"
+            }
+            
+        except urllib.error.HTTPError as e:
+            error_body = e.read().decode() if e.fp else ""
+            return {
+                "success": False,
+                "error": f"GitHub API error {e.code}: {error_body}"
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e)
+            }
+
     def _save_realm_to_db(self, realm_config: Dict) -> Dict:
         """Save realm configuration to Supabase database and create realm-specific tables"""
         if not self.supabase:

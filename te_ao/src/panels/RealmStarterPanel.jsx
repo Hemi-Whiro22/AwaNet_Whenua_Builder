@@ -18,6 +18,10 @@ export default function RealmStarterPanel() {
   const [kaitiakiRole, setKaitiakiRole] = useState("");
   const [kaitiakiInstructions, setKaitiakiInstructions] = useState("");
   
+  // GitHub push option
+  const [pushToGithub, setPushToGithub] = useState(false);
+  const [githubOrg, setGithubOrg] = useState("dezren39");
+  
   // Template selection
   const [template, setTemplate] = useState("full");
   
@@ -122,9 +126,13 @@ export default function RealmStarterPanel() {
         body: JSON.stringify({
           realm_name: realmName,
           kaitiaki_name: kaitiakiName,
-          description: `${description || ''}${kaitiakiRole ? ` Role: ${kaitiakiRole}` : ''}`.trim() || `Realm for ${kaitiakiName}`,
-          apis: selectedApis,
+          kaitiaki_role: kaitiakiRole,
+          kaitiaki_instructions: kaitiakiInstructions,
+          description: description || `Realm for ${kaitiakiName}`,
+          selected_apis: selectedApis,
           template: template,
+          push_to_github: pushToGithub,
+          github_org: githubOrg || null,
         }),
       });
 
@@ -132,8 +140,14 @@ export default function RealmStarterPanel() {
         const config = res.data?.config || {};
         const mode = res.data?.mode || "unknown";
         const tablesCreated = res.data?.tables_created || [];
+        const githubResult = res.data?.github;
         
-        setSuccess(`✓ Realm "${realmName}" created (${mode} mode)${tablesCreated.length ? ` - ${tablesCreated.length} tables` : ""}`);
+        let successMsg = `✓ Realm "${realmName}" created (${mode} mode)`;
+        if (tablesCreated.length) successMsg += ` - ${tablesCreated.length} tables`;
+        if (githubResult?.success) successMsg += ` 🐙 Pushed to ${githubResult.repo_url}`;
+        else if (githubResult?.error) successMsg += ` ⚠️ GitHub: ${githubResult.error}`;
+        
+        setSuccess(successMsg);
         
         // If SQL was generated, store it for display
         if (config.migration_sql) {
@@ -149,6 +163,7 @@ export default function RealmStarterPanel() {
           assistant_id: config.openai?.assistant_id,
           vector_store_id: config.openai?.vector_store_id,
           urls: config.urls,
+          github: res.data?.github,
           created_at: config.created_at || new Date().toISOString(),
           apis: selectedApis,
           mode: mode,
@@ -315,6 +330,38 @@ export default function RealmStarterPanel() {
                 </div>
               </div>
 
+              {/* GitHub Push Option */}
+              <div className="border border-purple-800 rounded p-3 bg-purple-950/30">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={pushToGithub}
+                    onChange={(e) => setPushToGithub(e.target.checked)}
+                    disabled={loading}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-sm font-medium text-purple-400">🐙 Push to GitHub</span>
+                </label>
+                {pushToGithub && (
+                  <div className="mt-2 space-y-2">
+                    <input
+                      type="text"
+                      value={githubOrg}
+                      onChange={(e) => setGithubOrg(e.target.value)}
+                      placeholder="GitHub org (leave blank for personal)"
+                      className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-sm focus:outline-none focus:border-purple-500"
+                      disabled={loading}
+                    />
+                    <p className="text-xs text-slate-500">
+                      Creates: github.com/{githubOrg || '[your-username]'}/{realmName.toLowerCase().replace(/[^a-z0-9-]/g, '-') || 'realm-name'}
+                    </p>
+                    <p className="text-[10px] text-yellow-600">
+                      ⚠️ Requires GITHUB_TOKEN env var on backend
+                    </p>
+                  </div>
+                )}
+              </div>
+
               {/* Submit Button */}
               <button
                 type="submit"
@@ -414,6 +461,20 @@ export default function RealmStarterPanel() {
                         <p className="text-[10px] text-slate-400 mb-1">🔗 URLs:</p>
                         {realm.urls.cloudflare && <p className="text-sky-400 text-[10px]">☁️ {realm.urls.cloudflare}</p>}
                         {realm.urls.backend && <p className="text-green-400 text-[10px]">🖥️ {realm.urls.backend}</p>}
+                      </div>
+                    )}
+                    
+                    {realm.github?.success && (
+                      <div className="bg-slate-800 rounded p-2 mb-2">
+                        <p className="text-[10px] text-slate-400 mb-1">🐙 GitHub:</p>
+                        <a 
+                          href={realm.github.repo_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-purple-400 text-sm hover:underline"
+                        >
+                          {realm.github.repo_url}
+                        </a>
                       </div>
                     )}
                     

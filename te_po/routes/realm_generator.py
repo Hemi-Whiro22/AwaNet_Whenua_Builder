@@ -31,6 +31,8 @@ class RealmCreateRequest(BaseModel):
     cloudflare_hostname: Optional[str] = Field(None, description="Custom Cloudflare hostname")
     pages_project: Optional[str] = Field(None, description="Cloudflare Pages project name")
     backend_url: Optional[str] = Field(None, description="Custom backend URL")
+    push_to_github: Optional[bool] = Field(False, description="Push realm to its own GitHub repository")
+    github_org: Optional[str] = Field(None, description="GitHub organization (uses personal account if not set)")
 
 
 class RealmResponse(BaseModel):
@@ -51,6 +53,7 @@ async def create_realm(request: RealmCreateRequest):
     3. Copy the project template to /realms/{realm_slug}/
     4. Replace all placeholders with realm-specific values
     5. Generate realm config and README
+    6. Optionally push to GitHub as its own repository
     """
     try:
         result = generate_realm(
@@ -63,7 +66,9 @@ async def create_realm(request: RealmCreateRequest):
             template=request.template or "basic",
             cloudflare_hostname=request.cloudflare_hostname,
             pages_project=request.pages_project,
-            backend_url=request.backend_url
+            backend_url=request.backend_url,
+            push_to_github=request.push_to_github or False,
+            github_org=request.github_org
         )
         
         if result.get("success"):
@@ -80,6 +85,16 @@ async def create_realm(request: RealmCreateRequest):
             )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/status/github")
+async def github_status():
+    """Check if GitHub integration is available"""
+    github_token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+    return {
+        "available": bool(github_token),
+        "token_source": "GITHUB_TOKEN" if os.environ.get("GITHUB_TOKEN") else ("GH_TOKEN" if os.environ.get("GH_TOKEN") else None)
+    }
 
 
 @router.get("/list", response_model=RealmResponse)
