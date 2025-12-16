@@ -3,12 +3,27 @@
   "name": "AwaOS MCP Configuration",
   "description": "Model Context Protocol servers for The Awa Network",
   "servers": {
+    "kitenga_whiro": {
+      "type": "python",
+      "command": "python",
+      "args": ["kaitiaki/kitenga_codex/start_kitenga.py"],
+      "environment": {
+        "DOTENV_PATH": ".env.kitenga_whiro",
+        "KITENGA_ASSISTANT_ID": "${KITENGA_ASSISTANT_ID}",
+        "OPENAI_VECTOR_STORE_ID": "${KITENGA_VECTOR_STORE_ID}",
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+        "SUPABASE_URL": "${SUPABASE_URL}",
+        "SUPABASE_SERVICE_ROLE_KEY": "${SUPABASE_SERVICE_ROLE_KEY}",
+        "MCP_PORT": "39285"
+      },
+      "description": "Kitenga Whiro - Oracle Kaitiaki: taonga watcher, summariser, translator, logger"
+    },
     "tepo": {
       "type": "python",
       "command": "python",
       "args": ["-m", "mcp.tepo_server.server"],
       "environment": {
-        "TE_PO_BASE_URL": "http://localhost:8010",
+        "TE_PO_BASE_URL": "http://localhost:8000",
         "PIPELINE_TOKEN": "${PIPELINE_TOKEN}"
       },
       "description": "Te Pō MCP Server - Vector memory, pipelines, kaitiaki tasks"
@@ -55,6 +70,24 @@
     }
   },
   "tools": {
+    "kitenga_whiro": [
+      "supabase_search",
+      "supabase_insert",
+      "read_file",
+      "list_files",
+      "kitenga_whisper",
+      "assistant_run",
+      "kitenga_vision_ocr",
+      "ocr_tool",
+      "translate_tool",
+      "summarise_text",
+      "enhanced_web_search",
+      "vector_save",
+      "pipeline_run",
+      "chat_save_session",
+      "generate_trade_me_listing",
+      "vector_batch_status"
+    ],
     "tepo": [
       "vector_search",
       "vector_store",

@@ -4,36 +4,27 @@ Lightweight Supabase client helpers with safe fallbacks.
 
 from __future__ import annotations
 
-import os
 from typing import Any, Dict, Optional
 from functools import lru_cache
 import logging
-from dotenv import load_dotenv
-from pathlib import Path
+from te_po.core.config import settings
 
 try:
     from supabase import create_client  # type: ignore
 except Exception:
     create_client = None  # type: ignore
 
-# Load environment variables from .env file
-env_path = Path(__file__).parent.parent / ".env"
-load_dotenv(env_path)
-
-SUPABASE_URL = os.getenv("SUPABASE_URL") or os.getenv("DEN_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_ANON_KEY") or os.getenv("DEN_API_KEY")
-
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger("supabase_client")
 
 # Debugging Supabase client initialization
-logger.debug(f"SUPABASE_URL: {SUPABASE_URL}")
-logger.debug(f"SUPABASE_KEY: {'Provided' if SUPABASE_KEY else 'Not Provided'}")
+logger.debug(f"SUPABASE_URL: {settings.supabase_url}")
+logger.debug(f"SUPABASE_KEY: {'Provided' if settings.supabase_service_role_key else 'Not Provided'}")
 
 supabase = None
-if create_client and SUPABASE_URL and SUPABASE_KEY:
+if create_client and settings.supabase_url and settings.supabase_service_role_key:
     try:
-        supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+        supabase = create_client(settings.supabase_url, settings.supabase_service_role_key)
         logger.debug("Supabase client initialized successfully.")
     except Exception as e:
         logger.error(f"Failed to initialize Supabase client: {e}")

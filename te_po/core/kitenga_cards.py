@@ -10,7 +10,8 @@ import requests
 from typing import Optional
 
 app = FastAPI(
-    title="Kitenga Backend API",
+    title="Kitenga Cards API",
+    description="Card OCR, pricing, and listing helper for collectible cards",
     version="1.0.0",
     docs_url="/docs" if os.getenv("ENVIRONMENT") != "production" else None,
     redoc_url="/redoc" if os.getenv("ENVIRONMENT") != "production" else None

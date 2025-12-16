@@ -2,6 +2,9 @@ import json
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import JSONResponse
+
+from te_po.state.read_state import get_private_state, get_public_state, get_state_version
 
 router = APIRouter(prefix="/logs", tags=["Logs"])
 
@@ -40,3 +43,21 @@ async def state():
         return json.loads(state_path.read_text(encoding="utf-8"))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Failed to read state: {exc}")
+
+
+@router.get("/state/public", response_class=JSONResponse)
+async def get_public_state_endpoint():
+    """Fetch the public project state."""
+    return get_public_state()
+
+
+@router.get("/state/private", response_class=JSONResponse)
+async def get_private_state_endpoint():
+    """Fetch the private project state. Protected by BearerAuthMiddleware."""
+    return get_private_state()
+
+
+@router.get("/state/version", response_class=JSONResponse)
+async def get_state_version_endpoint():
+    """Fetch the current state version."""
+    return get_state_version()

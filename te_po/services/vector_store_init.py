@@ -6,15 +6,19 @@ Skips creation if OPENAI_VECTOR_STORE_ID is already set.
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
 from openai import OpenAI
+from te_po.core.config import settings
 
 ROOT = Path(__file__).resolve().parents[1]
 ENV_PATH = ROOT / "core" / ".env"
 
+# Replace dotenv with settings
+SUPABASE_URL = settings.supabase_url
+SUPABASE_KEY = settings.supabase_service_role_key
 
-def load_env() -> None:
-    load_dotenv(ENV_PATH)
+# Ensure environment variables are loaded centrally
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise EnvironmentError("SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is not set.")
 
 
 def set_env_var(key: str, value: str) -> None:
@@ -34,7 +38,6 @@ def set_env_var(key: str, value: str) -> None:
 
 
 def main():
-    load_env()
     existing = os.getenv("OPENAI_VECTOR_STORE_ID")
     if existing:
         print(f"OPENAI_VECTOR_STORE_ID already set: {existing} (skip create)")

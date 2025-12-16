@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from te_po.utils.middleware.auth_middleware import BearerAuthMiddleware
 
-from te_po.core.env_loader import load_env, enforce_utf8_locale
+from te_po.core.env_loader import enforce_utf8_locale, get_env
 
 from te_po.routes import (
     intake,
@@ -33,8 +33,7 @@ from te_po.routes import (
 )
 from te_po.utils.middleware.utf8_enforcer import apply_utf8_middleware
 
-# Load environment early for local runs/tests
-load_env()
+# Enforce UTF-8 locale early for local runs/tests
 enforce_utf8_locale()
 
 

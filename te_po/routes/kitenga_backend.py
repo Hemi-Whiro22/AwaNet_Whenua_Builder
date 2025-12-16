@@ -980,6 +980,15 @@ def vector_search_tool():
         execute=lambda params: {
             "status": "success",
             "results": "Vector search results for params: {}".format(params)
+        },
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "The search query."},
+                "top_k": {"type": "integer", "description": "Number of top results to return.", "default": 5},
+                "threshold": {"type": "number", "description": "Minimum similarity threshold.", "default": 0.7}
+            },
+            "required": ["query"]
         }
     )
 

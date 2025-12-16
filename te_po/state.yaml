@@ -1,0 +1,66 @@
+meta:
+  last_updated: 2025-12-15
+  repo: The_Awa_Network
+  branch: main
+  commit: <git_sha_here>
+  environment: render
+urls:
+  local: http://localhost:10000
+  render: https://tiwhanawhana-backend.onrender.com
+  note: "External clients use render URL only (no :10000). Port is internal."
+
+services:
+  te_po:
+    status: active
+    entrypoints:
+      - /
+      - /heartbeat
+      - /docs
+      - /openapi.json
+      - /redoc
+    ports:
+      local: 10000
+    secrets_env_required:
+      - SUPABASE_URL
+      - SUPABASE_SERVICE_ROLE_KEY
+      - OPENAI_API_KEY
+      - DATABASE_URL
+    runtime_env_required:
+      - QUEUE_MODE
+      - CORS_ALLOW_ORIGINS
+      - PIPELINE_TOKEN
+      - HUMAN_BEARER_KEY
+
+security:
+  bearer_auth:
+    enabled: true
+    header: "Authorization: Bearer <token>"
+    token_env_vars:
+      - PIPELINE_TOKEN
+      - HUMAN_BEARER_KEY
+  unprotected_paths:
+    - /
+    - /heartbeat
+    - /health
+    - /docs
+    - /openapi.json
+    - /redoc
+  cors:
+    origins_env: CORS_ALLOW_ORIGINS
+    allow_methods: [GET, POST, OPTIONS]
+    allow_headers: [Authorization, Content-Type]
+
+pipelines:
+  queue_mode: inline
+  queue_mode_default: inline
+  queue_mode_render: inline
+  queue_modes_supported: [inline, rq]
+  postgres_tracking: enabled
+  redis_optional: true
+
+contracts:
+  api_base_paths:
+    - /
+  auth_required_default: true
+  auth_unprotected_paths_ref: security.unprotected_paths
+  cors_origins_source: env:CORS_ALLOW_ORIGINS

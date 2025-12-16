@@ -1,0 +1,21 @@
+# To-Do List for Backend Review
+
+- Validate TOOL_REGISTRY:
+    - Ensure all tools required by `kitenga_backend.py` are registered in `openai_tools.json`.
+    - Verify that tools listed in `openai_assistants.json` are functional and accessible.
+
+- Test Endpoints:
+    - Test `/tools/run` endpoint for dynamic tool invocation.
+    - Test `/tools/list` endpoint to ensure all tools are listed correctly.
+
+- Refactor Code:
+    - Modularize `kitenga_backend.py` by extracting reusable logic.
+    - Simplify `kitenga_tool_router.py` for better maintainability.
+
+- Write Tests:
+    - Add unit tests for `run_tool` and `list_tools` endpoints.
+    - Add integration tests for workflows like `process_document` and `query_knowledge_base`.
+
+- Push Changes:
+    - Commit and push validated changes to GitHub.
+    - Monitor Render deployment for any issues.

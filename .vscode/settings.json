@@ -15,5 +15,23 @@
   "python-envs.pythonProjects": [],
   "git.autofetch": false,
   "git.postCommitCommand": "none",
-  "git.enableSmartCommit": false
+  "git.enableSmartCommit": false,
+
+  // ─────────────────────────────────────────────
+  // 🐺 Kitenga Whiro MCP Configuration
+  // ─────────────────────────────────────────────
+  "github.copilot.chat.codeGeneration.useReferencedFiles": true,
+  "chat.mcp.discovery.enabled": true,
+  "chat.mcp.enabled": true,
+  "mcp": {
+    "servers": {
+      "kitenga_whiro": {
+        "command": "python",
+        "args": ["kaitiaki/kitenga_codex/start_kitenga.py"],
+        "env": {
+          "DOTENV_PATH": ".env.kitenga_whiro"
+        }
+      }
+    }
+  }
 }

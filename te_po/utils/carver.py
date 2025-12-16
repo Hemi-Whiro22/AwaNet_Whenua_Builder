@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from te_po.utils.safety_guard import safe_remove, safe_rmdir, safe_rename
+from te_po.core.config import settings
 
 # example:
 def delete_path(path: str) -> None:
@@ -9,7 +10,6 @@ def delete_path(path: str) -> None:
     safe_rmdir(path)
 
 import os, json, datetime
-from dotenv import load_dotenv
 from pathlib import Path
 from supabase import create_client
 from te_po.utils.safety_guard import protect_env
@@ -17,11 +17,13 @@ from te_po.utils.safety_guard import protect_env
 # 🛡️  enable protection first
 protect_env()
 
-# 🔧 load env
-env_path = Path(__file__).parent.parent / ".env"
-load_dotenv(env_path)
-DEN_URL = os.getenv("DEN_URL")
-DEN_API_KEY = os.getenv("DEN_API_KEY")
+# Replace dotenv with settings
+SUPABASE_URL = settings.supabase_url
+SUPABASE_KEY = settings.supabase_service_role_key
+
+# Ensure environment variables are loaded centrally
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise EnvironmentError("SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is not set.")
 
 # 🌿 load mauri
 mauri_path = Path(__file__).parent.parent / ".mauri" / "rongohia" / "mauri.json"
@@ -33,10 +35,10 @@ print(f"{glyph} Carver reflection mode — {kaitiaki}")
 
 # 🌐 connect Supabase
 supabase = None
-if DEN_URL and DEN_API_KEY:
+if SUPABASE_URL and SUPABASE_KEY:
     try:
-        supabase = create_client(DEN_URL, DEN_API_KEY)
-        print(f"🌐 Supabase connected → {DEN_URL}")
+        supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+        print(f"🌐 Supabase connected → {SUPABASE_URL}")
     except Exception as e:
         print(f"⚠️  Supabase unavailable: {e}")
 
