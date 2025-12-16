@@ -42,7 +42,11 @@ class RealmGenerator:
     def __init__(self, base_path: Optional[str] = None):
         self.base_path = Path(base_path or os.environ.get("WORKSPACE_ROOT", "/workspaces/The_Awa_Network"))
         self.template_path = self.base_path / "te_hau" / "project_template"
+        
+        # Realms directory - inside the project for now (permission issues with /workspaces root)
+        # Each realm gets its own git repo and can be opened as standalone project
         self.realms_path = self.base_path / "realms"
+        self.realms_path.mkdir(exist_ok=True)
         
         # For cloud deployments (Render), use templates folder in te_po
         self.cloud_template_path = Path(__file__).parent.parent / "templates" / "realm_template"
@@ -71,11 +75,13 @@ class RealmGenerator:
         cloudflare_hostname: Optional[str] = None,
         pages_project: Optional[str] = None,
         backend_url: Optional[str] = None,
-        github_org: Optional[str] = None,
-        push_to_github: bool = False
+        github_org: Optional[str] = None
     ) -> Dict:
         """
         Generate a new realm from template
+        
+        Creates realm as sibling to The_Awa_Network at /workspaces/{realm_name}
+        Initializes git repo - user pushes to GitHub when ready
         
         Args:
             realm_name: Name of the realm (e.g., te_wai)
@@ -95,6 +101,9 @@ class RealmGenerator:
         # Normalize realm name (lowercase, underscores for internal, hyphens for git)
         realm_slug = re.sub(r'[^a-z0-9_]', '_', realm_name.lower())
         repo_name = re.sub(r'[^a-z0-9-]', '-', realm_name.lower())  # GitHub-friendly name
+        
+        # Create realm in /realms/{realm_name}
+        # Each realm is its own git repo - can be moved/cloned anywhere
         realm_path = self.realms_path / realm_slug
         
         # Default APIs if none selected
@@ -171,20 +180,13 @@ class RealmGenerator:
         # Create initial README
         self._create_realm_readme(realm_path, realm_config)
         
-        # Step 3: Push to GitHub if requested
-        github_result = None
-        if push_to_github:
-            github_result = self._push_to_github(
-                realm_path=realm_path,
-                repo_name=repo_name,
-                description=description or f"Realm: {realm_name} - Kaitiaki: {kaitiaki_name}",
-                github_org=github_org
-            )
-            realm_config["github"] = github_result
-            
-            # Update config with GitHub info
-            with open(config_path, 'w', encoding='utf-8') as f:
-                json.dump(realm_config, f, indent=2)
+        # Step 3: Initialize git repo (user will push when ready)
+        git_result = self._init_git_repo(realm_path, realm_name, kaitiaki_name)
+        realm_config["git_initialized"] = git_result.get("success", False)
+        
+        # Update config
+        with open(config_path, 'w', encoding='utf-8') as f:
+            json.dump(realm_config, f, indent=2)
         
         # Step 4: Also store in database if available
         db_result = None
@@ -199,9 +201,80 @@ class RealmGenerator:
             "mode": "local",
             "realm_path": str(realm_path),
             "config": realm_config,
-            "github": github_result,
-            "database": db_result
+            "git": git_result,
+            "database": db_result,
+            "next_steps": [
+                f"cd {realm_path}",
+                "# Open in VS Code and 'Reopen in Container'",
+                "git remote add origin https://github.com/YOUR_ORG/{}.git".format(realm_config['repo_name']),
+                "git push -u origin main"
+            ]
         }
+    
+    def _init_git_repo(self, realm_path: Path, realm_name: str, kaitiaki_name: str) -> Dict:
+        """Initialize git repo with initial commit (user pushes when ready)"""
+        try:
+            # Initialize git repo
+            subprocess.run(
+                ["git", "init"],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            
+            # Configure git
+            subprocess.run(
+                ["git", "config", "user.email", "kaitiaki@awa.network"],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            subprocess.run(
+                ["git", "config", "user.name", "Kitenga Whiro"],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            
+            # Add all files
+            subprocess.run(
+                ["git", "add", "."],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            
+            # Initial commit
+            subprocess.run(
+                ["git", "commit", "-m", f"🌊 Initial spawn: {realm_name}\n\nKaitiaki: {kaitiaki_name}\nCreated by Kitenga Whiro realm generator"],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            
+            # Rename to main branch
+            subprocess.run(
+                ["git", "branch", "-M", "main"],
+                cwd=realm_path,
+                check=True,
+                capture_output=True
+            )
+            
+            return {
+                "success": True,
+                "message": "Git repo initialized with initial commit on 'main' branch"
+            }
+            
+        except subprocess.CalledProcessError as e:
+            return {
+                "success": False,
+                "error": f"Git command failed: {e.stderr.decode() if e.stderr else str(e)}"
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e)
+            }
     
     def _push_to_github(
         self,

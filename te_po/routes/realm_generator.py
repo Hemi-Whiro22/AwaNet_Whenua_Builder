@@ -31,8 +31,7 @@ class RealmCreateRequest(BaseModel):
     cloudflare_hostname: Optional[str] = Field(None, description="Custom Cloudflare hostname")
     pages_project: Optional[str] = Field(None, description="Cloudflare Pages project name")
     backend_url: Optional[str] = Field(None, description="Custom backend URL")
-    push_to_github: Optional[bool] = Field(False, description="Push realm to its own GitHub repository")
-    github_org: Optional[str] = Field(None, description="GitHub organization (uses personal account if not set)")
+    github_org: Optional[str] = Field(None, description="GitHub organization for suggested repo URL")
 
 
 class RealmResponse(BaseModel):
@@ -53,7 +52,7 @@ async def create_realm(request: RealmCreateRequest):
     3. Copy the project template to /realms/{realm_slug}/
     4. Replace all placeholders with realm-specific values
     5. Generate realm config and README
-    6. Optionally push to GitHub as its own repository
+    6. Initialize git repo (user pushes when ready)
     """
     try:
         result = generate_realm(
@@ -67,14 +66,13 @@ async def create_realm(request: RealmCreateRequest):
             cloudflare_hostname=request.cloudflare_hostname,
             pages_project=request.pages_project,
             backend_url=request.backend_url,
-            push_to_github=request.push_to_github or False,
             github_org=request.github_org
         )
         
         if result.get("success"):
             return RealmResponse(
                 success=True,
-                message=f"Realm '{request.realm_name}' created successfully",
+                message=f"Realm '{request.realm_name}' spawned at {result.get('realm_path')}",
                 data=result
             )
         else:
