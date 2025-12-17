@@ -31,6 +31,8 @@ def _build_client() -> Optional["Client"]:
     url = settings.supabase_url or os.getenv("SUPABASE_URL") or ""
     key = (
         settings.supabase_service_role_key
+        or os.getenv("SUPABASE_SECRET_KEY")
+        or os.getenv("SB_SECRET")
         or os.getenv("SUPABASE_KEY")
         or getattr(settings, "supabase_publishable_key", None)
         or settings.supabase_anon_key

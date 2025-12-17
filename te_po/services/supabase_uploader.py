@@ -73,7 +73,11 @@ def upload_file(
                     path_obj = candidate
                     break
         with path_obj.open("rb") as fh:
-            client.storage.from_(bucket_name).upload(dest_path, fh)
+            client.storage.from_(bucket_name).upload(
+                dest_path,
+                fh,
+                {"upsert": "true", "cacheControl": "3600"},
+            )
         return {"status": "ok", "bucket": bucket_name, "path": dest_path}
     except Exception as exc:
         return {"status": "error", "reason": str(exc)}
@@ -90,7 +94,11 @@ def upload_bytes(
         return {"status": "skipped", "reason": "supabase client not configured"}
     bucket_name = bucket or settings.supabase_bucket_storage or "tepo_storage"
     try:
-        client.storage.from_(bucket_name).upload(dest_path, data)
+        client.storage.from_(bucket_name).upload(
+            dest_path,
+            data,
+            {"upsert": "true", "cacheControl": "3600"},
+        )
         return {"status": "ok", "bucket": bucket_name, "path": dest_path}
     except Exception as exc:
         return {"status": "error", "reason": str(exc)}

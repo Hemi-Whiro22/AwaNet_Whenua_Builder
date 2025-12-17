@@ -7,8 +7,7 @@
   "capabilities": [
     "local_git",
     "github_api",
-    "versioning",
-    "deployment_tags"
+    "versioning"
   ],
   "environment": {
     "GITHUB_TOKEN": {

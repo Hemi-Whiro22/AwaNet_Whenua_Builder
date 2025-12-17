@@ -1,11 +1,10 @@
 import base64
+import hashlib
 import io
 import json
-import uuid
 import re
-import base64
-from typing import Any
-import hashlib
+import uuid
+from typing import Any, Dict, Tuple
 
 from te_po.mauri import MAURI
 from te_po.pipeline.cleaner.text_cleaner import clean_text
@@ -17,8 +16,7 @@ from te_po.services.local_storage import save, timestamp
 from te_po.services.vector_service import push_chunk_embedding
 from te_po.services.supabase_uploader import (
     record_file_metadata,
-    upload_file,
-    hash_file,
+    upload_bytes,
     detect_content_type,
 )
 from te_po.utils.openai_client import client as oa_client, DEFAULT_BACKEND_MODEL, generate_text
@@ -64,12 +62,54 @@ def _extract_pdf_text(file_bytes: bytes) -> str:
     return "\n\n".join(text_parts).strip()
 
 
-def _persist_raw(image_bytes: bytes, filename: str | None) -> str:
+def _persist_raw(
+    image_bytes: bytes,
+    filename: str | None,
+    source: str,
+    allow_supabase: bool = True,
+) -> Tuple[str, Dict[str, Any], str]:
     safe_name = filename or f"upload_{uuid.uuid4().hex}"
     encoded = base64.b64encode(image_bytes).decode("utf-8")
     raw_file = f"{timestamp()}_{safe_name}.b64"
-    save("raw", raw_file, encoded)
-    return raw_file
+    dest_path = f"{source}/raw/{raw_file}"
+
+    if allow_supabase:
+        upload_result = upload_bytes(encoded.encode("utf-8"), dest_path)
+    else:
+        upload_result = {"status": "skipped", "reason": "taonga_mode", "path": dest_path}
+
+    if upload_result.get("status") == "ok":
+        return dest_path, upload_result, encoded
+
+    # Fallback to local persistence when Supabase is unavailable or skipped
+    local_path = save("raw", raw_file, encoded)
+    fallback_result = dict(upload_result)
+    fallback_result.setdefault("path", dest_path)
+    fallback_result["fallback_path"] = local_path
+    return local_path, fallback_result, encoded
+
+
+def _persist_clean_text(
+    cleaned_text: str,
+    source: str,
+    allow_supabase: bool = True,
+) -> Tuple[str, Dict[str, Any]]:
+    clean_file = f"{timestamp()}_{uuid.uuid4().hex}.txt"
+    dest_path = f"{source}/clean/{clean_file}"
+
+    if allow_supabase:
+        upload_result = upload_bytes(cleaned_text.encode("utf-8"), dest_path)
+    else:
+        upload_result = {"status": "skipped", "reason": "taonga_mode", "path": dest_path}
+
+    if upload_result.get("status") == "ok":
+        return dest_path, upload_result
+
+    local_path = save("clean", clean_file, cleaned_text)
+    fallback_result = dict(upload_result)
+    fallback_result.setdefault("path", dest_path)
+    fallback_result["fallback_path"] = local_path
+    return local_path, fallback_result
 
 
 def _html_to_text(raw: str) -> str:
@@ -94,7 +134,13 @@ def run_pipeline(
 ) -> dict[str, Any]:
     log_memory_usage("start of pipeline")
 
-    raw_file = _persist_raw(file_bytes, filename)
+    taonga_restricted = (mode or source) == "taonga" and not allow_taonga_store
+    raw_file, raw_upload, raw_encoded = _persist_raw(
+        file_bytes,
+        filename,
+        source,
+        allow_supabase=not taonga_restricted,
+    )
     name = (filename or "").lower()
     glyph = (
         MAURI.get("identity", {}).get("glyph_id")
@@ -175,8 +221,11 @@ def run_pipeline(
         }
 
     cleaned = clean_text(raw_text)
-    clean_file = f"{timestamp()}_{uuid.uuid4().hex}.txt"
-    save("clean", clean_file, cleaned)
+    clean_file, clean_upload = _persist_clean_text(
+        cleaned,
+        source,
+        allow_supabase=not taonga_restricted,
+    )
 
     chunks = chunk_text(cleaned)
     meta = {
@@ -227,24 +276,16 @@ def run_pipeline(
         ),
     )
 
-    # Best-effort uploads to Supabase (raw + clean) and metadata
-    supabase_uploads = {}
-    raw_hash = hash_file(raw_file)
-    clean_hash = hash_file(clean_file)
-    raw_ct = detect_content_type(raw_file)
-    clean_ct = detect_content_type(clean_file)
-    if (mode or source) == "taonga" and not allow_taonga_store:
-        supabase_uploads["raw"] = {"status": "skipped", "reason": "taonga_mode"}
-        supabase_uploads["clean"] = {"status": "skipped", "reason": "taonga_mode"}
-    else:
-        try:
-            supabase_uploads["raw"] = upload_file(raw_file, f"{source}/{raw_file}")
-        except Exception:
-            supabase_uploads["raw"] = {"status": "error", "reason": "upload failed"}
-        try:
-            supabase_uploads["clean"] = upload_file(clean_file, f"{source}/{clean_file}")
-        except Exception:
-            supabase_uploads["clean"] = {"status": "error", "reason": "upload failed"}
+    # Content metadata hashes / content-type
+    raw_hash = hashlib.sha256(raw_encoded.encode("utf-8", errors="ignore")).hexdigest()
+    clean_hash = hashlib.sha256(cleaned.encode("utf-8", errors="ignore")).hexdigest()
+    raw_ct = detect_content_type(filename or "") or "text/plain"
+    clean_ct = detect_content_type(clean_file) or "text/plain"
+
+    supabase_uploads = {
+        "raw": raw_upload,
+        "clean": clean_upload,
+    }
 
     summary_result = None
     summary_long = None

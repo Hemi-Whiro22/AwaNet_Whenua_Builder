@@ -39,9 +39,9 @@
       "description": "Supabase MCP Server - Database queries, schema inspection"
     },
     "git": {
-      "type": "typescript",
-      "command": "node",
-      "args": ["mcp/git_server/server.js"],
+      "type": "python",
+      "command": "python",
+      "args": ["-m", "mcp.git_server.server"],
       "environment": {
         "GITHUB_TOKEN": "${GITHUB_TOKEN}",
         "GIT_USER_NAME": "AwaOS",
@@ -110,11 +110,18 @@
       "check_rls"
     ],
     "git": [
-      "git_commit",
-      "git_tag",
-      "github_create_pr",
-      "github_list_prs",
-      "semantic_version"
+      "init",
+      "commit_push",
+      "status",
+      "log",
+      "branch",
+      "checkout",
+      "tag",
+      "rollback",
+      "remote_add",
+      "github_create_repo",
+      "github_list_repos",
+      "github_create_release"
     ],
     "cloudflare": [
       "deploy_pages",

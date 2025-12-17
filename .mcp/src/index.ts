@@ -40,6 +40,34 @@ function tehau(args: string[]): string {
 }
 
 /**
+ * Ensure realm context is aligned with the requested realm.
+ */
+function ensureRealmContext(
+  requested?: string | null
+): { realm: string | null; switchOutput?: string; error?: string } {
+  const currentRealm = getCurrentRealm();
+  const desiredRealm = requested || currentRealm;
+
+  if (!desiredRealm) {
+    return { realm: null };
+  }
+
+  if (requested && requested !== currentRealm) {
+    const result = tehau(["context", "--switch", requested]);
+    const trimmed = result.trim();
+    const failurePattern = /(error|failed|not found)/i;
+    if (trimmed && failurePattern.test(trimmed)) {
+      return { realm: null, error: trimmed || "Failed to switch realm." };
+    }
+
+    const updatedRealm = getCurrentRealm() || requested;
+    return { realm: updatedRealm, switchOutput: trimmed };
+  }
+
+  return { realm: desiredRealm };
+}
+
+/**
  * Read JSON file safely
  */
 function readJson(path: string): any {
@@ -285,44 +313,67 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     case "realm_switch": {
       const realm = args?.realm as string;
-      const result = tehau(["context", "--switch", realm]);
-      return { content: [{ type: "text", text: result }] };
+      const { switchOutput, error } = ensureRealmContext(realm);
+      if (error) {
+        return { content: [{ type: "text", text: error }] };
+      }
+      const message = switchOutput || `Switched to realm ${realm}`;
+      return { content: [{ type: "text", text: message }] };
     }
 
     case "pipeline_run": {
       const pipeline = args?.pipeline as string;
       const input = args?.input as string;
-      const realm = (args?.realm as string) || getCurrentRealm();
+      const { realm, switchOutput, error } = ensureRealmContext(args?.realm as string | undefined);
+      if (error) {
+        return { content: [{ type: "text", text: error }] };
+      }
       if (!realm) {
         return { content: [{ type: "text", text: "No realm specified or active" }] };
       }
       const result = tehau(["pipeline", realm, pipeline, "--input", input]);
-      return { content: [{ type: "text", text: result }] };
+      const output = [switchOutput, result?.trim?.() || result].filter(Boolean).join("\n");
+      return { content: [{ type: "text", text: output }] };
     }
 
     case "pipeline_list": {
-      const realm = (args?.realm as string) || getCurrentRealm();
+      const { realm, switchOutput, error } = ensureRealmContext(args?.realm as string | undefined);
+      if (error) {
+        return { content: [{ type: "text", text: error }] };
+      }
       if (!realm) {
         return { content: [{ type: "text", text: "No realm specified or active" }] };
       }
       const result = tehau(["pipelines", realm]);
-      return { content: [{ type: "text", text: result }] };
+      const output = [switchOutput, result?.trim?.() || result].filter(Boolean).join("\n");
+      return { content: [{ type: "text", text: output }] };
     }
 
     case "seal_verify": {
-      const realm = args?.realm as string;
+      const { realm, switchOutput, error } = ensureRealmContext(args?.realm as string | undefined);
+      if (error) {
+        return { content: [{ type: "text", text: error }] };
+      }
+      if (!realm) {
+        return { content: [{ type: "text", text: "No realm specified or active" }] };
+      }
       const result = tehau(["seal", "--verify", "--realm", realm]);
-      return { content: [{ type: "text", text: result }] };
+      const output = [switchOutput, result?.trim?.() || result].filter(Boolean).join("\n");
+      return { content: [{ type: "text", text: output }] };
     }
 
     case "kaitiaki_invoke": {
       const kaitiakiName = args?.name as string;
       const prompt = args?.prompt as string;
-      const realm = args?.realm as string;
-      const cmdArgs = ["kaitiaki", "invoke", kaitiakiName, "--prompt", `"${prompt}"`];
+      const { realm, switchOutput, error } = ensureRealmContext(args?.realm as string | undefined);
+      if (error) {
+        return { content: [{ type: "text", text: error }] };
+      }
+      const cmdArgs = ["kaitiaki", "invoke", kaitiakiName, "--prompt", JSON.stringify(prompt)];
       if (realm) cmdArgs.push("--realm", realm);
       const result = tehau(cmdArgs);
-      return { content: [{ type: "text", text: result }] };
+      const output = [switchOutput, result?.trim?.() || result].filter(Boolean).join("\n");
+      return { content: [{ type: "text", text: output }] };
     }
 
     case "kaitiaki_list": {
