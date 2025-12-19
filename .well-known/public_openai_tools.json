@@ -1,0 +1,135 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "The Awa Network - Public Tools",
+    "version": "1.0.0",
+    "description": "Public-facing cultural AI tools provided by The Awa Network, built for te reo Māori learning, whakapapa research, and culturally aligned data interaction."
+  },
+  "paths": {
+    "/summarise": {
+      "post": {
+        "summary": "Whakarāpopoto Taonga",
+        "description": "Summarise a document (PDF, PNG, or TXT) using te ao Māori principles. Outputs kaupapa, kupu matua, and cultural insights.",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": ["file"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Summary and key points from taonga document"
+          }
+        }
+      }
+    },
+    "/memory/search": {
+      "post": {
+        "summary": "Rapua i te Pātaka",
+        "description": "Search stored taonga (summarised documents, whakapapa, or kōrero tuku iho) using natural language.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": { "type": "string" }
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Matching taonga from the pātaka"
+          }
+        }
+      }
+    },
+    "/reo/translate": {
+      "post": {
+        "summary": "Whakamāori",
+        "description": "Translate everyday English into te reo Māori with macrons, applying basic grammatical structure.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": { "type": "string" }
+                },
+                "required": ["text"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Translated text with macrons"
+          }
+        }
+      }
+    },
+    "/tikanga/apply": {
+      "post": {
+        "summary": "Tāmoko i te Tikanga",
+        "description": "Apply tikanga-based analysis to a document. Highlights alignment, tensions, and suggestions for cultural guidance.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": { "type": "string" }
+                },
+                "required": ["content"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tikanga-aligned commentary and feedback"
+          }
+        }
+      }
+    },
+    "/comparison/cultural-commercial": {
+      "post": {
+        "summary": "Tātaritanga Ahurea me te Arumoni",
+        "description": "Compare a kaupapa or document through cultural and commercial lenses. Offers strengths, gaps, and ethical insight.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": { "type": "string" }
+                },
+                "required": ["text"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Comparison report with cultural and commercial perspectives"
+          }
+        }
+      }
+    }
+  }
+}

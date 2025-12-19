@@ -5,8 +5,8 @@
   "servers": {
     "kitenga_whiro": {
       "type": "python",
-      "command": "python",
-      "args": ["kaitiaki/kitenga_codex/start_kitenga.py"],
+      "command": "/usr/bin/env",
+      "args": ["python3", "kaitiaki/kitenga_codex/start_kitenga.py"],
       "environment": {
         "DOTENV_PATH": ".env.kitenga_whiro",
         "KITENGA_ASSISTANT_ID": "${KITENGA_ASSISTANT_ID}",
@@ -20,8 +20,8 @@
     },
     "tepo": {
       "type": "python",
-      "command": "python",
-      "args": ["-m", "mcp.tepo_server.server"],
+      "command": "/usr/bin/env",
+      "args": ["python3", "-m", "mcp.tepo_server.server"],
       "environment": {
         "TE_PO_BASE_URL": "http://localhost:8000",
         "PIPELINE_TOKEN": "${PIPELINE_TOKEN}"
@@ -30,8 +30,8 @@
     },
     "supabase": {
       "type": "python",
-      "command": "python",
-      "args": ["-m", "mcp.supabase_server.server"],
+      "command": "/usr/bin/env",
+      "args": ["python3", "-m", "mcp.supabase_server.server"],
       "environment": {
         "SUPABASE_URL": "${SUPABASE_URL}",
         "SUPABASE_SERVICE_ROLE_KEY": "${SUPABASE_SERVICE_ROLE_KEY}"
@@ -40,8 +40,8 @@
     },
     "git": {
       "type": "python",
-      "command": "python",
-      "args": ["-m", "mcp.git_server.server"],
+      "command": "/usr/bin/env",
+      "args": ["python3", "-m", "mcp.git_server.server"],
       "environment": {
         "GITHUB_TOKEN": "${GITHUB_TOKEN}",
         "GIT_USER_NAME": "AwaOS",
@@ -51,8 +51,8 @@
     },
     "cloudflare": {
       "type": "python",
-      "command": "python",
-      "args": ["-m", "mcp.cloudflare_server.server"],
+      "command": "/usr/bin/env",
+      "args": ["python3", "-m", "mcp.cloudflare_server.server"],
       "environment": {
         "CLOUDFLARE_API_TOKEN": "${CLOUDFLARE_API_TOKEN}",
         "CLOUDFLARE_ACCOUNT_ID": "${CLOUDFLARE_ACCOUNT_ID}"
@@ -61,8 +61,8 @@
     },
     "render": {
       "type": "python",
-      "command": "python",
-      "args": ["-m", "mcp.render_server.server"],
+      "command": "/usr/bin/env",
+      "args": ["python3", "-m", "mcp.render_server.server"],
       "environment": {
         "RENDER_API_KEY": "${RENDER_API_KEY}"
       },

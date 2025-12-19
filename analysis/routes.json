@@ -1,0 +1,3447 @@
+{
+  "te_po.core.main": [
+    {
+      "path": "/",
+      "methods": [],
+      "summary": null,
+      "doc": null,
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "root"
+    },
+    {
+      "path": "/",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "root"
+    },
+    {
+      "path": "/heartbeat",
+      "methods": [],
+      "summary": null,
+      "doc": null,
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "heartbeat"
+    },
+    {
+      "path": "/heartbeat",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "heartbeat"
+    }
+  ],
+  "te_po.routes.intake": [
+    {
+      "path": "/intake/ocr",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "Body_intake_ocr_intake_ocr_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "file",
+            "type": "UploadFile",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "intake_ocr"
+    },
+    {
+      "path": "/intake/summarize",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "SummarizeRequest",
+        "module": "te_po.models.intake_models",
+        "fields": [
+          {
+            "name": "text",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "mode",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "intake_summarize"
+    }
+  ],
+  "te_po.routes.reo": [
+    {
+      "path": "/reo/translate",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "ReoRequest",
+        "module": "te_po.models.reo_models",
+        "fields": [
+          {
+            "name": "text",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "reo_translate"
+    },
+    {
+      "path": "/reo/explain",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "ReoRequest",
+        "module": "te_po.models.reo_models",
+        "fields": [
+          {
+            "name": "text",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "reo_explain"
+    },
+    {
+      "path": "/reo/pronounce",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "ReoRequest",
+        "module": "te_po.models.reo_models",
+        "fields": [
+          {
+            "name": "text",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "reo_pronounce"
+    }
+  ],
+  "te_po.routes.vector": [
+    {
+      "path": "/vector/embed",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "EmbedRequest",
+        "module": "te_po.models.vector_models",
+        "fields": [
+          {
+            "name": "text",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "vector_embed"
+    },
+    {
+      "path": "/vector/search",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "SearchRequest",
+        "module": "te_po.models.vector_models",
+        "fields": [
+          {
+            "name": "query",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "top_k",
+            "type": "typing.Optional[int]",
+            "required": false,
+            "default": 5,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "vector_search"
+    },
+    {
+      "path": "/vector/retrieval-test",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Run a simple retrieval against stored embeddings for confidence checks.",
+      "body": {
+        "model": "SearchRequest",
+        "module": "te_po.models.vector_models",
+        "fields": [
+          {
+            "name": "query",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "top_k",
+            "type": "typing.Optional[int]",
+            "required": false,
+            "default": 5,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "vector_retrieval_test"
+    },
+    {
+      "path": "/vector/recent",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Return recent vector logs saved locally (te_po/storage/openai/<glyph>.json).\n    Useful for UI 'recent vectors' display.",
+      "body": null,
+      "query_params": [
+        {
+          "name": "limit",
+          "type": "int",
+          "required": false,
+          "default": 5,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "vector_recent"
+    },
+    {
+      "path": "/vector/batch-status",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Check the status of a vector store file batch (GA OpenAI API).",
+      "body": null,
+      "query_params": [
+        {
+          "name": "batch_id",
+          "type": "str",
+          "required": true,
+          "default": "PydanticUndefined",
+          "description": "OpenAI vector store file batch id",
+          "kind": "ParamTypes.query"
+        },
+        {
+          "name": "vector_store_id",
+          "type": "str | None",
+          "required": false,
+          "description": "Override vector store id; defaults to OPENAI_VECTOR_STORE_ID env",
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "vector_batch_status"
+    }
+  ],
+  "te_po.routes.status": [
+    {
+      "path": "/status",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Lightweight health endpoint for Te P\u014d.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "status"
+    },
+    {
+      "path": "/status/openai",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Check OpenAI readiness (key present, optional vector store reachable).",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "status_openai"
+    },
+    {
+      "path": "/status/full",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "status_full"
+    }
+  ],
+  "te_po.routes.ocr": [
+    {
+      "path": "/ocr/scan",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "Body_scan_ocr_scan_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "file",
+            "type": "UploadFile",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "scan"
+    },
+    {
+      "path": "/ocr/stealth",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Direct StealthOCR test endpoint using real Tesseract + vision fallback (with cultural protection).\n    Returns the protected text and metadata; does NOT run the full pipeline.",
+      "body": {
+        "model": "Body_stealth_scan_ocr_stealth_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "file",
+            "type": "UploadFile",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "stealth_scan"
+    },
+    {
+      "path": "/ocr/stealth-testit",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Alternate StealthOCR test endpoint using the testit class (real Tesseract + vision).\n    Useful to compare behaviors without touching the main pipeline.",
+      "body": {
+        "model": "Body_stealth_scan_testit_ocr_stealth_testit_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "file",
+            "type": "UploadFile",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "stealth_scan_testit"
+    }
+  ],
+  "te_po.routes.research": [
+    {
+      "path": "/research/query",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": "<class 'dict'>",
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "research"
+    },
+    {
+      "path": "/research/web_search",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Web search via Brave API with optional site filters. Falls back to stacked search if missing key, empty, or failure.",
+      "body": "<class 'dict'>",
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "research_web_search"
+    },
+    {
+      "path": "/research/stacked",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Layered research: local vector search -> recent docs -> web/LLM fallback.",
+      "body": "<class 'dict'>",
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "research_stacked"
+    }
+  ],
+  "te_po.routes.dev": [
+    {
+      "path": "/dev/ocr",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "Body_dev_ocr_dev_ocr_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "file",
+            "type": "UploadFile",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "dev_ocr"
+    },
+    {
+      "path": "/dev/clean",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "dev_clean"
+    },
+    {
+      "path": "/dev/chunk",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "dev_chunk"
+    },
+    {
+      "path": "/dev/openai",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "dev_openai"
+    },
+    {
+      "path": "/dev/summarise",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "Body_dev_summarise_dev_summarise_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "text",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "mode",
+            "type": "str",
+            "required": false,
+            "default": "research",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "dev_summarise"
+    },
+    {
+      "path": "/dev/ollama",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Quick chat endpoint for the local Ollama (Llama 3) runtime.",
+      "body": {
+        "model": "Body_dev_ollama_dev_ollama_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "prompt",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "system_prompt",
+            "type": "str",
+            "required": false,
+            "default": "You are a helpful M\u0101ori research assistant.",
+            "description": null
+          },
+          {
+            "name": "model",
+            "type": "str",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "dev_ollama"
+    },
+    {
+      "path": "/dev/routes",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "List all registered routes in the application.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "list_routes"
+    },
+    {
+      "path": "/dev/kitenga-status",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Get Kitenga Whiro configuration status.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "kitenga_status"
+    }
+  ],
+  "te_po.routes.memory": [
+    {
+      "path": "/memory/",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "memory_index"
+    },
+    {
+      "path": "/memory/retrieve",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "MemoryQuery",
+        "module": "te_po.models.memory_models",
+        "fields": [
+          {
+            "name": "query",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "top_k",
+            "type": "int | None",
+            "required": false,
+            "default": 5,
+            "description": null
+          },
+          {
+            "name": "min_similarity",
+            "type": "float | None",
+            "required": false,
+            "default": 0.0,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "memory_retrieve"
+    }
+  ],
+  "te_po.routes.pipeline": [
+    {
+      "path": "/pipeline/run",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Run the pipeline on an uploaded file (preferred) or inline text.",
+      "body": {
+        "model": "Body_pipeline_run_pipeline_run_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "file",
+            "type": "fastapi.datastructures.UploadFile | None",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "text",
+            "type": "str | None",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "source",
+            "type": "str",
+            "required": false,
+            "default": "api",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "pipeline_run"
+    },
+    {
+      "path": "/pipeline/enqueue",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Enqueue a pipeline job (inline mode) or to Redis/RQ (RQ mode).\n    \n    Queue mode controlled by QUEUE_MODE env var:\n    - inline (default): Run immediately in-process, no Redis required\n    - rq: Use Redis queue, requires Redis configured\n    \n    Returns:\n    - Inline mode: {job_id, status, result?, error?}\n    - RQ mode: {job_id, rq_job_id, queue, realm, status}\n    \n    Optional header: X-Realm (for multi-tenant tracking)",
+      "body": {
+        "model": "Body_enqueue_pipeline_pipeline_enqueue_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "file",
+            "type": "UploadFile",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "enqueue_pipeline"
+    },
+    {
+      "path": "/pipeline/status/{job_id}",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Return the pipeline job status from PostgreSQL (durable tracking).\n    \n    Includes: status, result, error, started_at, finished_at, queue, realm.\n    Falls back to Supabase if PostgreSQL unavailable (backward compat).",
+      "body": null,
+      "query_params": [],
+      "path_params": [
+        {
+          "name": "job_id",
+          "type": "str",
+          "required": true,
+          "default": "PydanticUndefined",
+          "kind": "ParamTypes.path"
+        }
+      ],
+      "response_model": null,
+      "name": "pipeline_status"
+    },
+    {
+      "path": "/pipeline/jobs/recent",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Get recent pipeline jobs from PostgreSQL for dashboarding.\n    \n    Query parameters:\n    - limit: Max results (default 50, max 500)\n    - realm: Filter by realm (optional)\n    - queue: Filter by queue (urgent/default/slow) (optional)\n    - status: Filter by status (queued/running/finished/failed) (optional)",
+      "body": null,
+      "query_params": [
+        {
+          "name": "limit",
+          "type": "int",
+          "required": false,
+          "default": 50,
+          "kind": "ParamTypes.query"
+        },
+        {
+          "name": "realm",
+          "type": "str | None",
+          "required": false,
+          "kind": "ParamTypes.query"
+        },
+        {
+          "name": "queue",
+          "type": "str | None",
+          "required": false,
+          "kind": "ParamTypes.query"
+        },
+        {
+          "name": "status",
+          "type": "str | None",
+          "required": false,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "get_recent_jobs_endpoint"
+    },
+    {
+      "path": "/pipeline/batch",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Enqueue multiple files; returns batch_id and job_ids.",
+      "body": {
+        "model": "Body_enqueue_batch_pipeline_batch_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "files",
+            "type": "typing.List[fastapi.datastructures.UploadFile]",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "enqueue_batch"
+    },
+    {
+      "path": "/pipeline/batch-status/{batch_id}",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": null,
+      "query_params": [],
+      "path_params": [
+        {
+          "name": "batch_id",
+          "type": "str",
+          "required": true,
+          "default": "PydanticUndefined",
+          "kind": "ParamTypes.path"
+        }
+      ],
+      "response_model": null,
+      "name": "batch_status"
+    },
+    {
+      "path": "/pipeline/cancel/{job_id}",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": null,
+      "query_params": [],
+      "path_params": [
+        {
+          "name": "job_id",
+          "type": "str",
+          "required": true,
+          "default": "PydanticUndefined",
+          "kind": "ParamTypes.path"
+        }
+      ],
+      "response_model": null,
+      "name": "cancel_job"
+    },
+    {
+      "path": "/pipeline/health/queue",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Health check for queue system.\n    \n    In inline mode: Returns 'disabled' (no Redis needed).\n    In RQ mode: Checks Redis connectivity and queue lengths.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "queue_health"
+    }
+  ],
+  "te_po.routes.assistant": [
+    {
+      "path": "/assistant/run",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Bridge endpoint for assistant tool-calls.\n    Accepts either:\n    - file_url: URL to fetch file bytes\n    - text: inline text to process",
+      "body": "<class 'dict'>",
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "assistant_run"
+    },
+    {
+      "path": "/assistant/create",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Create an OpenAI Assistant with optional vector store.\n    Used by Realm Generator to spin up kaitiaki with their own vector stores.\n    \n    Payload:\n    - name: Assistant name (required)\n    - instructions: System instructions (required)\n    - model: Model to use (default: gpt-4o)\n    - create_vector_store: Whether to create a vector store (default: True)\n    - vector_store_name: Name for the vector store",
+      "body": "<class 'dict'>",
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "create_assistant"
+    },
+    {
+      "path": "/assistant/list",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "List all OpenAI assistants.",
+      "body": null,
+      "query_params": [
+        {
+          "name": "limit",
+          "type": "int",
+          "required": false,
+          "default": 20,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "list_assistants"
+    },
+    {
+      "path": "/assistant/vector-stores",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "List all OpenAI vector stores.",
+      "body": null,
+      "query_params": [
+        {
+          "name": "limit",
+          "type": "int",
+          "required": false,
+          "default": 20,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "list_vector_stores"
+    }
+  ],
+  "te_po.routes.recall": [
+    {
+      "path": "/{realm_id}/recall",
+      "methods": [
+        "POST"
+      ],
+      "summary": "Retrieve realm-scoped recall matches.",
+      "doc": null,
+      "body": {
+        "model": "RecallRequest",
+        "module": "te_po.routes.recall",
+        "fields": [
+          {
+            "name": "query",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": "User query to recall context for."
+          },
+          {
+            "name": "thread_id",
+            "type": "str | None",
+            "required": false,
+            "default": null,
+            "description": "Optional thread/session identifier."
+          },
+          {
+            "name": "top_k",
+            "type": "int | None",
+            "required": false,
+            "default": null,
+            "description": "Maximum matches to return."
+          },
+          {
+            "name": "vector_store",
+            "type": "str | None",
+            "required": false,
+            "default": null,
+            "description": "Vector store backend hint (e.g., 'supabase', 'openai')."
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [
+        {
+          "name": "realm_id",
+          "type": "str",
+          "required": true,
+          "default": "PydanticUndefined",
+          "description": "Identifier for the realm (e.g., researcher).",
+          "kind": "ParamTypes.path"
+        }
+      ],
+      "response_model": null,
+      "name": "realm_recall"
+    }
+  ],
+  "te_po.routes.kitenga_backend": [
+    {
+      "path": "/kitenga/vision-ocr",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Extract text from an image via OpenAI vision; optionally persist to vector store.",
+      "body": {
+        "model": "VisionOCRRequest",
+        "module": "te_po.routes.kitenga_backend",
+        "fields": [
+          {
+            "name": "image_base64",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "save_vector",
+            "type": "bool",
+            "required": false,
+            "default": false,
+            "description": null
+          },
+          {
+            "name": "run_pipeline",
+            "type": "bool",
+            "required": false,
+            "default": false,
+            "description": null
+          },
+          {
+            "name": "pipeline_source",
+            "type": "str | None",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "vision_ocr"
+    },
+    {
+      "path": "/kitenga/cards/scan",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Scan DBS cards (front/back), extract metadata, estimate value, and persist to Supabase.\n    - Accepts multipart with front/back UploadFile or JSON with URLs.\n    - Uses StealthOCR -> parsed metadata -> optional Brave price estimate.\n    - Stores raw/process artifacts in Supabase bucket `ocr_cards` and rows in `card_scans`.",
+      "body": {
+        "model": "Body_scan_cards_kitenga_cards_scan_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "front",
+            "type": "fastapi.datastructures.UploadFile | None",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "back",
+            "type": "fastapi.datastructures.UploadFile | None",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "payload",
+            "type": "te_po.routes.kitenga_backend.CardScanRequest | None",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "scan_cards"
+    },
+    {
+      "path": "/kitenga/tool/ocr",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "OcrToolRequest",
+        "module": "te_po.routes.kitenga_backend",
+        "fields": [
+          {
+            "name": "file_url",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": "Remote URL with the bytes to OCR"
+          },
+          {
+            "name": "taonga_mode",
+            "type": "bool",
+            "required": false,
+            "default": false,
+            "description": "Preserve stealth metadata when true"
+          },
+          {
+            "name": "prefer_offline",
+            "type": "bool",
+            "required": false,
+            "default": true,
+            "description": "Try local OCR before OpenAI vision"
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "ocr_tool_handler"
+    },
+    {
+      "path": "/kitenga/tool/translate",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": {
+        "model": "TranslateToolRequest",
+        "module": "te_po.routes.kitenga_backend",
+        "fields": [
+          {
+            "name": "text",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": "Text to translate"
+          },
+          {
+            "name": "target_language",
+            "type": "str",
+            "required": false,
+            "default": "mi",
+            "description": "Language code e.g., mi/en"
+          },
+          {
+            "name": "context",
+            "type": "str | None",
+            "required": false,
+            "default": null,
+            "description": "Optional translation context or guidance"
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "translate_tool_handler"
+    },
+    {
+      "path": "/kitenga/ask",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Relay Te Ao chat prompts to the configured OpenAI assistant using the Assistants API.",
+      "body": {
+        "model": "KitengaAskRequest",
+        "module": "te_po.routes.kitenga_backend",
+        "fields": [
+          {
+            "name": "prompt",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "session_id",
+            "type": "str | None",
+            "required": false,
+            "default": null,
+            "description": "Supabase logging session id"
+          },
+          {
+            "name": "thread_id",
+            "type": "str | None",
+            "required": false,
+            "default": null,
+            "description": "Assistant thread id for continuity"
+          },
+          {
+            "name": "metadata",
+            "type": "typing.Optional[typing.Dict[str, typing.Any]]",
+            "required": false,
+            "default": null,
+            "description": "Optional metadata stored in logs"
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "ask_kitenga"
+    },
+    {
+      "path": "/kitenga/gpt-whisper",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Free-form text -> OpenAI response with optional retrieval/pipeline/vector persistence. Supports JSON or multipart/form-data with file.",
+      "body": {
+        "model": "Body_gpt_whisper_kitenga_gpt_whisper_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "payload",
+            "type": "te_po.routes.kitenga_backend.WhisperRequest | None",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "file",
+            "type": "fastapi.datastructures.UploadFile | None",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "whisper",
+            "type": "str | None",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "session_id",
+            "type": "str | None",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "thread_id",
+            "type": "str | None",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "system_prompt",
+            "type": "str | None",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "run_pipeline",
+            "type": "bool | str",
+            "required": false,
+            "default": false,
+            "description": null
+          },
+          {
+            "name": "save_vector",
+            "type": "bool | str",
+            "required": false,
+            "default": false,
+            "description": null
+          },
+          {
+            "name": "use_retrieval",
+            "type": "bool | str",
+            "required": false,
+            "default": false,
+            "description": null
+          },
+          {
+            "name": "use_openai_summary",
+            "type": "bool | str",
+            "required": false,
+            "default": false,
+            "description": null
+          },
+          {
+            "name": "use_openai_translation",
+            "type": "bool | str",
+            "required": false,
+            "default": false,
+            "description": null
+          },
+          {
+            "name": "mode",
+            "type": "str | None",
+            "required": false,
+            "default": "research",
+            "description": null
+          },
+          {
+            "name": "allow_taonga_store",
+            "type": "bool | str",
+            "required": false,
+            "default": false,
+            "description": null
+          },
+          {
+            "name": "source",
+            "type": "str | None",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [
+        {
+          "name": "session_id_q",
+          "type": "str | None",
+          "required": false,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "gpt_whisper"
+    },
+    {
+      "path": "/kitenga/run_pipeline",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Endpoint to execute a pipeline.\n    Args:\n        pipeline_name: Name of the pipeline to execute.\n        input_data: Input data for the pipeline.\n        realm_name: Realm in which the pipeline resides.\n        verbose: Whether to show detailed logs.\n    Returns:\n        Pipeline execution results.",
+      "body": {
+        "model": "Body_run_pipeline_endpoint_kitenga_run_pipeline_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "pipeline_name",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "input_data",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "realm_name",
+            "type": "str",
+            "required": false,
+            "default": "Te_Po",
+            "description": null
+          },
+          {
+            "name": "verbose",
+            "type": "bool",
+            "required": false,
+            "default": false,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "run_pipeline_endpoint"
+    },
+    {
+      "path": "/kitenga/query_knowledge_base",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Endpoint to query the knowledge base using vector search.\n    Args:\n        query: The search query string.\n        top_k: Number of top results to return.\n        min_similarity: Minimum similarity threshold for results.\n    Returns:\n        A list of matching knowledge base entries.",
+      "body": {
+        "model": "Body_query_knowledge_base_kitenga_query_knowledge_base_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "query",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "top_k",
+            "type": "int",
+            "required": false,
+            "default": 5,
+            "description": null
+          },
+          {
+            "name": "min_similarity",
+            "type": "float",
+            "required": false,
+            "default": 0.7,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "query_knowledge_base"
+    }
+  ],
+  "te_po.routes.kitenga_db": [
+    {
+      "path": "/kitenga/db/status",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Check kitenga schema connection status.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "kitenga_db_status"
+    },
+    {
+      "path": "/kitenga/db/stats",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Get kitenga schema statistics.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "kitenga_db_stats"
+    },
+    {
+      "path": "/kitenga/db/logs",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Create a log entry in kitenga.logs.",
+      "body": {
+        "model": "LogEventRequest",
+        "module": "te_po.routes.kitenga_db",
+        "fields": [
+          {
+            "name": "event",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "detail",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "source",
+            "type": "str",
+            "required": false,
+            "default": "kitenga_whiro",
+            "description": null
+          },
+          {
+            "name": "data",
+            "type": "typing.Optional[typing.Dict[str, typing.Any]]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "create_log"
+    },
+    {
+      "path": "/kitenga/db/logs/recent",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Get recent log entries.",
+      "body": null,
+      "query_params": [
+        {
+          "name": "limit",
+          "type": "int",
+          "required": false,
+          "default": 50,
+          "kind": "ParamTypes.query"
+        },
+        {
+          "name": "source",
+          "type": "str",
+          "required": false,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "recent_logs"
+    },
+    {
+      "path": "/kitenga/db/memory",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Store context memory.",
+      "body": {
+        "model": "MemoryRequest",
+        "module": "te_po.routes.kitenga_db",
+        "fields": [
+          {
+            "name": "content",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "metadata",
+            "type": "typing.Optional[typing.Dict[str, typing.Any]]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "create_memory"
+    },
+    {
+      "path": "/kitenga/db/memory/search",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Search context memory.",
+      "body": {
+        "model": "SearchRequest",
+        "module": "te_po.routes.kitenga_db",
+        "fields": [
+          {
+            "name": "query",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "limit",
+            "type": "int",
+            "required": false,
+            "default": 10,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "search_memory_route"
+    },
+    {
+      "path": "/kitenga/db/chat/log",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Save a chat log entry.",
+      "body": {
+        "model": "ChatLogRequest",
+        "module": "te_po.routes.kitenga_db",
+        "fields": [
+          {
+            "name": "session_id",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "user_message",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "assistant_reply",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "thread_id",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "mode",
+            "type": "str",
+            "required": false,
+            "default": "chat",
+            "description": null
+          },
+          {
+            "name": "metadata",
+            "type": "typing.Optional[typing.Dict[str, typing.Any]]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "create_chat_log"
+    },
+    {
+      "path": "/kitenga/db/chat/history/{session_id}",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Get chat history for a session.",
+      "body": null,
+      "query_params": [
+        {
+          "name": "limit",
+          "type": "int",
+          "required": false,
+          "default": 50,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [
+        {
+          "name": "session_id",
+          "type": "str",
+          "required": true,
+          "default": "PydanticUndefined",
+          "kind": "ParamTypes.path"
+        }
+      ],
+      "response_model": null,
+      "name": "chat_history"
+    },
+    {
+      "path": "/kitenga/db/taonga",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Store a taonga.",
+      "body": {
+        "model": "TaongaRequest",
+        "module": "te_po.routes.kitenga_db",
+        "fields": [
+          {
+            "name": "title",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "content",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "metadata",
+            "type": "typing.Optional[typing.Dict[str, typing.Any]]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "create_taonga"
+    },
+    {
+      "path": "/kitenga/db/taonga/{taonga_id}",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Get a taonga by ID.",
+      "body": null,
+      "query_params": [],
+      "path_params": [
+        {
+          "name": "taonga_id",
+          "type": "str",
+          "required": true,
+          "default": "PydanticUndefined",
+          "kind": "ParamTypes.path"
+        }
+      ],
+      "response_model": null,
+      "name": "get_taonga"
+    },
+    {
+      "path": "/kitenga/db/taonga/search",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Search taonga.",
+      "body": {
+        "model": "SearchRequest",
+        "module": "te_po.routes.kitenga_db",
+        "fields": [
+          {
+            "name": "query",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "limit",
+            "type": "int",
+            "required": false,
+            "default": 10,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "search_taonga_route"
+    },
+    {
+      "path": "/kitenga/db/pipeline/recent",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Get recent pipeline runs.",
+      "body": null,
+      "query_params": [
+        {
+          "name": "limit",
+          "type": "int",
+          "required": false,
+          "default": 20,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "recent_pipelines"
+    },
+    {
+      "path": "/kitenga/db/whakapapa",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Log to whakapapa (lineage).",
+      "body": {
+        "model": "WhakapapaRequest",
+        "module": "te_po.routes.kitenga_db",
+        "fields": [
+          {
+            "name": "id",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "title",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "category",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "summary",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "content_type",
+            "type": "str",
+            "required": false,
+            "default": "event",
+            "description": null
+          },
+          {
+            "name": "data",
+            "type": "typing.Optional[typing.Dict[str, typing.Any]]",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "author",
+            "type": "str",
+            "required": false,
+            "default": "kitenga_whiro",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "create_whakapapa"
+    }
+  ],
+  "te_po.routes.logs": [
+    {
+      "path": "/logs/recent",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Return the most recent audit events (reverse chronological).",
+      "body": null,
+      "query_params": [
+        {
+          "name": "limit",
+          "type": "int",
+          "required": false,
+          "default": 50,
+          "kind": "ParamTypes.query"
+        },
+        {
+          "name": "contains",
+          "type": "str | None",
+          "required": false,
+          "description": "Filter by substring in event/detail",
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "recent_logs"
+    }
+  ],
+  "te_po.routes.assistants_meta": [
+    {
+      "path": "/assistants/profiles",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Return assistant profile definitions for QA/Ops wiring.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "assistant_profiles"
+    }
+  ],
+  "te_po.routes.state": [
+    {
+      "path": "/logs/ledger",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Return recent carving ledger entries from Mauri state.",
+      "body": null,
+      "query_params": [
+        {
+          "name": "limit",
+          "type": "int",
+          "required": false,
+          "default": 200,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "ledger"
+    },
+    {
+      "path": "/logs/state",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Return Te P\u014d state summary from Mauri.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "state"
+    },
+    {
+      "path": "/logs/state/public",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Fetch the public project state.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "get_public_state_endpoint"
+    },
+    {
+      "path": "/logs/state/private",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Fetch the private project state. Protected by BearerAuthMiddleware.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "get_private_state_endpoint"
+    },
+    {
+      "path": "/logs/state/version",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Fetch the current state version.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "get_state_version_endpoint"
+    }
+  ],
+  "te_po.routes.documents": [
+    {
+      "path": "/documents/profiles",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Return recent document profiles from local pipeline logs (best-effort) and Supabase metadata if available.",
+      "body": null,
+      "query_params": [
+        {
+          "name": "limit",
+          "type": "int",
+          "required": false,
+          "default": 50,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "document_profiles"
+    }
+  ],
+  "te_po.routes.chat": [
+    {
+      "path": "/chat/save-session",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Finalize/save a chat session: optional summary, tag, and store in Supabase logs.\n    - session_id: chat session identifier\n    - title: optional human-friendly title\n    - tags: optional comma-separated tags\n    - summarize: when true, attempts an OpenAI summary of session context",
+      "body": null,
+      "query_params": [
+        {
+          "name": "session_id",
+          "type": "str",
+          "required": true,
+          "default": "PydanticUndefined",
+          "kind": "ParamTypes.query"
+        },
+        {
+          "name": "title",
+          "type": "typing.Optional[str]",
+          "required": false,
+          "kind": "ParamTypes.query"
+        },
+        {
+          "name": "tags",
+          "type": "typing.Optional[str]",
+          "required": false,
+          "kind": "ParamTypes.query"
+        },
+        {
+          "name": "summarize",
+          "type": "bool",
+          "required": false,
+          "default": true,
+          "kind": "ParamTypes.query"
+        },
+        {
+          "name": "summary_words",
+          "type": "int",
+          "required": false,
+          "default": 300,
+          "kind": "ParamTypes.query"
+        },
+        {
+          "name": "write_ari",
+          "type": "bool",
+          "required": false,
+          "default": false,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "save_session"
+    }
+  ],
+  "te_po.routes.cards": [
+    {
+      "path": "/cards/scan-image",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Run OCR on a card photo to extract card details (name, number, rarity).",
+      "body": {
+        "model": "Body_scan_image_cards_scan_image_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "image",
+            "type": "UploadFile",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "scan_image"
+    },
+    {
+      "path": "/cards/estimate-value",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Aggregate multi-source valuation for a trading card.",
+      "body": "<class 'typing._GenericAlias'>",
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "estimate_value"
+    },
+    {
+      "path": "/cards/build-row",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Build a Trade Me-ready row from card metadata.",
+      "body": "<class 'typing._GenericAlias'>",
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "build_row"
+    },
+    {
+      "path": "/cards/build-csv",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Build a CSV from a list of card objects.\n    groups_of: batch size (default 10) for splitting files client-side.",
+      "body": "<class 'typing._GenericAlias'>",
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "build_csv"
+    },
+    {
+      "path": "/cards/value",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Lookup card value from reference; fallback to default.",
+      "body": "<class 'typing._GenericAlias'>",
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "card_value"
+    },
+    {
+      "path": "/cards/upload-image",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Upload a single card image to Supabase storage and return its public URL.",
+      "body": {
+        "model": "Body_upload_image_cards_upload_image_post",
+        "module": "fastapi._compat.v2",
+        "fields": [
+          {
+            "name": "image",
+            "type": "UploadFile",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "upload_image"
+    }
+  ],
+  "te_po.routes.roshi": [
+    {
+      "path": "/roshi/query_card_context",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Vector search over card_context_index. Body: { query: \"text\" }",
+      "body": "<class 'typing._GenericAlias'>",
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "query_card_context"
+    }
+  ],
+  "te_po.routes.sell": [
+    {
+      "path": "/sell/add_to_csv",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Log a card for Trade Me CSV output by inserting into cards_for_sale.",
+      "body": "<class 'typing._GenericAlias'>",
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "add_to_csv"
+    }
+  ],
+  "te_po.routes.metrics": [
+    {
+      "path": "/metrics",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": null,
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "metrics"
+    }
+  ],
+  "te_po.routes.awa_protocol": [
+    {
+      "path": "/awa/envelope",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Wrap message with realm context.\n    Adds realm identity, timestamp, and metadata.",
+      "body": {
+        "model": "EnvelopeRequest",
+        "module": "te_po.routes.awa_protocol",
+        "fields": [
+          {
+            "name": "message",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "realm",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "metadata",
+            "type": "typing.Optional[typing.Dict[str, typing.Any]]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "wrap_envelope"
+    },
+    {
+      "path": "/awa/task",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Execute a kaitiaki task.\n    Routes to the specified kaitiaki with task details.",
+      "body": {
+        "model": "TaskRequest",
+        "module": "te_po.routes.awa_protocol",
+        "fields": [
+          {
+            "name": "kaitiaki",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "task",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "input",
+            "type": "typing.Dict[str, typing.Any]",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "priority",
+            "type": "str",
+            "required": false,
+            "default": "normal",
+            "description": null
+          },
+          {
+            "name": "realm",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "execute_task"
+    },
+    {
+      "path": "/awa/handoff",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Transfer task between kaitiaki.\n    Records context transfer and updates ownership.",
+      "body": {
+        "model": "HandoffRequest",
+        "module": "te_po.routes.awa_protocol",
+        "fields": [
+          {
+            "name": "from_kaitiaki",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "to_kaitiaki",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "task_id",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "context",
+            "type": "typing.Optional[typing.Dict[str, typing.Any]]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "handoff_task"
+    },
+    {
+      "path": "/awa/memory/query",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Semantic search across vector memory.\n    Returns documents with similarity scores.",
+      "body": {
+        "model": "MemoryQueryRequest",
+        "module": "te_po.routes.awa_protocol",
+        "fields": [
+          {
+            "name": "query",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "top_k",
+            "type": "int",
+            "required": false,
+            "default": 5,
+            "description": null
+          },
+          {
+            "name": "threshold",
+            "type": "float",
+            "required": false,
+            "default": 0.7,
+            "description": null
+          },
+          {
+            "name": "realm",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "tapu_level",
+            "type": "typing.Optional[int]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "query_memory"
+    },
+    {
+      "path": "/awa/memory/store",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Store content to vector memory with embedding.\n    Assigns tapu level and metadata.",
+      "body": {
+        "model": "MemoryStoreRequest",
+        "module": "te_po.routes.awa_protocol",
+        "fields": [
+          {
+            "name": "content",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "metadata",
+            "type": "typing.Optional[typing.Dict[str, typing.Any]]",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "realm",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "tapu_level",
+            "type": "int",
+            "required": false,
+            "default": 0,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "store_memory"
+    },
+    {
+      "path": "/awa/log",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Log activity to carving log.\n    Creates immutable audit trail entry.",
+      "body": {
+        "model": "LogRequest",
+        "module": "te_po.routes.awa_protocol",
+        "fields": [
+          {
+            "name": "event_type",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "details",
+            "type": "typing.Dict[str, typing.Any]",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "realm",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "severity",
+            "type": "str",
+            "required": false,
+            "default": "info",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "log_activity"
+    },
+    {
+      "path": "/awa/notify",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Send notification to recipient.\n    Supports multiple channels (Slack, email, realtime).",
+      "body": {
+        "model": "NotifyRequest",
+        "module": "te_po.routes.awa_protocol",
+        "fields": [
+          {
+            "name": "recipient",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "message",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "channel",
+            "type": "str",
+            "required": false,
+            "default": "default",
+            "description": null
+          },
+          {
+            "name": "priority",
+            "type": "str",
+            "required": false,
+            "default": "normal",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "send_notification"
+    },
+    {
+      "path": "/awa/kaitiaki/register",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Register a new kaitiaki (guardian agent).\n    Stores role, system prompt, and tool definitions.",
+      "body": {
+        "model": "KaitiakiregisterRequest",
+        "module": "te_po.routes.awa_protocol",
+        "fields": [
+          {
+            "name": "name",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "role",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "system_prompt",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "tools",
+            "type": "typing.Optional[typing.List[str]]",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "realm",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "register_kaitiaki"
+    },
+    {
+      "path": "/awa/kaitiaki/context",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Get context (state, capabilities, memory) for a kaitiaki.",
+      "body": null,
+      "query_params": [
+        {
+          "name": "kaitiaki",
+          "type": "str",
+          "required": true,
+          "default": "PydanticUndefined",
+          "kind": "ParamTypes.query"
+        },
+        {
+          "name": "realm",
+          "type": "typing.Optional[str]",
+          "required": false,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [],
+      "response_model": null,
+      "name": "get_kaitiaki_context"
+    },
+    {
+      "path": "/awa/kaitiaki",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "List all registered kaitiaki in the system.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "list_kaitiaki"
+    },
+    {
+      "path": "/awa/vector/embed",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Generate embeddings for text.\n    Uses configured embedding model (OpenAI).",
+      "body": {
+        "model": "VectorEmbedRequest",
+        "module": "te_po.routes.awa_protocol",
+        "fields": [
+          {
+            "name": "text",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "model",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "generate_embeddings"
+    },
+    {
+      "path": "/awa/vector/search",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Semantic search (alias for /awa/memory/query).",
+      "body": {
+        "model": "MemoryQueryRequest",
+        "module": "te_po.routes.awa_protocol",
+        "fields": [
+          {
+            "name": "query",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "top_k",
+            "type": "int",
+            "required": false,
+            "default": 5,
+            "description": null
+          },
+          {
+            "name": "threshold",
+            "type": "float",
+            "required": false,
+            "default": 0.7,
+            "description": null
+          },
+          {
+            "name": "realm",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": null
+          },
+          {
+            "name": "tapu_level",
+            "type": "typing.Optional[int]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "semantic_search"
+    },
+    {
+      "path": "/awa/pipeline",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Execute a Te P\u014d pipeline.\n    Valid pipelines: ocr, summarise, translate, embed, taonga",
+      "body": {
+        "model": "PipelineRequest",
+        "module": "te_po.routes.awa_protocol",
+        "fields": [
+          {
+            "name": "name",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "input",
+            "type": "typing.Dict[str, typing.Any]",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "wait",
+            "type": "bool",
+            "required": false,
+            "default": false,
+            "description": null
+          },
+          {
+            "name": "realm",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "run_pipeline"
+    },
+    {
+      "path": "/awa/pipelines",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "List available pipelines.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "list_pipelines"
+    }
+  ],
+  "te_po.routes.llama3": [
+    {
+      "path": "/awa/llama3/review",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Review code for issues and improvements.",
+      "body": {
+        "model": "CodeReviewRequest",
+        "module": "te_po.routes.llama3",
+        "fields": [
+          {
+            "name": "code",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": "Code to review"
+          },
+          {
+            "name": "language",
+            "type": "str",
+            "required": false,
+            "default": "python",
+            "description": "Programming language"
+          },
+          {
+            "name": "focus",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": "Specific areas to focus on (e.g., 'performance', 'security')"
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": {
+        "model": "CodeReviewResponse",
+        "module": "te_po.routes.llama3",
+        "fields": [
+          {
+            "name": "language",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "issues",
+            "type": "list[str]",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "suggestions",
+            "type": "list[str]",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "overall_score",
+            "type": "int",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "name": "review_code"
+    },
+    {
+      "path": "/awa/llama3/docstring",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Generate docstring for code.",
+      "body": {
+        "model": "DocstringRequest",
+        "module": "te_po.routes.llama3",
+        "fields": [
+          {
+            "name": "code",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": "Code to document"
+          },
+          {
+            "name": "language",
+            "type": "str",
+            "required": false,
+            "default": "python",
+            "description": "Programming language"
+          },
+          {
+            "name": "style",
+            "type": "str",
+            "required": false,
+            "default": "numpy",
+            "description": "Docstring style (numpy, google, sphinx)"
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": {
+        "model": "DocstringResponse",
+        "module": "te_po.routes.llama3",
+        "fields": [
+          {
+            "name": "docstring",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "language",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "style",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "name": "generate_docstring"
+    },
+    {
+      "path": "/awa/llama3/analyze-error",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Analyze an error and suggest solutions.",
+      "body": {
+        "model": "ErrorAnalysisRequest",
+        "module": "te_po.routes.llama3",
+        "fields": [
+          {
+            "name": "error",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": "Error message or traceback"
+          },
+          {
+            "name": "context",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": "Code context or error description"
+          },
+          {
+            "name": "language",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": "Programming language"
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": {
+        "model": "ErrorAnalysisResponse",
+        "module": "te_po.routes.llama3",
+        "fields": [
+          {
+            "name": "root_cause",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "explanation",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "solutions",
+            "type": "list[str]",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "severity",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "name": "analyze_error"
+    },
+    {
+      "path": "/awa/llama3/status",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Check if Llama3 is available.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "llama3_status"
+    }
+  ],
+  "te_po.routes.realm_generator": [
+    {
+      "path": "/realms/create",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Create a new realm from template\n    \n    This will:\n    1. Create an OpenAI assistant for the realm's kaitiaki\n    2. Create a vector store for the realm's knowledge\n    3. Copy the project template to /realms/{realm_slug}/\n    4. Replace all placeholders with realm-specific values\n    5. Generate realm config and README\n    6. Initialize git repo (user pushes when ready)",
+      "body": {
+        "model": "RealmCreateRequest",
+        "module": "te_po.routes.realm_generator",
+        "fields": [
+          {
+            "name": "realm_name",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": "Name of the realm (e.g., Te Wai)"
+          },
+          {
+            "name": "kaitiaki_name",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": "Name of the guardian"
+          },
+          {
+            "name": "kaitiaki_role",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": "Role/title of the guardian"
+          },
+          {
+            "name": "kaitiaki_instructions",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": "Custom instructions for the AI assistant"
+          },
+          {
+            "name": "description",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": "Description of the realm and its purpose"
+          },
+          {
+            "name": "selected_apis",
+            "type": "typing.Optional[list]",
+            "required": false,
+            "default": null,
+            "description": "List of APIs to enable"
+          },
+          {
+            "name": "template",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": "basic",
+            "description": "Template type: basic, with-kaitiaki, with-storage, full"
+          },
+          {
+            "name": "cloudflare_hostname",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": "Custom Cloudflare hostname"
+          },
+          {
+            "name": "pages_project",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": "Cloudflare Pages project name"
+          },
+          {
+            "name": "backend_url",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": "Custom backend URL"
+          },
+          {
+            "name": "github_org",
+            "type": "typing.Optional[str]",
+            "required": false,
+            "default": null,
+            "description": "GitHub organization for suggested repo URL"
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": {
+        "model": "RealmResponse",
+        "module": "te_po.routes.realm_generator",
+        "fields": [
+          {
+            "name": "success",
+            "type": "bool",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "message",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "data",
+            "type": "typing.Optional[dict]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "name": "create_realm"
+    },
+    {
+      "path": "/realms/status/github",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Check if GitHub integration is available",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "github_status"
+    },
+    {
+      "path": "/realms/list",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "List all spawned realms\n    \n    Returns all realms in the /realms/ directory with their configs",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": {
+        "model": "RealmResponse",
+        "module": "te_po.routes.realm_generator",
+        "fields": [
+          {
+            "name": "success",
+            "type": "bool",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "message",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "data",
+            "type": "typing.Optional[dict]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "name": "list_all_realms"
+    },
+    {
+      "path": "/realms/{realm_slug}",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Get information about a specific realm\n    \n    Args:\n        realm_slug: The slug identifier for the realm (e.g., te_wai)",
+      "body": null,
+      "query_params": [],
+      "path_params": [
+        {
+          "name": "realm_slug",
+          "type": "str",
+          "required": true,
+          "default": "PydanticUndefined",
+          "kind": "ParamTypes.path"
+        }
+      ],
+      "response_model": {
+        "model": "RealmResponse",
+        "module": "te_po.routes.realm_generator",
+        "fields": [
+          {
+            "name": "success",
+            "type": "bool",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "message",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "data",
+            "type": "typing.Optional[dict]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "name": "get_realm_info"
+    },
+    {
+      "path": "/realms/{realm_slug}/sql",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Get the SQL migration script for a realm's tables\n    \n    Args:\n        realm_slug: The slug identifier for the realm\n        kaitiaki_name: Name of the kaitiaki guardian",
+      "body": null,
+      "query_params": [
+        {
+          "name": "kaitiaki_name",
+          "type": "str",
+          "required": false,
+          "default": "Kaitiaki",
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [
+        {
+          "name": "realm_slug",
+          "type": "str",
+          "required": true,
+          "default": "PydanticUndefined",
+          "kind": "ParamTypes.path"
+        }
+      ],
+      "response_model": null,
+      "name": "get_realm_sql"
+    },
+    {
+      "path": "/realms/template/info",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "Get information about the realm template\n    \n    Returns the template config showing what placeholders and secrets are needed",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "get_template_info"
+    },
+    {
+      "path": "/realms/{realm_slug}",
+      "methods": [
+        "DELETE"
+      ],
+      "summary": null,
+      "doc": "Delete a realm\n    \n    WARNING: This permanently deletes the realm folder.\n    Does NOT delete OpenAI resources (assistant, vector store).\n    \n    Args:\n        realm_slug: The slug identifier for the realm\n        confirm: Must be True to actually delete",
+      "body": null,
+      "query_params": [
+        {
+          "name": "confirm",
+          "type": "bool",
+          "required": false,
+          "default": false,
+          "kind": "ParamTypes.query"
+        }
+      ],
+      "path_params": [
+        {
+          "name": "realm_slug",
+          "type": "str",
+          "required": true,
+          "default": "PydanticUndefined",
+          "kind": "ParamTypes.path"
+        }
+      ],
+      "response_model": {
+        "model": "RealmResponse",
+        "module": "te_po.routes.realm_generator",
+        "fields": [
+          {
+            "name": "success",
+            "type": "bool",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "message",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "data",
+            "type": "typing.Optional[dict]",
+            "required": false,
+            "default": null,
+            "description": null
+          }
+        ]
+      },
+      "name": "delete_realm"
+    }
+  ],
+  "te_po.routes.cors_manager": [
+    {
+      "path": "/cors/origins",
+      "methods": [
+        "GET"
+      ],
+      "summary": null,
+      "doc": "List all currently allowed CORS origins.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": {
+        "model": "OriginsResponse",
+        "module": "te_po.routes.cors_manager",
+        "fields": [
+          {
+            "name": "origins",
+            "type": "typing.List[str]",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          },
+          {
+            "name": "count",
+            "type": "int",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "name": "list_origins"
+    },
+    {
+      "path": "/cors/origins/add",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Add a new CORS origin at runtime.",
+      "body": {
+        "model": "OriginRequest",
+        "module": "te_po.routes.cors_manager",
+        "fields": [
+          {
+            "name": "origin",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "add_origin"
+    },
+    {
+      "path": "/cors/origins/remove",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Remove a CORS origin at runtime.",
+      "body": {
+        "model": "OriginRequest",
+        "module": "te_po.routes.cors_manager",
+        "fields": [
+          {
+            "name": "origin",
+            "type": "str",
+            "required": true,
+            "default": "PydanticUndefined",
+            "description": null
+          }
+        ]
+      },
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "remove_origin"
+    },
+    {
+      "path": "/cors/origins/reset",
+      "methods": [
+        "POST"
+      ],
+      "summary": null,
+      "doc": "Reset CORS origins to defaults.",
+      "body": null,
+      "query_params": [],
+      "path_params": [],
+      "response_model": null,
+      "name": "reset_origins"
+    }
+  ]
+}

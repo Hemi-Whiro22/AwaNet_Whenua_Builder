@@ -60,6 +60,11 @@ npm run dev
 # http://localhost:5173
 ```
 
+### Te Pō MCP (stdio)
+```bash
+TE_PO_BASE_URL=http://localhost:8010 PIPELINE_TOKEN=your_token python tepo_mcp_server.py
+```
+
 ---
 
 ## Key Features

@@ -1,3 +1,8 @@
+# System prerequisite: install Python CLI so `python` resolves on PATH.
+# Linux (Debian/Ubuntu): sudo apt update && sudo apt install python3
+# macOS (Homebrew): brew install python
+# Windows (winget): winget install python.python.3
+
 # --- Build Tools ---
 pip>=25.3
 setuptools>=75.0.0

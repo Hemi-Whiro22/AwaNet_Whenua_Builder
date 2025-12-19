@@ -1,0 +1,135 @@
+{
+    "name": "git",
+    "version": "1.0.0",
+    "description": "GitHub Integration Schema",
+    "baseUrl": "https://api.github.com",
+    "authentication": {
+        "type": "bearer",
+        "tokenEnv": "GITHUB_TOKEN",
+        "required": true
+    },
+    "services": {
+        "repositories": {
+            "description": "Repository management",
+            "endpoints": [
+                "/repos/{owner}/{repo}",
+                "/repos/{owner}/{repo}/contents/{path}",
+                "/user/repos"
+            ]
+        },
+        "branches": {
+            "description": "Branch operations",
+            "endpoints": [
+                "/repos/{owner}/{repo}/branches",
+                "/repos/{owner}/{repo}/branches/{branch}",
+                "/repos/{owner}/{repo}/git/refs/heads"
+            ]
+        },
+        "commits": {
+            "description": "Commit history and details",
+            "endpoints": [
+                "/repos/{owner}/{repo}/commits",
+                "/repos/{owner}/{repo}/commits/{sha}",
+                "/repos/{owner}/{repo}/commits/{sha}/pulls"
+            ]
+        },
+        "pullRequests": {
+            "description": "Pull request management",
+            "endpoints": [
+                "/repos/{owner}/{repo}/pulls",
+                "/repos/{owner}/{repo}/pulls/{pull_number}",
+                "/repos/{owner}/{repo}/pulls/{pull_number}/reviews",
+                "/repos/{owner}/{repo}/pulls/{pull_number}/files"
+            ]
+        },
+        "issues": {
+            "description": "Issue tracking",
+            "endpoints": [
+                "/repos/{owner}/{repo}/issues",
+                "/repos/{owner}/{repo}/issues/{issue_number}",
+                "/repos/{owner}/{repo}/issues/{issue_number}/comments"
+            ]
+        },
+        "releases": {
+            "description": "Release management",
+            "endpoints": [
+                "/repos/{owner}/{repo}/releases",
+                "/repos/{owner}/{repo}/releases/{release_id}",
+                "/repos/{owner}/{repo}/tags"
+            ]
+        },
+        "users": {
+            "description": "User and team management",
+            "endpoints": [
+                "/user",
+                "/users/{username}",
+                "/repos/{owner}/{repo}/collaborators",
+                "/orgs/{org}/teams"
+            ]
+        },
+        "actions": {
+            "description": "GitHub Actions workflows",
+            "endpoints": [
+                "/repos/{owner}/{repo}/actions/workflows",
+                "/repos/{owner}/{repo}/actions/runs",
+                "/repos/{owner}/{repo}/actions/runs/{run_id}"
+            ]
+        }
+    },
+    "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+            "operation": {
+                "type": "string",
+                "description": "Git operation to perform"
+            },
+            "owner": {
+                "type": "string",
+                "description": "Repository owner (user or org)"
+            },
+            "repo": {
+                "type": "string",
+                "description": "Repository name"
+            },
+            "path": {
+                "type": "string",
+                "description": "File path in repository"
+            },
+            "branch": {
+                "type": "string",
+                "description": "Branch name"
+            },
+            "content": {
+                "type": "string",
+                "description": "File content"
+            },
+            "message": {
+                "type": "string",
+                "description": "Commit message"
+            },
+            "query": {
+                "type": "object",
+                "description": "Query parameters"
+            }
+        }
+    },
+    "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+            "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+            },
+            "data": {
+                "type": "object",
+                "description": "Response data"
+            },
+            "error": {
+                "type": "string",
+                "description": "Error message"
+            }
+        }
+    }
+}

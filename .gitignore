@@ -264,3 +264,4 @@ dist/
 # === End AwaNet Project Protection ===
 mauri/encrypted_keys/
 realms/*/
+!.well-known/

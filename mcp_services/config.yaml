@@ -1,0 +1,151 @@
+# MCP Services Continue IDE Configuration
+# ========================================
+# Add this to ~/.continue/config.yaml to enable all MCP servers
+
+mcpServers:
+  # Te Pō Backend Service
+  # Exposes all backend APIs: chat, OCR, vector search, knowledge base, etc.
+  tepo:
+    command: python3
+    args: ["${WORKSPACE_DIR}/mcp_services/tepo/server.py"]
+    env:
+      TE_PO_BASE_URL: "${TE_PO_BASE_URL:http://localhost:8010}"
+      TE_PO_AUTH_TOKEN: "${TE_PO_AUTH_TOKEN:}"
+      TE_PO_TIMEOUT: "60"
+
+  # GitHub Integration
+  # Repository management: create/update files, manage branches, PRs, issues, releases
+  git:
+    command: python3
+    args: ["${WORKSPACE_DIR}/mcp_services/git/server.py"]
+    env:
+      GITHUB_TOKEN: "${GITHUB_TOKEN}"
+
+  # Render Deployment Service
+  # Deploy, scale, and monitor services on Render
+  render:
+    command: python3
+    args: ["${WORKSPACE_DIR}/mcp_services/render/server.py"]
+    env:
+      RENDER_API_KEY: "${RENDER_API_KEY}"
+
+  # Supabase Database Service
+  # CRUD operations, RPC calls, file storage management
+  supabase:
+    command: python3
+    args: ["${WORKSPACE_DIR}/mcp_services/supabase/server.py"]
+    env:
+      SUPABASE_URL: "${SUPABASE_URL}"
+      SUPABASE_KEY: "${SUPABASE_KEY}"
+
+# Optional: Cloudflare (add when ready)
+# cloudflare:
+#   command: python
+#   args: ["${WORKSPACE_DIR}/mcp_services/cloudflare/server.py"]
+#   env:
+#     CLOUDFLARE_API_KEY: "${CLOUDFLARE_API_KEY}"
+
+# Tool definitions
+tools:
+  # Te Pō tools
+  - name: tepo_kitenga_whisper
+    category: chat
+    mcp: tepo
+
+  - name: tepo_vector_search
+    category: knowledge
+    mcp: tepo
+
+  - name: tepo_ocr_scan
+    category: processing
+    mcp: tepo
+
+  - name: tepo_pipeline_run
+    category: processing
+    mcp: tepo
+
+  - name: tepo_memory_store
+    category: memory
+    mcp: tepo
+
+  - name: tepo_memory_query
+    category: memory
+    mcp: tepo
+
+  # Git tools
+  - name: git_repo_info
+    category: repository
+    mcp: git
+
+  - name: git_list_branches
+    category: branches
+    mcp: git
+
+  - name: git_create_branch
+    category: branches
+    mcp: git
+
+  - name: git_list_commits
+    category: commits
+    mcp: git
+
+  - name: git_create_file
+    category: files
+    mcp: git
+
+  - name: git_update_file
+    category: files
+    mcp: git
+
+  - name: git_create_pull_request
+    category: pull_requests
+    mcp: git
+
+  - name: git_list_issues
+    category: issues
+    mcp: git
+
+  # Render tools
+  - name: render_list_services
+    category: deployment
+    mcp: render
+
+  - name: render_deploy
+    category: deployment
+    mcp: render
+
+  - name: render_list_deploys
+    category: deployment
+    mcp: render
+
+  - name: render_scale_service
+    category: deployment
+    mcp: render
+
+  # Supabase tools
+  - name: supabase_select
+    category: database
+    mcp: supabase
+
+  - name: supabase_insert
+    category: database
+    mcp: supabase
+
+  - name: supabase_update
+    category: database
+    mcp: supabase
+
+  - name: supabase_rpc
+    category: database
+    mcp: supabase
+
+# Context settings
+context:
+  # Keep permanent schema in memory (prevents context drops)
+  - name: "mcp_schemas"
+    description: "MCP service schemas"
+    paths:
+      - "mcp_services/tepo/schema.json"
+      - "mcp_services/git/schema.json"
+      - "mcp_services/render/schema.json"
+      - "mcp_services/supabase/schema.json"
