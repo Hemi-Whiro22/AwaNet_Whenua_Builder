@@ -81,9 +81,6 @@ te_po/openai_tools.json
 # Runtime analysis reports (schema drift, etc)
 te_po/schema_drift_report.json
 
-# Unused OCR implementations (main ones elsewhere)
-te_po/stealth_ocr.py
-te_po/stealth_ocr_testit.py
 
 ##############################
 #          SUPABASE
