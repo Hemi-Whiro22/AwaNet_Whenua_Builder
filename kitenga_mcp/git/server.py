@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
-Render MCP Server
-=================
-Render deployment API integration via Model Context Protocol.
-Deploy, scale, monitor, and manage services on Render.
+Git MCP Server
+==============
+GitHub API integration via Model Context Protocol.
+Supports repos, branches, commits, PRs, issues, releases.
 
 Env:
-  RENDER_API_KEY    Render API key (required)
+  GITHUB_TOKEN    GitHub personal access token (required)
 """
 
 import asyncio
+import base64
 import json
 import os
 from pathlib import Path
@@ -22,13 +23,13 @@ from mcp.server.stdio import stdio_server
 from mcp.types import Tool, TextContent
 
 
-class RenderServer:
+class GitServer:
     def __init__(self):
-        self.base_url = "https://api.render.com/v1"
-        self.api_key = os.getenv("RENDER_API_KEY")
+        self.base_url = "https://api.github.com"
+        self.token = os.getenv("GITHUB_TOKEN")
 
-        if not self.api_key:
-            raise ValueError("RENDER_API_KEY environment variable is required")
+        if not self.token:
+            raise ValueError("GITHUB_TOKEN environment variable is required")
 
         # Load schema and tools
         schema_path = Path(__file__).parent / "schema.json"
@@ -43,18 +44,19 @@ class RenderServer:
 
     def get_headers(self) -> Dict[str, str]:
         return {
-            "Authorization": f"Bearer {self.api_key}",
+            "Authorization": f"token {self.token}",
+            "Accept": "application/vnd.github.v3+json",
             "Content-Type": "application/json",
         }
 
-    async def call_render(
+    async def call_github(
         self,
         method: str,
         path: str,
         payload: Optional[Dict[str, Any]] = None,
         query: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """Call Render API."""
+        """Call GitHub API."""
         url = f"{self.base_url}{path}"
         headers = self.get_headers()
 
@@ -63,13 +65,13 @@ class RenderServer:
                 if method.upper() == "GET":
                     resp = await client.get(url, params=query, headers=headers)
                 elif method.upper() == "POST":
-                    resp = await client.post(url, json=payload, headers=headers)
+                    resp = await client.post(url, json=payload, params=query, headers=headers)
                 elif method.upper() == "PUT":
-                    resp = await client.put(url, json=payload, headers=headers)
-                elif method.upper() == "PATCH":
-                    resp = await client.patch(url, json=payload, headers=headers)
+                    resp = await client.put(url, json=payload, params=query, headers=headers)
                 elif method.upper() == "DELETE":
-                    resp = await client.delete(url, headers=headers)
+                    resp = await client.delete(url, params=query, headers=headers)
+                elif method.upper() == "PATCH":
+                    resp = await client.patch(url, json=payload, params=query, headers=headers)
                 else:
                     return {"error": f"Unsupported method: {method}"}
 
@@ -85,39 +87,48 @@ class RenderServer:
 
 
 def create_server() -> Server:
-    server = Server("render")
-    render = RenderServer()
+    server = Server("git")
+    git = GitServer()
 
     @server.list_tools()
     async def list_tools() -> list[Tool]:
-        """List all available Render tools."""
+        """List all available Git tools."""
         return [
             Tool(
                 name=tool["name"],
                 description=tool["description"],
                 inputSchema=tool.get("inputSchema", {}),
             )
-            for tool in render.tools
+            for tool in git.tools
         ]
 
     @server.call_tool()
     async def call_tool(name: str, arguments: Dict[str, Any]) -> list[TextContent]:
-        """Execute a Render tool."""
+        """Execute a Git tool."""
 
-        tool_def = next((t for t in render.tools if t["name"] == name), None)
+        tool_def = next((t for t in git.tools if t["name"] == name), None)
         if not tool_def:
             return [TextContent(type="text", text=json.dumps({"error": f"Tool {name} not found"}))]
 
-        # Tool to Render API mapping
+        # Tool to GitHub API mapping
         tool_map = {
-            "render_list_services": ("GET", "/services"),
-            "render_get_service": ("GET", "/services/{service_id}"),
-            "render_deploy": ("POST", "/services/{service_id}/deploys"),
-            "render_list_deploys": ("GET", "/services/{service_id}/deploys"),
-            "render_get_deploy": ("GET", "/services/{service_id}/deploys/{deploy_id}"),
-            "render_update_env": ("PUT", "/services/{service_id}/env-groups"),
-            "render_list_events": ("GET", "/services/{service_id}/events"),
-            "render_scale_service": ("PATCH", "/services/{service_id}"),
+            "git_repo_info": ("GET", "/repos/{owner}/{repo}"),
+            "git_list_branches": ("GET", "/repos/{owner}/{repo}/branches"),
+            "git_create_branch": ("POST", "/repos/{owner}/{repo}/git/refs"),
+            "git_list_commits": ("GET", "/repos/{owner}/{repo}/commits"),
+            "git_get_file": ("GET", "/repos/{owner}/{repo}/contents/{path}"),
+            "git_create_file": ("PUT", "/repos/{owner}/{repo}/contents/{path}"),
+            "git_update_file": ("PUT", "/repos/{owner}/{repo}/contents/{path}"),
+            "git_delete_file": ("DELETE", "/repos/{owner}/{repo}/contents/{path}"),
+            "git_list_pull_requests": ("GET", "/repos/{owner}/{repo}/pulls"),
+            "git_get_pull_request": ("GET", "/repos/{owner}/{repo}/pulls/{pull_number}"),
+            "git_create_pull_request": ("POST", "/repos/{owner}/{repo}/pulls"),
+            "git_list_issues": ("GET", "/repos/{owner}/{repo}/issues"),
+            "git_create_issue": ("POST", "/repos/{owner}/{repo}/issues"),
+            "git_list_releases": ("GET", "/repos/{owner}/{repo}/releases"),
+            "git_create_release": ("POST", "/repos/{owner}/{repo}/releases"),
+            "git_get_user": ("GET", "/user"),
+            "git_list_workflows": ("GET", "/repos/{owner}/{repo}/actions/workflows"),
         }
 
         if name not in tool_map:
@@ -131,23 +142,34 @@ def create_server() -> Server:
             placeholder = "{" + key + "}"
             if placeholder in path:
                 path = path.replace(placeholder, str(value))
-                if method != "PATCH" or key != "num_instances":
-                    arguments.pop(key)
+                arguments.pop(key)
 
-        # Prepare payload/query based on method
+        # Separate query params from payload
+        query_params = {}
         payload = None
-        query = None
 
         if method == "GET":
-            query = arguments
+            query_params = arguments
         else:
             payload = arguments
 
-        result = await render.call_render(method, path, payload=payload, query=query)
+        result = await git.call_github(method, path, payload=payload, query=query_params)
 
         return [TextContent(type="text", text=json.dumps(result))]
 
     return server
+
+def create_fastapi_app():
+    mcp_server = create_server()
+    from fastapi import FastAPI
+    app = FastAPI()
+
+    @app.get("/status")
+    async def status():
+        return {"status": "ok", "service": "git"}
+
+    app.state.mcp_server = mcp_server
+    return app
 
 
 async def main():

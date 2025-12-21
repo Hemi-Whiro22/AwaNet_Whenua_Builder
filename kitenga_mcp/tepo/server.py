@@ -207,6 +207,18 @@ def create_server() -> Server:
 
     return server
 
+def create_fastapi_app():
+    mcp_server = create_server()
+    from fastapi import FastAPI
+    app = FastAPI()
+
+    @app.get("/status")
+    async def status():
+        return {"status": "ok", "service": "tepo"}
+
+    app.state.mcp_server = mcp_server
+    return app
+
 
 async def main():
     server = create_server()
