@@ -39,8 +39,6 @@ from te_po.routes import (
 )
 from te_po.utils.middleware.utf8_enforcer import apply_utf8_middleware
 
-# Import the Kitenga MCP FastAPI app
-from kitenga_mcp.server import app as mcp_app
 
 # Enforce UTF-8 locale early for local runs/tests
 enforce_utf8_locale()
