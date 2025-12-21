@@ -9,6 +9,7 @@ from kitenga_mcp.app_server import app as mcp_app
 
 from te_po.core.env_loader import enforce_utf8_locale, get_env
 from te_po.core import awa_gpt  # Import the new AwaGPT router
+from te_po.core import awa_realtime  # Import the new AwaGPT Realtime router
 
 from te_po.routes import (
     intake,
@@ -141,6 +142,7 @@ app.include_router(realm_generator.router)  # Realm spawner routes
 app.include_router(cors_manager.router)  # Dynamic CORS management
 app.include_router(awa.router)  # <-- Add this line to register the awa router
 app.include_router(awa_gpt.router)  # Register the AwaGPT router
+app.include_router(awa_realtime.router)  # Register the AwaGPT Realtime router
 
 # Mount the Kitenga MCP sub-application under /mcp
 app.mount("/mcp", mcp_app)
