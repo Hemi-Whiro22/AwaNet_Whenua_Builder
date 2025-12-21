@@ -74,7 +74,7 @@ te_ao/build/
 
 # Sensitive OpenAI configs (te_po backend)
 te_po/openai_assistants.json
-te_po/openai_tools.json
+# te_po/openai_tools.json
 !te_po/openai_assistants.json.example
 !te_po/openai_tools.json.example
 
