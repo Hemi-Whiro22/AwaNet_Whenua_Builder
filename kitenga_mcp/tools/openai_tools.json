@@ -5,23 +5,58 @@
       "description": "Chat/processing endpoint: supports retrieval, pipeline ingest, vector save, OpenAI summary/translation.",
       "method": "POST",
       "path": "/kitenga/gpt-whisper",
-      "ui": { "label": "Kitenga Whisper", "icon": "chat" },
+      "ui": {
+        "label": "Kitenga Whisper",
+        "icon": "chat"
+      },
       "auth": null,
       "input_schema": {
         "type": "object",
         "properties": {
-          "whisper": { "type": "string", "description": "User message or text to process" },
-          "session_id": { "type": "string", "description": "Chat session id (reuse for context)" },
-          "thread_id": { "type": "string", "description": "Assistant thread id (reuse for continuity)" },
-          "system_prompt": { "type": "string", "description": "Optional system prompt" },
-          "run_pipeline": { "type": "boolean", "default": false },
-          "save_vector": { "type": "boolean", "default": true },
-          "use_retrieval": { "type": "boolean", "default": true },
-          "use_openai_summary": { "type": "boolean", "default": false },
-          "use_openai_translation": { "type": "boolean", "default": false },
-          "source": { "type": "string", "default": "kitenga_whisper" }
+          "whisper": {
+            "type": "string",
+            "description": "User message or text to process"
+          },
+          "session_id": {
+            "type": "string",
+            "description": "Chat session id (reuse for context)"
+          },
+          "thread_id": {
+            "type": "string",
+            "description": "Assistant thread id (reuse for continuity)"
+          },
+          "system_prompt": {
+            "type": "string",
+            "description": "Optional system prompt"
+          },
+          "run_pipeline": {
+            "type": "boolean",
+            "default": false
+          },
+          "save_vector": {
+            "type": "boolean",
+            "default": true
+          },
+          "use_retrieval": {
+            "type": "boolean",
+            "default": true
+          },
+          "use_openai_summary": {
+            "type": "boolean",
+            "default": false
+          },
+          "use_openai_translation": {
+            "type": "boolean",
+            "default": false
+          },
+          "source": {
+            "type": "string",
+            "default": "kitenga_whisper"
+          }
         },
-        "required": ["whisper"]
+        "required": [
+          "whisper"
+        ]
       }
     },
     {
@@ -29,12 +64,18 @@
       "description": "OCR a remote image/PDF/text file with optional taonga protection.",
       "method": "POST",
       "path": "/kitenga/tool/ocr",
-      "ui": { "label": "OCR Tool", "icon": "scan" },
+      "ui": {
+        "label": "OCR Tool",
+        "icon": "scan"
+      },
       "auth": null,
       "input_schema": {
         "type": "object",
         "properties": {
-          "file_url": { "type": "string", "description": "URL of the file to OCR" },
+          "file_url": {
+            "type": "string",
+            "description": "URL of the file to OCR"
+          },
           "taonga_mode": {
             "type": "boolean",
             "description": "Preserve stealth metadata and taonga protections",
@@ -46,7 +87,9 @@
             "default": true
           }
         },
-        "required": ["file_url"]
+        "required": [
+          "file_url"
+        ]
       }
     },
     {
@@ -54,16 +97,31 @@
       "description": "Translate text into a specified language with cultural context.",
       "method": "POST",
       "path": "/kitenga/tool/translate",
-      "ui": { "label": "Translate Tool", "icon": "language" },
+      "ui": {
+        "label": "Translate Tool",
+        "icon": "language"
+      },
       "auth": null,
       "input_schema": {
         "type": "object",
         "properties": {
-          "text": { "type": "string", "description": "Text to translate" },
-          "target_language": { "type": "string", "description": "Target language code", "default": "mi" },
-          "context": { "type": "string", "description": "Optional context or instructions" }
+          "text": {
+            "type": "string",
+            "description": "Text to translate"
+          },
+          "target_language": {
+            "type": "string",
+            "description": "Target language code",
+            "default": "mi"
+          },
+          "context": {
+            "type": "string",
+            "description": "Optional context or instructions"
+          }
         },
-        "required": ["text"]
+        "required": [
+          "text"
+        ]
       }
     },
     {
@@ -71,17 +129,34 @@
       "description": "Finalize/save a chat session: optional summary, title, tags. Stores audit/logs and returns a summary.",
       "method": "POST",
       "path": "/chat/save-session",
-      "ui": { "label": "Save Chat Session", "icon": "save" },
+      "ui": {
+        "label": "Save Chat Session",
+        "icon": "save"
+      },
       "auth": null,
       "input_schema": {
         "type": "object",
         "properties": {
-          "session_id": { "type": "string", "description": "Chat session id to finalize" },
-          "title": { "type": "string", "description": "Optional title" },
-          "tags": { "type": "string", "description": "Optional comma-separated tags" },
-          "summarize": { "type": "boolean", "default": true }
+          "session_id": {
+            "type": "string",
+            "description": "Chat session id to finalize"
+          },
+          "title": {
+            "type": "string",
+            "description": "Optional title"
+          },
+          "tags": {
+            "type": "string",
+            "description": "Optional comma-separated tags"
+          },
+          "summarize": {
+            "type": "boolean",
+            "default": true
+          }
         },
-        "required": ["session_id"]
+        "required": [
+          "session_id"
+        ]
       }
     },
     {
@@ -89,7 +164,10 @@
       "description": "Run the Te Pō pipeline on text (or a fetched file URL) for cleaning, chunking, embedding, and vector-store push.",
       "method": "POST",
       "path": "/pipeline/run",
-      "ui": { "label": "Run Pipeline", "icon": "pipeline" },
+      "ui": {
+        "label": "Run Pipeline",
+        "icon": "pipeline"
+      },
       "auth": {
         "type": "bearer",
         "header": "Authorization",
@@ -98,9 +176,19 @@
       "input_schema": {
         "type": "object",
         "properties": {
-          "text": { "type": "string", "description": "Inline text to process" },
-          "file_url": { "type": "string", "description": "Optional URL to fetch bytes instead of inline text" },
-          "source": { "type": "string", "description": "Label for the pipeline source", "default": "assistant_tool" }
+          "text": {
+            "type": "string",
+            "description": "Inline text to process"
+          },
+          "file_url": {
+            "type": "string",
+            "description": "Optional URL to fetch bytes instead of inline text"
+          },
+          "source": {
+            "type": "string",
+            "description": "Label for the pipeline source",
+            "default": "assistant_tool"
+          }
         },
         "required": []
       }
@@ -110,7 +198,10 @@
       "description": "OCR an image via OpenAI vision; optionally save embedding and push through the pipeline.",
       "method": "POST",
       "path": "/kitenga/vision-ocr",
-      "ui": { "label": "Vision OCR", "icon": "camera" },
+      "ui": {
+        "label": "Vision OCR",
+        "icon": "camera"
+      },
       "auth": {
         "type": "bearer",
         "header": "Authorization",
@@ -119,12 +210,29 @@
       "input_schema": {
         "type": "object",
         "properties": {
-          "image_base64": { "type": "string", "description": "Base64-encoded image" },
-          "save_vector": { "type": "boolean", "description": "Persist embedding to vector store", "default": true },
-          "run_pipeline": { "type": "boolean", "description": "Send extracted text through pipeline", "default": false },
-          "pipeline_source": { "type": "string", "description": "Source tag when pipeline is run", "default": "kitenga_vision" }
+          "image_base64": {
+            "type": "string",
+            "description": "Base64-encoded image"
+          },
+          "save_vector": {
+            "type": "boolean",
+            "description": "Persist embedding to vector store",
+            "default": true
+          },
+          "run_pipeline": {
+            "type": "boolean",
+            "description": "Send extracted text through pipeline",
+            "default": false
+          },
+          "pipeline_source": {
+            "type": "string",
+            "description": "Source tag when pipeline is run",
+            "default": "kitenga_vision"
+          }
         },
-        "required": ["image_base64"]
+        "required": [
+          "image_base64"
+        ]
       }
     },
     {
@@ -132,7 +240,10 @@
       "description": "Bridge to existing assistant pipeline (text or file_url).",
       "method": "POST",
       "path": "/assistant/run",
-      "ui": { "label": "Assistant Bridge", "icon": "message" },
+      "ui": {
+        "label": "Assistant Bridge",
+        "icon": "message"
+      },
       "auth": {
         "type": "bearer",
         "header": "Authorization",
@@ -141,9 +252,16 @@
       "input_schema": {
         "type": "object",
         "properties": {
-          "text": { "type": "string" },
-          "file_url": { "type": "string" },
-          "source": { "type": "string", "default": "assistant" }
+          "text": {
+            "type": "string"
+          },
+          "file_url": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "default": "assistant"
+          }
         },
         "required": []
       }
@@ -165,7 +283,9 @@
               "properties": {
                 "site": {
                   "type": "array",
-                  "items": { "type": "string" },
+                  "items": {
+                    "type": "string"
+                  },
                   "description": "List of websites to boost (e.g. iwi.govt.nz)"
                 }
               }
@@ -176,7 +296,9 @@
               "default": true
             }
           },
-          "required": ["query"]
+          "required": [
+            "query"
+          ]
         }
       }
     },
@@ -198,7 +320,9 @@
               "default": false
             }
           },
-          "required": ["file_url"]
+          "required": [
+            "file_url"
+          ]
         }
       }
     },
@@ -220,7 +344,9 @@
               "default": "research"
             }
           },
-          "required": ["text"]
+          "required": [
+            "text"
+          ]
         }
       }
     },
@@ -238,11 +364,15 @@
             },
             "tags": {
               "type": "array",
-              "items": { "type": "string" },
+              "items": {
+                "type": "string"
+              },
               "description": "Tags/labels for this content"
             }
           },
-          "required": ["content"]
+          "required": [
+            "content"
+          ]
         }
       }
     },
@@ -254,11 +384,22 @@
         "parameters": {
           "type": "object",
           "properties": {
-            "card_name": { "type": "string", "description": "Card name/title" },
-            "series": { "type": "string", "description": "Set/series name" },
-            "condition": { "type": "string", "description": "Condition (e.g. NM, LP)" }
+            "card_name": {
+              "type": "string",
+              "description": "Card name/title"
+            },
+            "series": {
+              "type": "string",
+              "description": "Set/series name"
+            },
+            "condition": {
+              "type": "string",
+              "description": "Condition (e.g. NM, LP)"
+            }
           },
-          "required": ["card_name"]
+          "required": [
+            "card_name"
+          ]
         }
       }
     },
@@ -267,15 +408,120 @@
       "description": "Check status of a vector store file batch push.",
       "method": "GET",
       "path": "/vector/batch-status",
-      "ui": { "label": "Vector Batch Status", "icon": "activity" },
+      "ui": {
+        "label": "Vector Batch Status",
+        "icon": "activity"
+      },
       "auth": null,
       "input_schema": {
         "type": "object",
         "properties": {
-          "batch_id": { "type": "string" },
-          "vector_store_id": { "type": "string", "description": "Optional override; defaults to env" }
+          "batch_id": {
+            "type": "string"
+          },
+          "vector_store_id": {
+            "type": "string",
+            "description": "Optional override; defaults to env"
+          }
         },
-        "required": ["batch_id"]
+        "required": [
+          "batch_id"
+        ]
+      }
+    },
+    {
+      "name": "gpt_reason",
+      "description": "Summarize the Awa-Kitenga pipeline diagnostic loop",
+      "method": "POST",
+      "path": "/gpt/bridge",
+      "ui": {
+        "label": "GPT Reason",
+        "icon": "brain"
+      },
+      "auth": null,
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Diagnostic query"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "reasoning": {
+            "type": "string"
+          },
+          "loop_closed": {
+            "type": "boolean"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "reasoning",
+          "loop_closed",
+          "timestamp"
+        ]
+      }
+    },
+    {
+      "name": "awa_orchestrate",
+      "description": "Orchestrate Awa protocol event",
+      "method": "POST",
+      "path": "/awa/orchestrate",
+      "ui": {
+        "label": "Awa Orchestrate",
+        "icon": "shuffle"
+      },
+      "auth": null,
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "intent": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          },
+          "input": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "intent",
+          "context",
+          "input"
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "event": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "event",
+          "timestamp"
+        ]
       }
     }
   ],
