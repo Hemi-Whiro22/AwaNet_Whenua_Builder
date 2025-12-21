@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from te_po.utils.middleware.auth_middleware import BearerAuthMiddleware
 from kitenga_mcp.app_server import app as mcp_app
 
+
 from te_po.core.env_loader import enforce_utf8_locale, get_env
 
 from te_po.routes import (
