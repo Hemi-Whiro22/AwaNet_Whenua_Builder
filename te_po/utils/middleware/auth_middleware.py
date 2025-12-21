@@ -5,7 +5,7 @@ from starlette.types import ASGIApp
 
 
 class BearerAuthMiddleware(BaseHTTPMiddleware):
-    UNPROTECTED_PATHS = {"/", "/heartbeat", "/health", "/docs", "/openapi.json", "/redoc", "/state/public", "/state/version"}
+    UNPROTECTED_PATHS = {"/", "/heartbeat", "/health", "/docs", "/openapi.json", "/redoc", "/state/public", "/state/version", "/mcp/health", "/debug/routes"}
     UNPROTECTED_PREFIXES = {"/static"}
 
     async def dispatch(self, request: Request, call_next):
