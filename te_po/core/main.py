@@ -37,6 +37,9 @@ from te_po.routes import (
 )
 from te_po.utils.middleware.utf8_enforcer import apply_utf8_middleware
 
+# Import the Kitenga MCP FastAPI app
+from kitenga_mcp.server import app as mcp_app
+
 # Enforce UTF-8 locale early for local runs/tests
 enforce_utf8_locale()
 
@@ -45,14 +48,14 @@ def get_cors_origins():
     """
     Read CORS_ALLOW_ORIGINS from environment as comma-separated list.
     Fallback to sensible defaults for local development.
-    
+
     Example env:
         CORS_ALLOW_ORIGINS=http://localhost:5173,http://example.com,https://example.com
     """
     env_origins = os.getenv("CORS_ALLOW_ORIGINS", "").strip()
     if env_origins:
         return [origin.strip() for origin in env_origins.split(",") if origin.strip()]
-    
+
     # Fallback defaults for local development
     return [
         "http://localhost:5000",
@@ -134,6 +137,9 @@ app.include_router(awa_protocol.router)  # Model Context Protocol routes
 app.include_router(llama3.router)  # Llama3 local inference routes
 app.include_router(realm_generator.router)  # Realm spawner routes
 app.include_router(cors_manager.router)  # Dynamic CORS management
+
+# Mount the Kitenga MCP sub-application under /mcp
+app.mount("/mcp", mcp_app)
 
 
 # For local launches only
