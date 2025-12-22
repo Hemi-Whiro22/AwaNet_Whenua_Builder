@@ -1,0 +1,49 @@
+{
+  "name": "git",
+  "version": "1.1.0",
+  "description": "Git/GitHub MCP commands (hardened): no shell, optional base dir enforcement.",
+  "commands": {
+    "status": {
+      "description": "git status --short",
+      "usage": "@git.status(path=\"kitenga-main\")",
+      "params": {
+        "path": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "commit_push": {
+      "description": "git add -A; commit; push",
+      "usage": "@git.commit_push(path=\"kitenga-main\", message=\"chore: tidy\")",
+      "params": {
+        "path": {
+          "type": "string",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        },
+        "remote": {
+          "type": "string",
+          "default": "origin"
+        },
+        "branch": {
+          "type": "string",
+          "default": "main"
+        }
+      }
+    },
+    "github_list_repos": {
+      "description": "List GitHub repos",
+      "usage": "@git.github_list_repos(limit=30)",
+      "params": {
+        "limit": {
+          "type": "integer",
+          "default": 30
+        }
+      }
+    }
+  }
+}

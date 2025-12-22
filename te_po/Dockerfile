@@ -35,8 +35,8 @@ COPY . .
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:10000/heartbeat || exit 1
 
-# Expose port
-EXPOSE 10000
+# Expose the dynamic port Render provides
+EXPOSE $PORT
 
-# Run the FastAPI application
-CMD ["uvicorn", "te_po.core.main:app", "--host", "0.0.0.0", "--port", "10000", "--workers", "4"]
+# Start the app on the Render-assigned port
+CMD ["sh", "-c", "uvicorn te_po.core.main:app --host 0.0.0.0 --port ${PORT:-10000} --workers 4"]
