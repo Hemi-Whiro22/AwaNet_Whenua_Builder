@@ -3,7 +3,7 @@
 Te Pō MCP Server (stdio)
 ========================
 
-Wraps Te Pō HTTP tools (defined in .mcp/openai/openai_tools.json) as Model
+Wraps Te Pō HTTP tools (defined in kitenga_mcp/tepo/openai_tools.json) as Model
 Context Protocol tools. Each MCP tool proxies a Te Pō REST endpoint so IDEs can
 invoke Te Pō capabilities via MCP.
 
@@ -46,7 +46,7 @@ class ToolConfig:
 
 
 def _load_tool_configs() -> tuple[List[ToolConfig], str]:
-    tool_file = Path(__file__).resolve().parent / ".mcp/openai/openai_tools.json"
+    tool_file = Path(__file__).resolve().parent / "kitenga_mcp" / "tepo" / "openai_tools.json"
     if not tool_file.is_file():
         raise FileNotFoundError(f"Tool definition file missing: {tool_file}")
 

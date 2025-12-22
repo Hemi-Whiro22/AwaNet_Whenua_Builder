@@ -3,40 +3,53 @@
 # Add this to ~/.continue/config.yaml to enable all MCP servers
 
 mcpServers:
-  # Te Pō Backend Service
-  # Exposes all backend APIs: chat, OCR, vector search, knowledge base, etc.
+  # Te Pō Backend Service (all Te Pō routes, pipelines, vectors)
   tepo:
     command: python3
-    args: ["${WORKSPACE_DIR}/mcp_services/tepo/server.py"]
+    args: ["${WORKSPACE_DIR}/kitenga_mcp/tepo/server.py"]
     env:
       TE_PO_BASE_URL: "${TE_PO_BASE_URL:http://localhost:8010}"
       TE_PO_AUTH_TOKEN: "${TE_PO_AUTH_TOKEN:}"
       TE_PO_TIMEOUT: "60"
 
   # GitHub Integration
-  # Repository management: create/update files, manage branches, PRs, issues, releases
   git:
     command: python3
-    args: ["${WORKSPACE_DIR}/mcp_services/git/server.py"]
+    args: ["${WORKSPACE_DIR}/kitenga_mcp/git/server.py"]
     env:
       GITHUB_TOKEN: "${GITHUB_TOKEN}"
 
   # Render Deployment Service
-  # Deploy, scale, and monitor services on Render
   render:
     command: python3
-    args: ["${WORKSPACE_DIR}/mcp_services/render/server.py"]
+    args: ["${WORKSPACE_DIR}/kitenga_mcp/render/server.py"]
     env:
       RENDER_API_KEY: "${RENDER_API_KEY}"
 
   # Supabase Database Service
-  # CRUD operations, RPC calls, file storage management
   supabase:
     command: python3
-    args: ["${WORKSPACE_DIR}/mcp_services/supabase/server.py"]
+    args: ["${WORKSPACE_DIR}/kitenga_mcp/supabase/server.py"]
     env:
       SUPABASE_URL: "${SUPABASE_URL}"
       SUPABASE_KEY: "${SUPABASE_KEY}"
+
+  # OpenAI Responses API
+  openai:
+    command: python3
+    args: ["${WORKSPACE_DIR}/kitenga_mcp/openai/server.py"]
+    env:
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      OPENAI_BASE_URL: "${OPENAI_BASE_URL:https://api.openai.com/v1}"
+      OPENAI_DEFAULT_MODEL: "${OPENAI_DEFAULT_MODEL:gpt-5}"
+
+  # Cloudflare Pages Service
+  cloudflare:
+    command: python3
+    args: ["${WORKSPACE_DIR}/kitenga_mcp/cloudflare/server.py"]
+    env:
+      CLOUDFLARE_API_TOKEN: "${CLOUDFLARE_API_TOKEN}"
+      CLOUDFLARE_ACCOUNT_ID: "${CLOUDFLARE_ACCOUNT_ID}"
 
 # Optional: Cloudflare (add when ready)
 # cloudflare:
@@ -139,13 +152,61 @@ tools:
     category: database
     mcp: supabase
 
+  # OpenAI tools
+  - name: responses_generate
+    category: responses
+    mcp: openai
+
+  - name: responses_get
+    category: responses
+    mcp: openai
+
+  # Cloudflare tools
+  - name: deploy_pages
+    category: pages
+    mcp: cloudflare
+
+  - name: deploy_te_ao
+    category: pages
+    mcp: cloudflare
+
+  - name: create_project
+    category: projects
+    mcp: cloudflare
+
+  - name: list_projects
+    category: projects
+    mcp: cloudflare
+
+  - name: get_project
+    category: projects
+    mcp: cloudflare
+
+  - name: set_env_vars
+    category: projects
+    mcp: cloudflare
+
+  - name: list_deployments
+    category: deployments
+    mcp: cloudflare
+
+  - name: add_custom_domain
+    category: domains
+    mcp: cloudflare
+
+  - name: purge_cache
+    category: cache
+    mcp: cloudflare
+
 # Context settings
 context:
   # Keep permanent schema in memory (prevents context drops)
   - name: "mcp_schemas"
     description: "MCP service schemas"
     paths:
-      - "mcp_services/tepo/schema.json"
-      - "mcp_services/git/schema.json"
-      - "mcp_services/render/schema.json"
-      - "mcp_services/supabase/schema.json"
+      - "kitenga_mcp/tepo/schema.json"
+      - "kitenga_mcp/git/schema.json"
+      - "kitenga_mcp/render/schema.json"
+      - "kitenga_mcp/supabase/schema.json"
+      - "kitenga_mcp/openai/schema.json"
+      - "kitenga_mcp/cloudflare/schema.json"

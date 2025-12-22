@@ -24,6 +24,7 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request, Header, status
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from te_po.utils.middleware.auth_middleware import apply_bearer_middleware
 
 # --- Helper functions ---
 async def embed_text(text):
@@ -82,6 +83,7 @@ def create_app():
         version="1.1.0",
         description="Core memory, tools, and protocol management for AwaNet and GPT orchestration."
     )
+    apply_bearer_middleware(app)
 
     # --- CORS ---
     app.add_middleware(

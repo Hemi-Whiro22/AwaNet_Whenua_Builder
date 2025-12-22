@@ -1,0 +1,444 @@
+{
+  "domains": [
+    {
+      "name": "cloudflare",
+      "description": "Cloudflare Pages deployment and configuration schema.",
+      "baseUrl": "https://api.cloudflare.com/client/v4",
+      "toolCount": 9,
+      "tools": [
+        {
+          "name": "deploy_pages",
+          "description": "Deploy a local build directory to a Cloudflare Pages project via Wrangler CLI.",
+          "method": "POST",
+          "path": "wrangler pages deploy",
+          "category": "pages"
+        },
+        {
+          "name": "deploy_te_ao",
+          "description": "Run npm build for Te Ao and deploy the dist folder to Cloudflare Pages.",
+          "method": "POST",
+          "path": "wrangler pages deploy + npm run build",
+          "category": "pages"
+        },
+        {
+          "name": "create_project",
+          "description": "Create a new Cloudflare Pages project via the Pages API.",
+          "method": "POST",
+          "path": "/accounts/{account_id}/pages/projects",
+          "category": "projects"
+        },
+        {
+          "name": "list_projects",
+          "description": "List Cloudflare Pages projects for the configured account.",
+          "method": "GET",
+          "path": "/accounts/{account_id}/pages/projects",
+          "category": "projects"
+        },
+        {
+          "name": "get_project",
+          "description": "Return metadata for a specific Pages project.",
+          "method": "GET",
+          "path": "/accounts/{account_id}/pages/projects/{name}",
+          "category": "projects"
+        },
+        {
+          "name": "set_env_vars",
+          "description": "Set environment variables for a Pages project (production and preview).",
+          "method": "PATCH",
+          "path": "/accounts/{account_id}/pages/projects/{project}",
+          "category": "projects"
+        },
+        {
+          "name": "list_deployments",
+          "description": "List deployments for a Pages project.",
+          "method": "GET",
+          "path": "/accounts/{account_id}/pages/projects/{project}/deployments",
+          "category": "deployments"
+        },
+        {
+          "name": "add_custom_domain",
+          "description": "Bind a custom domain to a Pages project.",
+          "method": "POST",
+          "path": "/accounts/{account_id}/pages/projects/{project}/domains",
+          "category": "domains"
+        },
+        {
+          "name": "purge_cache",
+          "description": "Purge the cache for a Cloudflare zone.",
+          "method": "POST",
+          "path": "/zones/{zone_id}/purge_cache",
+          "category": "cache"
+        }
+      ]
+    },
+    {
+      "name": "git",
+      "description": "GitHub Integration Schema",
+      "baseUrl": "https://api.github.com",
+      "toolCount": 17,
+      "tools": [
+        {
+          "name": "git_repo_info",
+          "description": "Get repository information including stars, forks, description, and URL.",
+          "method": "GET",
+          "path": "/repos/{owner}/{repo}",
+          "category": "repository"
+        },
+        {
+          "name": "git_list_branches",
+          "description": "List all branches in a repository with their latest commit SHA.",
+          "method": "GET",
+          "path": "/repos/{owner}/{repo}/branches",
+          "category": "branches"
+        },
+        {
+          "name": "git_create_branch",
+          "description": "Create a new branch from a specified base branch or commit.",
+          "method": "POST",
+          "path": "/repos/{owner}/{repo}/git/refs",
+          "category": "branches"
+        },
+        {
+          "name": "git_list_commits",
+          "description": "List commits for a branch with author, message, and SHA.",
+          "method": "GET",
+          "path": "/repos/{owner}/{repo}/commits",
+          "category": "commits"
+        },
+        {
+          "name": "git_get_file",
+          "description": "Get file contents from a repository.",
+          "method": "GET",
+          "path": "/repos/{owner}/{repo}/contents/{path}",
+          "category": "files"
+        },
+        {
+          "name": "git_create_file",
+          "description": "Create a new file in a repository.",
+          "method": "PUT",
+          "path": "/repos/{owner}/{repo}/contents/{path}",
+          "category": "files"
+        },
+        {
+          "name": "git_update_file",
+          "description": "Update an existing file in a repository.",
+          "method": "PUT",
+          "path": "/repos/{owner}/{repo}/contents/{path}",
+          "category": "files"
+        },
+        {
+          "name": "git_delete_file",
+          "description": "Delete a file from a repository.",
+          "method": "DELETE",
+          "path": "/repos/{owner}/{repo}/contents/{path}",
+          "category": "files"
+        },
+        {
+          "name": "git_list_pull_requests",
+          "description": "List pull requests with status, author, and branch info.",
+          "method": "GET",
+          "path": "/repos/{owner}/{repo}/pulls",
+          "category": "pull_requests"
+        },
+        {
+          "name": "git_get_pull_request",
+          "description": "Get detailed information about a specific pull request.",
+          "method": "GET",
+          "path": "/repos/{owner}/{repo}/pulls/{pull_number}",
+          "category": "pull_requests"
+        },
+        {
+          "name": "git_create_pull_request",
+          "description": "Create a new pull request from one branch to another.",
+          "method": "POST",
+          "path": "/repos/{owner}/{repo}/pulls",
+          "category": "pull_requests"
+        },
+        {
+          "name": "git_list_issues",
+          "description": "List issues in a repository.",
+          "method": "GET",
+          "path": "/repos/{owner}/{repo}/issues",
+          "category": "issues"
+        },
+        {
+          "name": "git_create_issue",
+          "description": "Create a new issue in a repository.",
+          "method": "POST",
+          "path": "/repos/{owner}/{repo}/issues",
+          "category": "issues"
+        },
+        {
+          "name": "git_list_releases",
+          "description": "List releases for a repository.",
+          "method": "GET",
+          "path": "/repos/{owner}/{repo}/releases",
+          "category": "releases"
+        },
+        {
+          "name": "git_create_release",
+          "description": "Create a new release with tag and notes.",
+          "method": "POST",
+          "path": "/repos/{owner}/{repo}/releases",
+          "category": "releases"
+        },
+        {
+          "name": "git_get_user",
+          "description": "Get GitHub user profile information.",
+          "method": "GET",
+          "path": "/user",
+          "category": "users"
+        },
+        {
+          "name": "git_list_workflows",
+          "description": "List GitHub Actions workflows in a repository.",
+          "method": "GET",
+          "path": "/repos/{owner}/{repo}/actions/workflows",
+          "category": "actions"
+        }
+      ]
+    },
+    {
+      "name": "openai",
+      "description": "OpenAI Responses API integration schema.",
+      "baseUrl": "https://api.openai.com/v1",
+      "toolCount": 2,
+      "tools": [
+        {
+          "name": "responses_generate",
+          "description": "Generate a response via the OpenAI Responses API.",
+          "method": "POST",
+          "path": "/responses",
+          "category": "responses"
+        },
+        {
+          "name": "responses_get",
+          "description": "Retrieve a previously generated response by ID.",
+          "method": "GET",
+          "path": "/responses/{response_id}",
+          "category": "responses"
+        }
+      ]
+    },
+    {
+      "name": "render",
+      "description": "Render Deployment Service Schema",
+      "baseUrl": "https://api.render.com/v1",
+      "toolCount": 8,
+      "tools": [
+        {
+          "name": "render_list_services",
+          "description": "List all Render services with status, created date, and URLs.",
+          "method": "GET",
+          "path": "/services",
+          "category": "services"
+        },
+        {
+          "name": "render_get_service",
+          "description": "Get detailed information about a specific service.",
+          "method": "GET",
+          "path": "/services/{service_id}",
+          "category": "services"
+        },
+        {
+          "name": "render_deploy",
+          "description": "Trigger a deployment for a service.",
+          "method": "POST",
+          "path": "/services/{service_id}/deploys",
+          "category": "deploys"
+        },
+        {
+          "name": "render_list_deploys",
+          "description": "List deployment history for a service.",
+          "method": "GET",
+          "path": "/services/{service_id}/deploys",
+          "category": "deploys"
+        },
+        {
+          "name": "render_get_deploy",
+          "description": "Get status and details of a specific deployment.",
+          "method": "GET",
+          "path": "/services/{service_id}/deploys/{deploy_id}",
+          "category": "deploys"
+        },
+        {
+          "name": "render_update_env",
+          "description": "Update environment variables for a service.",
+          "method": "PUT",
+          "path": "/services/{service_id}/env-groups",
+          "category": "services"
+        },
+        {
+          "name": "render_list_events",
+          "description": "List service events and activity logs.",
+          "method": "GET",
+          "path": "/services/{service_id}/events",
+          "category": "events"
+        },
+        {
+          "name": "render_scale_service",
+          "description": "Scale a service (update number of instances).",
+          "method": "PATCH",
+          "path": "/services/{service_id}",
+          "category": "services"
+        }
+      ]
+    },
+    {
+      "name": "supabase",
+      "description": "Supabase Database Service Schema",
+      "baseUrl": "${SUPABASE_URL}/rest/v1",
+      "toolCount": 7,
+      "tools": [
+        {
+          "name": "supabase_select",
+          "description": "Query rows from a Supabase table with filters.",
+          "method": "GET",
+          "path": "/{table}",
+          "category": "database"
+        },
+        {
+          "name": "supabase_insert",
+          "description": "Insert a new row into a table.",
+          "method": "POST",
+          "path": "/{table}",
+          "category": "database"
+        },
+        {
+          "name": "supabase_update",
+          "description": "Update rows in a table matching filter conditions.",
+          "method": "PATCH",
+          "path": "/{table}",
+          "category": "database"
+        },
+        {
+          "name": "supabase_delete",
+          "description": "Delete rows from a table.",
+          "method": "DELETE",
+          "path": "/{table}",
+          "category": "database"
+        },
+        {
+          "name": "supabase_rpc",
+          "description": "Call a stored procedure/function in Supabase.",
+          "method": "POST",
+          "path": "/rpc/{function_name}",
+          "category": "database"
+        },
+        {
+          "name": "supabase_upload_file",
+          "description": "Upload a file to Supabase storage bucket.",
+          "method": "POST",
+          "path": "/storage/v1/buckets/{bucket_name}/upload",
+          "category": "storage"
+        },
+        {
+          "name": "supabase_list_buckets",
+          "description": "List all storage buckets.",
+          "method": "GET",
+          "path": "/storage/v1/buckets",
+          "category": "storage"
+        }
+      ]
+    },
+    {
+      "name": "tepo",
+      "description": "Te P\u014d Backend Service Schema",
+      "baseUrl": "${TE_PO_BASE_URL}",
+      "toolCount": 13,
+      "tools": [
+        {
+          "name": "tepo_kitenga_whisper",
+          "description": "Free-form text chat with optional retrieval, pipeline, and vector persistence. Main Kitenga conversation endpoint.",
+          "method": "POST",
+          "path": "/kitenga/gpt-whisper",
+          "category": "chat"
+        },
+        {
+          "name": "tepo_vector_search",
+          "description": "Semantic search across vector store. Find similar content by meaning.",
+          "method": "POST",
+          "path": "/vector/search",
+          "category": "knowledge"
+        },
+        {
+          "name": "tepo_ocr_scan",
+          "description": "Extract text from images, PDFs, or documents using OCR.",
+          "method": "POST",
+          "path": "/ocr/scan",
+          "category": "processing"
+        },
+        {
+          "name": "tepo_pipeline_run",
+          "description": "Execute a data processing pipeline. Pipelines: ocr, summarise, translate, embed, taonga.",
+          "method": "POST",
+          "path": "/awa/pipeline",
+          "category": "processing"
+        },
+        {
+          "name": "tepo_reo_translate",
+          "description": "Translate text to/from M\u0101ori. Uses context for accuracy.",
+          "method": "POST",
+          "path": "/reo/translate",
+          "category": "language"
+        },
+        {
+          "name": "tepo_memory_store",
+          "description": "Store content in vector memory with embedding. Maintains persistent context.",
+          "method": "POST",
+          "path": "/awa/memory/store",
+          "category": "memory"
+        },
+        {
+          "name": "tepo_memory_query",
+          "description": "Semantic search in memory. Retrieve stored context.",
+          "method": "POST",
+          "path": "/awa/memory/query",
+          "category": "memory"
+        },
+        {
+          "name": "tepo_kaitiaki_register",
+          "description": "Register a new kaitiaki (guardian/agent) with role, system prompt, and tools.",
+          "method": "POST",
+          "path": "/awa/kaitiaki/register",
+          "category": "system"
+        },
+        {
+          "name": "tepo_task_execute",
+          "description": "Execute a task via a specific kaitiaki. Routes to appropriate guardian.",
+          "method": "POST",
+          "path": "/awa/task",
+          "category": "system"
+        },
+        {
+          "name": "tepo_db_chat_history",
+          "description": "Retrieve chat history for a session.",
+          "method": "GET",
+          "path": "/kitenga/db/chat/history/{session_id}",
+          "category": "database"
+        },
+        {
+          "name": "tepo_db_taonga_search",
+          "description": "Search for taonga (treasured content) in database.",
+          "method": "POST",
+          "path": "/kitenga/db/taonga/search",
+          "category": "database"
+        },
+        {
+          "name": "tepo_health_check",
+          "description": "Check Te P\u014d backend health and status.",
+          "method": "GET",
+          "path": "/heartbeat",
+          "category": "system"
+        },
+        {
+          "name": "tepo_list_kaitiaki",
+          "description": "List all registered kaitiaki in the system.",
+          "method": "GET",
+          "path": "/awa/kaitiaki",
+          "category": "system"
+        }
+      ]
+    }
+  ]
+}

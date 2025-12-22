@@ -1,0 +1,34 @@
+{
+    "name": "cloudflare",
+    "version": "1.0.0",
+    "description": "Cloudflare Pages deployment and configuration schema.",
+    "baseUrl": "https://api.cloudflare.com/client/v4",
+    "authentication": {
+        "type": "bearer",
+        "tokenEnv": "CLOUDFLARE_API_TOKEN",
+        "required": true
+    },
+    "services": {
+        "pages": {
+            "description": "Wrangler Pages deployments and builds",
+            "endpoints": [
+                "wrangler pages deploy",
+                "/accounts/{account_id}/pages/projects/{project}/deployments"
+            ]
+        },
+        "projects": {
+            "description": "Pages project lifecycle management",
+            "endpoints": [
+                "/accounts/{account_id}/pages/projects",
+                "/accounts/{account_id}/pages/projects/{name}",
+                "/accounts/{account_id}/pages/projects/{project}/domains"
+            ]
+        },
+        "cache": {
+            "description": "Cache invalidation",
+            "endpoints": [
+                "/zones/{zone_id}/purge_cache"
+            ]
+        }
+    }
+}

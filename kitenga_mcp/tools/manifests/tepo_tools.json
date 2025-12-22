@@ -1,0 +1,421 @@
+{
+  "tepo": {
+    "tools": [
+      {
+        "name": "tepo_kitenga_whisper",
+        "description": "Free-form text chat with optional retrieval, pipeline, and vector persistence. Main Kitenga conversation endpoint.",
+        "category": "chat",
+        "method": "POST",
+        "path": "/kitenga/gpt-whisper",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "payload": {
+              "type": "object",
+              "properties": {
+                "prompt": {
+                  "type": "string",
+                  "description": "The text to process"
+                },
+                "session_id": {
+                  "type": "string",
+                  "description": "Chat session ID"
+                },
+                "system_prompt": {
+                  "type": "string",
+                  "description": "Custom system prompt"
+                },
+                "use_retrieval": {
+                  "type": "boolean",
+                  "description": "Use vector store retrieval"
+                },
+                "run_pipeline": {
+                  "type": "boolean",
+                  "description": "Run processing pipeline"
+                },
+                "save_vector": {
+                  "type": "boolean",
+                  "description": "Save to vector store"
+                }
+              },
+              "required": [
+                "prompt"
+              ]
+            }
+          },
+          "required": [
+            "payload"
+          ]
+        },
+        "examples": [
+          {
+            "name": "Basic chat",
+            "input": {
+              "payload": {
+                "prompt": "What is Kitenga?"
+              }
+            }
+          },
+          {
+            "name": "Chat with context retrieval",
+            "input": {
+              "payload": {
+                "prompt": "Summarize this",
+                "use_retrieval": true,
+                "session_id": "sess_123"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "tepo_vector_search",
+        "description": "Semantic search across vector store. Find similar content by meaning.",
+        "category": "knowledge",
+        "method": "POST",
+        "path": "/vector/search",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Search query"
+            },
+            "top_k": {
+              "type": "integer",
+              "default": 5,
+              "description": "Number of results"
+            },
+            "threshold": {
+              "type": "number",
+              "default": 0.7,
+              "description": "Similarity threshold"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "examples": [
+          {
+            "name": "Search for related documents",
+            "input": {
+              "query": "mau whanaungatanga culture",
+              "top_k": 5
+            }
+          }
+        ]
+      },
+      {
+        "name": "tepo_ocr_scan",
+        "description": "Extract text from images, PDFs, or documents using OCR.",
+        "category": "processing",
+        "method": "POST",
+        "path": "/ocr/scan",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "file_url": {
+              "type": "string",
+              "description": "URL to file or base64 encoded image"
+            },
+            "taonga_mode": {
+              "type": "boolean",
+              "description": "Enable taonga (treasure) preservation mode"
+            },
+            "prefer_offline": {
+              "type": "boolean",
+              "description": "Use offline OCR if available"
+            }
+          },
+          "required": [
+            "file_url"
+          ]
+        }
+      },
+      {
+        "name": "tepo_pipeline_run",
+        "description": "Execute a data processing pipeline. Pipelines: ocr, summarise, translate, embed, taonga.",
+        "category": "processing",
+        "method": "POST",
+        "path": "/awa/pipeline",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "enum": [
+                "ocr",
+                "summarise",
+                "translate",
+                "embed",
+                "taonga"
+              ],
+              "description": "Pipeline name"
+            },
+            "input": {
+              "type": "object",
+              "description": "Input data for pipeline"
+            },
+            "wait": {
+              "type": "boolean",
+              "default": false,
+              "description": "Wait for completion"
+            },
+            "realm": {
+              "type": "string",
+              "description": "Target realm"
+            }
+          },
+          "required": [
+            "name",
+            "input"
+          ]
+        }
+      },
+      {
+        "name": "tepo_reo_translate",
+        "description": "Translate text to/from M\u0101ori. Uses context for accuracy.",
+        "category": "language",
+        "method": "POST",
+        "path": "/reo/translate",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "Text to translate"
+            },
+            "target_language": {
+              "type": "string",
+              "default": "mi",
+              "description": "Target language code"
+            },
+            "context": {
+              "type": "string",
+              "description": "Context for translation"
+            }
+          },
+          "required": [
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "tepo_memory_store",
+        "description": "Store content in vector memory with embedding. Maintains persistent context.",
+        "category": "memory",
+        "method": "POST",
+        "path": "/awa/memory/store",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "Content to store"
+            },
+            "metadata": {
+              "type": "object",
+              "description": "Metadata (tags, source, etc)"
+            },
+            "realm": {
+              "type": "string",
+              "description": "Realm name"
+            },
+            "tapu_level": {
+              "type": "integer",
+              "default": 0,
+              "description": "Tapu (restricted) level"
+            }
+          },
+          "required": [
+            "content"
+          ]
+        }
+      },
+      {
+        "name": "tepo_memory_query",
+        "description": "Semantic search in memory. Retrieve stored context.",
+        "category": "memory",
+        "method": "POST",
+        "path": "/awa/memory/query",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Search query"
+            },
+            "top_k": {
+              "type": "integer",
+              "default": 5,
+              "description": "Results to return"
+            },
+            "threshold": {
+              "type": "number",
+              "default": 0.7,
+              "description": "Confidence threshold"
+            },
+            "realm": {
+              "type": "string",
+              "description": "Realm to search in"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "tepo_kaitiaki_register",
+        "description": "Register a new kaitiaki (guardian/agent) with role, system prompt, and tools.",
+        "category": "system",
+        "method": "POST",
+        "path": "/awa/kaitiaki/register",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Kaitiaki name"
+            },
+            "role": {
+              "type": "string",
+              "description": "Role/responsibility"
+            },
+            "system_prompt": {
+              "type": "string",
+              "description": "System prompt for kaitiaki"
+            },
+            "tools": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Available tools"
+            },
+            "realm": {
+              "type": "string",
+              "description": "Realm assignment"
+            }
+          },
+          "required": [
+            "name",
+            "role",
+            "system_prompt"
+          ]
+        }
+      },
+      {
+        "name": "tepo_task_execute",
+        "description": "Execute a task via a specific kaitiaki. Routes to appropriate guardian.",
+        "category": "system",
+        "method": "POST",
+        "path": "/awa/task",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "kaitiaki": {
+              "type": "string",
+              "description": "Kaitiaki name"
+            },
+            "task": {
+              "type": "string",
+              "description": "Task description"
+            },
+            "input": {
+              "type": "object",
+              "description": "Task input data"
+            },
+            "priority": {
+              "type": "string",
+              "enum": [
+                "low",
+                "normal",
+                "high"
+              ],
+              "default": "normal"
+            },
+            "realm": {
+              "type": "string",
+              "description": "Realm context"
+            }
+          },
+          "required": [
+            "kaitiaki",
+            "task",
+            "input"
+          ]
+        }
+      },
+      {
+        "name": "tepo_db_chat_history",
+        "description": "Retrieve chat history for a session.",
+        "category": "database",
+        "method": "GET",
+        "path": "/kitenga/db/chat/history/{session_id}",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "session_id": {
+              "type": "string",
+              "description": "Chat session ID"
+            },
+            "limit": {
+              "type": "integer",
+              "default": 50,
+              "description": "Number of messages"
+            }
+          },
+          "required": [
+            "session_id"
+          ]
+        }
+      },
+      {
+        "name": "tepo_db_taonga_search",
+        "description": "Search for taonga (treasured content) in database.",
+        "category": "database",
+        "method": "POST",
+        "path": "/kitenga/db/taonga/search",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Search query"
+            },
+            "limit": {
+              "type": "integer",
+              "default": 10,
+              "description": "Results limit"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "tepo_health_check",
+        "description": "Check Te P\u014d backend health and status.",
+        "category": "system",
+        "method": "GET",
+        "path": "/heartbeat",
+        "inputSchema": {
+          "type": "object"
+        }
+      },
+      {
+        "name": "tepo_list_kaitiaki",
+        "description": "List all registered kaitiaki in the system.",
+        "category": "system",
+        "method": "GET",
+        "path": "/awa/kaitiaki",
+        "inputSchema": {
+          "type": "object"
+        }
+      }
+    ]
+  }
+}

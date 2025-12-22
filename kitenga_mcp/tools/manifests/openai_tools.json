@@ -1,0 +1,70 @@
+{
+  "openai": {
+    "tools": [
+      {
+        "name": "responses_generate",
+        "description": "Generate a response via the OpenAI Responses API.",
+        "category": "responses",
+        "method": "POST",
+        "path": "/responses",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "description": "Model to execute",
+              "default": "gpt-5"
+            },
+            "input": {
+              "type": "string",
+              "description": "User input text"
+            },
+            "instructions": {
+              "type": "string",
+              "description": "Optional system instructions"
+            },
+            "max_output_tokens": {
+              "type": "integer",
+              "description": "Max tokens"
+            },
+            "temperature": {
+              "type": "number",
+              "description": "Sampling temperature"
+            },
+            "background": {
+              "type": "boolean",
+              "default": false,
+              "description": "Run background job"
+            },
+            "metadata": {
+              "type": "object",
+              "description": "Optional metadata"
+            }
+          },
+          "required": [
+            "input"
+          ]
+        }
+      },
+      {
+        "name": "responses_get",
+        "description": "Retrieve a previously generated response by ID.",
+        "category": "responses",
+        "method": "GET",
+        "path": "/responses/{response_id}",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "response_id": {
+              "type": "string",
+              "description": "Response identifier"
+            }
+          },
+          "required": [
+            "response_id"
+          ]
+        }
+      }
+    ]
+  }
+}

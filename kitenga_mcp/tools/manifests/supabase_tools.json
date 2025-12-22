@@ -1,0 +1,190 @@
+{
+  "supabase": {
+    "tools": [
+      {
+        "name": "supabase_select",
+        "description": "Query rows from a Supabase table with filters.",
+        "category": "database",
+        "method": "GET",
+        "path": "/{table}",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "type": "string",
+              "description": "Table name"
+            },
+            "select": {
+              "type": "string",
+              "description": "Columns to select (comma-separated)"
+            },
+            "limit": {
+              "type": "integer",
+              "description": "Limit results"
+            },
+            "offset": {
+              "type": "integer",
+              "description": "Offset for pagination"
+            },
+            "order_by": {
+              "type": "string",
+              "description": "Order by column"
+            },
+            "order_direction": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          "required": [
+            "table"
+          ]
+        }
+      },
+      {
+        "name": "supabase_insert",
+        "description": "Insert a new row into a table.",
+        "category": "database",
+        "method": "POST",
+        "path": "/{table}",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "type": "string"
+            },
+            "data": {
+              "type": "object",
+              "description": "Row data"
+            },
+            "return": {
+              "type": "string",
+              "enum": [
+                "minimal",
+                "representation"
+              ],
+              "default": "representation"
+            }
+          },
+          "required": [
+            "table",
+            "data"
+          ]
+        }
+      },
+      {
+        "name": "supabase_update",
+        "description": "Update rows in a table matching filter conditions.",
+        "category": "database",
+        "method": "PATCH",
+        "path": "/{table}",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "type": "string"
+            },
+            "data": {
+              "type": "object",
+              "description": "Update data"
+            },
+            "filters": {
+              "type": "object",
+              "description": "WHERE conditions"
+            }
+          },
+          "required": [
+            "table",
+            "data",
+            "filters"
+          ]
+        }
+      },
+      {
+        "name": "supabase_delete",
+        "description": "Delete rows from a table.",
+        "category": "database",
+        "method": "DELETE",
+        "path": "/{table}",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "type": "string"
+            },
+            "filters": {
+              "type": "object",
+              "description": "WHERE conditions"
+            }
+          },
+          "required": [
+            "table",
+            "filters"
+          ]
+        }
+      },
+      {
+        "name": "supabase_rpc",
+        "description": "Call a stored procedure/function in Supabase.",
+        "category": "database",
+        "method": "POST",
+        "path": "/rpc/{function_name}",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "function_name": {
+              "type": "string"
+            },
+            "params": {
+              "type": "object",
+              "description": "Function parameters"
+            }
+          },
+          "required": [
+            "function_name"
+          ]
+        }
+      },
+      {
+        "name": "supabase_upload_file",
+        "description": "Upload a file to Supabase storage bucket.",
+        "category": "storage",
+        "method": "POST",
+        "path": "/storage/v1/buckets/{bucket_name}/upload",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "bucket_name": {
+              "type": "string"
+            },
+            "file_path": {
+              "type": "string",
+              "description": "Path in bucket"
+            },
+            "file_content": {
+              "type": "string",
+              "description": "Base64 encoded file content"
+            }
+          },
+          "required": [
+            "bucket_name",
+            "file_path",
+            "file_content"
+          ]
+        }
+      },
+      {
+        "name": "supabase_list_buckets",
+        "description": "List all storage buckets.",
+        "category": "storage",
+        "method": "GET",
+        "path": "/storage/v1/buckets",
+        "inputSchema": {
+          "type": "object"
+        }
+      }
+    ]
+  }
+}

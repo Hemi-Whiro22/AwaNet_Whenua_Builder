@@ -1,0 +1,21 @@
+# Moved Markdown Files
+
+_Logged on 2025-12-22T04:26:13.185863+00:00 UTC._
+
+| File | Current Path |
+| --- | --- |
+| CHANGES_SUMMARY.md | docs/root_docs/CHANGES_SUMMARY.md |
+| GPT_BUILD_INTEGRATION.md | docs/root_docs/GPT_BUILD_INTEGRATION.md |
+| MASTER_SUMMARY.md | docs/root_docs/MASTER_SUMMARY.md |
+| POSTGRES_JOB_TRACKING_COMMIT_CHECKLIST.md | docs/root_docs/POSTGRES_JOB_TRACKING_COMMIT_CHECKLIST.md |
+| QUEUE_MODE_CHECKLIST.md | docs/root_docs/QUEUE_MODE_CHECKLIST.md |
+| QUEUE_MODE_IMPLEMENTATION.md | docs/root_docs/QUEUE_MODE_IMPLEMENTATION.md |
+| README.md | docs/root_docs/README.md |
+| REALM_GENERATOR_QUICKSTART.md | docs/root_docs/REALM_GENERATOR_QUICKSTART.md |
+| REALM_ISOLATION_SUMMARY.md | docs/root_docs/REALM_ISOLATION_SUMMARY.md |
+| REFACTOR_INDEX.md | docs/root_docs/REFACTOR_INDEX.md |
+| REFACTOR_SUMMARY.md | docs/root_docs/REFACTOR_SUMMARY.md |
+| RENDER_COMMIT_READY.md | docs/root_docs/RENDER_COMMIT_READY.md |
+| REPOSITORY_STRUCTURE.md | docs/root_docs/REPOSITORY_STRUCTURE.md |
+| RUN_DEV_QUEUE_MODE.md | docs/root_docs/RUN_DEV_QUEUE_MODE.md |
+| TEPO_VERIFICATION.md | docs/root_docs/TEPO_VERIFICATION.md |
