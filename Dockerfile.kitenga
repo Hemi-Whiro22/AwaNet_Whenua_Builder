@@ -18,9 +18,9 @@ ENV LANG=mi_NZ.UTF-8 \
     PYTHONUNBUFFERED=1
 
 # Copy requirements and install shared dependencies
-COPY requirements.txt .
+COPY requirements.kitenga.txt .
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.kitenga.txt
 
 # Copy the entire repository (Render sets the build context to the repo root)
 COPY . .
