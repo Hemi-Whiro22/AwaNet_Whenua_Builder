@@ -427,6 +427,13 @@ def pipeline_context(run_id: str) -> Dict[str, Any]:
     return context
 
 
+def pipeline_token_hash() -> Optional[str]:
+    token = os.getenv("PIPELINE_TOKEN")
+    if not token:
+        return None
+    return hashlib.sha256(token.encode()).hexdigest()[:12]
+
+
 def protect_text(raw_text: str, *, context_metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     metadata: Dict[str, Any] = {}
     protected_text = raw_text

@@ -4,6 +4,8 @@ import os
 import uuid
 import datetime
 
+from te_po.stealth_ocr import pipeline_token_hash
+
 router = APIRouter(prefix="/awa", tags=["Awa ↔ Kitenga Bridge"])
 
 KITENGA_URL = os.getenv("KITENGA_MCP_URL", "http://127.0.0.1:8000")
@@ -100,9 +102,13 @@ async def awa_orchestrate(request: Request):
 
         # 4️⃣ Emit protocol event
         try:
+            event_headers = {"Content-Type": "application/json"}
+            hash_token = pipeline_token_hash()
+            if hash_token:
+                event_headers["X-Stealth-Token-Hash"] = hash_token
             await client.post(
                 f"{KITENGA_URL}/awa/protocol/event",
-                headers={"Content-Type": "application/json"},
+                headers=event_headers,
                 json={
                     "type": "awa_orchestration_complete",
                     "trace_id": trace_id,
