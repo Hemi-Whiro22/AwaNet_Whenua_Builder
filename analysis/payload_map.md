@@ -1,6 +1,6 @@
 # Te Kaitiaki o ngā Āhua Kawenga — Payload Registry
 
-**Scan time:** 2025-12-23T20:49:10.358732
+**Scan time:** 2025-12-23T20:59:56.498397
 **Mauri score:** 10 / 10
 
 ## Realm Whakapapa
@@ -1855,13 +1855,11 @@
 - Mauri score: 1
 
 ## Drift Observations
-- Added: 1
-  - POST /memory-ingest
+- Added: 0
 - Removed: 0
 - Changed: 0
 
 ## Notes
-- Schema drift detected — keep this artifact aligned with route changes.
 - Karakia: E rere ana te awa o ngā whakaaro, kia tau te mauri o tēnei mahi. Haumi e, hui e, tāiki e.
 
 ---

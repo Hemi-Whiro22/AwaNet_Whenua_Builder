@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-23T20:49:10.358732",
+  "timestamp": "2025-12-23T20:59:56.498397",
   "mauri_score": 10,
   "realm": {
     "name": "Te Pō Assistant",
@@ -4101,9 +4101,7 @@
     }
   ],
   "drift": {
-    "added": [
-      "POST /memory-ingest"
-    ],
+    "added": [],
     "removed": [],
     "changed": []
   }

@@ -51,6 +51,7 @@ The_Awa_Network
 │   ├── kaitiaki_context_sync.py
 │   ├── kaitiaki_sync_20251223_204003.json
 │   ├── kaitiaki_sync_20251223_204519.json
+│   ├── kaitiaki_sync_20251223_204811.json
 │   ├── live_samples
 │   │   ├── sample.htm
 │   │   ├── sample.html
@@ -67,9 +68,11 @@ The_Awa_Network
 │   │   ├── sample.webp
 │   │   └── sample.yaml
 │   ├── mcp_tools_manifest.json
+│   ├── mcp_tools_manifest.meta.json
 │   ├── metadata.py
 │   ├── payload_map.json
 │   ├── payload_map.md
+│   ├── payload_map.meta.json
 │   ├── repo_tree.md
 │   ├── review_log_20251223_151258.md
 │   ├── review_log_20251223_151317.md
@@ -93,10 +96,15 @@ The_Awa_Network
 │   ├── review_log_20251223_224437.md
 │   ├── review_log_20251224_005222.md
 │   ├── review_log_20251224_010346.md
+│   ├── review_log_20251224_094908.md
+│   ├── review_log_20251224_095546.md
 │   ├── routes.json
 │   ├── routes.md
+│   ├── routes.meta.json
 │   ├── routes_compact.md
+│   ├── routes_compact.meta.json
 │   ├── routes_summary.json
+│   ├── routes_summary.meta.json
 │   ├── run_repo_review.py
 │   ├── sync_status.py
 │   └── te_kaitiaki_o_nga_ahua_kawenga.py
@@ -967,8 +975,10 @@ The_Awa_Network
 │   ├── storage
 │   │   ├── chunks
 │   │   │   ├── chunk_006a35fe496a4b94bf92030feb833a48.json
+│   │   │   ├── chunk_02a8c2442c2144cda57204f8584e6154.json
 │   │   │   ├── chunk_07a7f8ee9e334796b8003a7cf8b114af.json
 │   │   │   ├── chunk_097de907909447ac8270c2abb6277e44.json
+│   │   │   ├── chunk_0c6d8b69446b45e5800abf765ea8dbf3.json
 │   │   │   ├── chunk_1017fd826fcc487b829c2baf7d9bee25.json
 │   │   │   ├── chunk_116699b5e8ff48a2bce484ec866fe053.json
 │   │   │   ├── chunk_14073172b4194c5c973be34e881a59d4.json
@@ -982,8 +992,11 @@ The_Awa_Network
 │   │   │   ├── chunk_25e6940c29e14e0bb3be1abe678b526d.json
 │   │   │   ├── chunk_266f2a3d50c24e1b8c7847bdc978c7e7.json
 │   │   │   ├── chunk_2a05301215ac4947b1fca71571e8af29.json
+│   │   │   ├── chunk_2f6d334d1b0f44dbb02d7769be8f5551.json
 │   │   │   ├── chunk_3f8f2a54f0b14bff95bd3faa6d84d01c.json
 │   │   │   ├── chunk_46234cbe4f2e439e9eeaa9ed29413dbd.json
+│   │   │   ├── chunk_484fe5afb3e14a9f8989d1fc9d13c920.json
+│   │   │   ├── chunk_4d8a864dfee94b61b26ab93d8936e11e.json
 │   │   │   ├── chunk_4ebf719134234684814d9dc937f25bf1.json
 │   │   │   ├── chunk_597b0c983a7d482bbd459f53e5df4df5.json
 │   │   │   ├── chunk_5c93b43d50964a0ca11ceb8c19608ccd.json
@@ -992,7 +1005,9 @@ The_Awa_Network
 │   │   │   ├── chunk_6d680a57bb9741cfa431bbab0ff1a27b.json
 │   │   │   ├── chunk_6ddb9019ea7e40909dd858705e6cb62d.json
 │   │   │   ├── chunk_6e9dcbf7b4e0480a8b739af42a441688.json
+│   │   │   ├── chunk_737063909cd84090a1b17dec25861618.json
 │   │   │   ├── chunk_7a7abaf1e97b44d28a8741b66cfca978.json
+│   │   │   ├── chunk_7e6adb2481614257a10e38dc0d00cf1c.json
 │   │   │   ├── chunk_80a47c924de64fda9c0a31bbd8ebc620.json
 │   │   │   ├── chunk_89d550fc9195446aa51a55650a660bb9.json
 │   │   │   ├── chunk_8cbe42265b634cdf9f1d4a322640e149.json
@@ -1001,9 +1016,11 @@ The_Awa_Network
 │   │   │   ├── chunk_906edc53377f4f0295bd3ee9569d4ed9.json
 │   │   │   ├── chunk_9727c42db81849bd979127bbee43e3db.json
 │   │   │   ├── chunk_9d707a509c9245bc96e47c5798f7e161.json
+│   │   │   ├── chunk_9db785e4f80341fd9080e364c3cabbd7.json
 │   │   │   ├── chunk_9ea291c9ccfc484e9b7704df3ee8a17f.json
 │   │   │   ├── chunk_a55224d8d5ea4f2597d1597828d137c8.json
 │   │   │   ├── chunk_a5abf6e2a8c94e01adc94b644188c309.json
+│   │   │   ├── chunk_a7ad8df52ee04b13aa8d83c897a0f5d3.json
 │   │   │   ├── chunk_a7c7884d16b649278131561efc4e7415.json
 │   │   │   ├── chunk_b13270a301784c4587156994c2c51399.json
 │   │   │   ├── chunk_b73677b637034e97afb52bf3df366033.json
@@ -1092,7 +1109,9 @@ The_Awa_Network
 │   │   │   ├── pipeline_20251224_072558_640c02e4b4e6437a9b0a260ef9fc9211.json
 │   │   │   ├── pipeline_20251224_072559_a4dba2b2250948e0abb07b4c76533114.json
 │   │   │   ├── pipeline_20251224_072600_3e5f5eeb98a542738d7d367a911d9a0d.json
-│   │   │   └── pipeline_20251224_072759_1f64b052b6cc4716b393bd88ee40a976.json
+│   │   │   ├── pipeline_20251224_072759_1f64b052b6cc4716b393bd88ee40a976.json
+│   │   │   ├── pipeline_20251224_094818_ac37bf72174843caa1a071a06bb139d7.json
+│   │   │   └── pipeline_20251224_094845_9c8480628d754a84ab9845f86637bbf4.json
 │   │   ├── openai
 │   │   │   └── koru_wolf_blue.json
 │   │   └── raw
