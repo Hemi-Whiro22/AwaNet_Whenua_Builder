@@ -1,4 +1,5 @@
 {
+  "baseUrl": "https://tiwhanawhana-backend.onrender.com",
   "tools": [
     {
       "name": "kitenga_whisper",

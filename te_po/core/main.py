@@ -25,6 +25,7 @@ from te_po.routes import (
     memory,
     pipeline,
     assistant,
+    assistant_bridge,
     recall,
     kitenga_backend,
     kitenga_db,
@@ -122,6 +123,7 @@ app.include_router(dev.router)
 app.include_router(memory.router)
 app.include_router(pipeline.router)
 app.include_router(assistant.router)
+app.include_router(assistant_bridge.router)
 app.include_router(recall.router)
 app.include_router(kitenga_backend.router)
 app.include_router(kitenga_db.router)
