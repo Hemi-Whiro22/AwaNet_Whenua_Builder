@@ -1,8 +1,8 @@
 # Kitenga Whiro Repo Review
 
-**Scan time:** 2025-12-23T17:57:03.600789
+**Scan time:** 2025-12-23T18:24:04.682258
 **Branch:** main
-**Commit:** 289fa4a9d8152d053ab7f976821db9cd6c8ebe0a
+**Commit:** 09c2f495984862db3fdc4e81873362ddbb863b50
 **Performed by:** run_repo_review.py
 
 ## Route Catalog
@@ -40,6 +40,8 @@
 - GET /heartbeat
 - GET /gpt_connect.yaml
 - GET /realm.json
+- GET /openapi-core.json
+- GET /.well-known/openapi-core.json
 - POST /ocr
 - POST /translate
 - POST /speak
@@ -73,7 +75,7 @@
 - `SUPABASE_SERVICE_ROLE_KEY`
 
 ## Mauri Summary
-Flows stay connected: base routes + tool manifests are present, MCP/middleware checks guard bearer auth. Mauri score is 8/10 and growing.
+Flows stay connected: base routes + tool manifests are present, MCP/middleware checks guard bearer auth. Mauri score is 9/10 and growing.
 
 ## Notes for Agents
 - `/analysis/` now holds JSON + Markdown review artifacts—MCP tool manifests should guide GPT Builder tooling.

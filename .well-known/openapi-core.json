@@ -1,0 +1,849 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Kitenga Whiro \u2014 Te P\u014d Core Orchestration",
+    "version": "1.0.0",
+    "description": "Core orchestration schema for GPT Builder bridge to Te P\u014d backend.",
+    "x-mauri": {
+      "realm": "Te P\u014d",
+      "owner": "AwaNet",
+      "maintainer": "Hemi Whiro",
+      "environment": "render",
+      "awa_version": "1.0.0"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://tiwhanawhana-backend.onrender.com"
+    }
+  ],
+  "paths": {
+    "/assistant/run": {
+      "post": {
+        "tags": [
+          "Assistant"
+        ],
+        "summary": "Run the Te P\u014d assistant",
+        "operationId": "assistant_run",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/health": {
+      "get": {
+        "tags": [
+          "Assistant"
+        ],
+        "summary": "Health check for the assistant",
+        "operationId": "assistant_health",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/create": {
+      "post": {
+        "tags": [
+          "Assistant"
+        ],
+        "summary": "Create a new assistant session",
+        "operationId": "assistant_create",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/list": {
+      "get": {
+        "tags": [
+          "Assistant"
+        ],
+        "summary": "List assistant sessions",
+        "operationId": "assistant_list",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/vector-stores": {
+      "get": {
+        "tags": [
+          "Assistant"
+        ],
+        "summary": "List vector stores",
+        "operationId": "assistant_vector_stores",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/version": {
+      "get": {
+        "tags": [
+          "Assistant"
+        ],
+        "summary": "Assistant version metadata",
+        "operationId": "assistant_version",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kitenga/vision-ocr": {
+      "post": {
+        "tags": [
+          "Kitenga"
+        ],
+        "summary": "Vision OCR processing",
+        "operationId": "vision_ocr",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kitenga/tool/translate": {
+      "post": {
+        "tags": [
+          "Kitenga"
+        ],
+        "summary": "Translate text via Kitenga",
+        "operationId": "kitenga_translate",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kitenga/ask": {
+      "post": {
+        "tags": [
+          "Kitenga"
+        ],
+        "summary": "Ask Kitenga a question",
+        "operationId": "kitenga_ask",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kitenga/gpt-whisper": {
+      "post": {
+        "tags": [
+          "Kitenga"
+        ],
+        "summary": "Whisper / GPT request",
+        "operationId": "kitenga_whisper",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kitenga/query_knowledge_base": {
+      "post": {
+        "tags": [
+          "Kitenga"
+        ],
+        "summary": "Query the knowledge base",
+        "operationId": "kitenga_query_kb",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reo/translate": {
+      "post": {
+        "tags": [
+          "Reo"
+        ],
+        "summary": "Translate to te reo M\u0101ori",
+        "operationId": "reo_translate",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reo/explain": {
+      "post": {
+        "tags": [
+          "Reo"
+        ],
+        "summary": "Explain te reo context",
+        "operationId": "reo_explain",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reo/pronounce": {
+      "post": {
+        "tags": [
+          "Reo"
+        ],
+        "summary": "Pronounce text",
+        "operationId": "reo_pronounce",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipeline/run": {
+      "post": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Run the Te P\u014d pipeline",
+        "operationId": "pipeline_run",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipeline/enqueue": {
+      "post": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Enqueue pipeline work",
+        "operationId": "pipeline_enqueue",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipeline/status/{job_id}": {
+      "get": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Query pipeline job status",
+        "operationId": "pipeline_status",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/pipeline/jobs/recent": {
+      "get": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "List recent pipeline jobs",
+        "operationId": "pipeline_jobs_recent",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vector/embed": {
+      "post": {
+        "tags": [
+          "Vector"
+        ],
+        "summary": "Embed text into vector store",
+        "operationId": "vector_embed",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vector/search": {
+      "post": {
+        "tags": [
+          "Vector"
+        ],
+        "summary": "Search vectors",
+        "operationId": "vector_search",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vector/recent": {
+      "get": {
+        "tags": [
+          "Vector"
+        ],
+        "summary": "List recent vector batches",
+        "operationId": "vector_recent",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memory/retrieve": {
+      "post": {
+        "tags": [
+          "Memory"
+        ],
+        "summary": "Retrieve stored memory",
+        "operationId": "memory_retrieve",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kitenga/db/memory": {
+      "get": {
+        "tags": [
+          "Kitenga"
+        ],
+        "summary": "Browse DB memory",
+        "operationId": "kitenga_db_memory",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/research/stacked": {
+      "post": {
+        "tags": [
+          "Research"
+        ],
+        "summary": "Stacked research run",
+        "operationId": "research_stacked",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/research/web_search": {
+      "post": {
+        "tags": [
+          "Research"
+        ],
+        "summary": "Web search for research",
+        "operationId": "research_web_search",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logs/recent": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Recent log entries",
+        "operationId": "logs_recent",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logs/ledger": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Ledger log history",
+        "operationId": "logs_ledger",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logs/state": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "State snapshots",
+        "operationId": "logs_state",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Key"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ]
+}

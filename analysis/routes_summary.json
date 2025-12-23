@@ -19,6 +19,8 @@
     "GET /heartbeat",
     "GET /gpt_connect.yaml",
     "GET /realm.json",
+    "GET /openapi-core.json",
+    "GET /.well-known/openapi-core.json",
     "POST /ocr",
     "POST /translate",
     "POST /speak",

@@ -14,6 +14,8 @@ services:
     buildFilter:
       paths:
         - te_po/**
+        - app/**
+        - .well-known/**
     
     # Environment variables - required for te_po to function
     envVars:

@@ -8,6 +8,7 @@ from pathlib import Path
 from fastapi import BackgroundTasks, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 # Middleware imports
 from te_po.utils.middleware.auth_middleware import BearerAuthMiddleware
@@ -71,6 +72,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 SPEC_FILE = REPO_ROOT / "gpt_connect.yaml"
 REALM_FILE = REPO_ROOT / "realm.json"
 AWA_LOG_URL = os.getenv("AWA_LOG_URL", "https://tiwhanawhana-backend.onrender.com/awa/log")
+CORE_SPEC_FILE = REPO_ROOT / "app" / "openapi-core.json"
+WELL_KNOWN_DIR = REPO_ROOT / ".well-known"
 
 # -------------------------------------------------------------------
 # 🌐 CORS + AUTH MIDDLEWARE
@@ -170,6 +173,26 @@ async def serve_realm():
     if not REALM_FILE.exists():
         return JSONResponse({"error": "realm.json missing"}, status_code=404)
     return FileResponse(REALM_FILE, media_type="application/json")
+
+
+def _core_spec_response():
+    if not CORE_SPEC_FILE.exists():
+        return JSONResponse({"error": "openapi-core.json missing"}, status_code=404)
+    return FileResponse(CORE_SPEC_FILE, media_type="application/json")
+
+
+@app.get("/openapi-core.json", include_in_schema=False)
+async def serve_openapi_core():
+    return _core_spec_response()
+
+
+@app.get("/.well-known/openapi-core.json", include_in_schema=False)
+async def serve_openapi_core_well_known():
+    return _core_spec_response()
+
+
+if WELL_KNOWN_DIR.exists():
+    app.mount("/.well-known", StaticFiles(directory=str(WELL_KNOWN_DIR)), name="well_known")
 
 # -------------------------------------------------------------------
 # 🔗 ROUTER REGISTRATION

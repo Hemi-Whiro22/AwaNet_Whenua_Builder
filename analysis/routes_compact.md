@@ -29,6 +29,8 @@
 | GET | /heartbeat | te_po/core/main.py |
 | GET | /gpt_connect.yaml | te_po/core/main.py |
 | GET | /realm.json | te_po/core/main.py |
+| GET | /openapi-core.json | te_po/core/main.py |
+| GET | /.well-known/openapi-core.json | te_po/core/main.py |
 | POST | /ocr | te_po/core/kitenga_cards.py |
 | POST | /translate | te_po/core/kitenga_cards.py |
 | POST | /speak | te_po/core/kitenga_cards.py |
