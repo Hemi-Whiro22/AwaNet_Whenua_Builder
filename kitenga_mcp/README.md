@@ -111,3 +111,17 @@ Each service is a self-contained carving - solid mauri fueled context that can't
 - **Point GPT at kitenga-main** – Update GPT Builder/OpenAI apps to import `https://kitenga-main.onrender.com/openai_tools.json` (with `Authorization: Bearer $PIPELINE_TOKEN`) and use the `/openapi-core.json` schema so the same tool set is shared between the builder, the app, and your automation.
 
 This keeps every live test running through `kitenga-main`, so the bearer token, stealth metadata, and vector logging stay centralized while you prep GPT to hit those endpoints.
+
+## Running the Awa stack together
+
+Use `scripts/run_awa_stack.sh` to start/stop the Awa loop, realtime listener, and GPT bridge as a group:
+
+```
+cd /home/hemi-whiro/Titiraukawa/The_Awa_Network
+scripts/run_awa_stack.sh start   # boots awa_loop.py, awa_realtime.py, awa_gpt.py with .env applied
+scripts/run_awa_stack.sh status  # shows which helper is running
+scripts/run_awa_stack.sh stop    # stops all services cleanly
+scripts/run_awa_stack.sh restart # restart the whole stack when you redeploy
+```
+
+Each run loads `.env`, pipes output to `logs/awa/<service>.log`, and keeps PID files so you can manage the trio without juggling windows. This keeps the automation loop warm, ensures events hit kitenga-main with the stealth hash, and replays GPT context for each cycle.
