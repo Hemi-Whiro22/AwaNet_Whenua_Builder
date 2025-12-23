@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
+# Author: awa developer (Kitenga Whiro [Adrian Hemi])
 set -euo pipefail
 
-ROOT_DIR="$(dirname "$0")"
-REPO_ROOT="$(cd "$ROOT_DIR/.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+TESTRUNNER="$SCRIPT_DIR/run_all_tests.sh"
 cd "$REPO_ROOT"
 
 TARGET="${1:-local}"
@@ -38,7 +40,7 @@ start_local_backend() {
   export TARGET
 
   echo "Running test suite against $API_URL ..."
-  bash "$ROOT_DIR/run_all_tests.sh" "$TARGET"
+  bash "$TESTRUNNER" "$TARGET"
 }
 
 start_remote_tests() {
@@ -47,7 +49,7 @@ start_remote_tests() {
   export API_URL STATE_BASE_URL TARGET
 
   echo "Running tests against remote backend ($API_URL) ..."
-  bash "$ROOT_DIR/run_all_tests.sh" "$TARGET"
+  bash "$TESTRUNNER" "$TARGET"
 }
 
 if [ "$TARGET" = "local" ]; then

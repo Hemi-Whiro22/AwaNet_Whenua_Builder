@@ -1,8 +1,8 @@
 # Kitenga Whiro Repo Review
 
-**Scan time:** 2025-12-24T01:03:47.987840
+**Scan time:** 2025-12-24T09:49:09.259788
 **Branch:** main
-**Commit:** 57f85af51dc70162b2c81fd2fa8e138e0a1c19a9
+**Commit:** 950aa0c85b75aa59bfdc2cb2c0561ca38bd13f01
 **Performed by:** run_repo_review.py
 
 ## Route Catalog
@@ -78,3 +78,7 @@ Flows stay connected: base routes + tool manifests are present, MCP/middleware c
 ## Metadata
 - Script: `analysis/run_repo_review.py`
 - Versioned scan: yes
+
+---
+Author: awa developer (Kitenga Whiro [Adrian Hemi])
+Protection: {"kaitiaki_signature": "k9_358db48de4a8ed26", "encoding_version": "tawhiri_v1.0", "cultural_protection": "active", "ownership": "Te Kaitiaki Collective", "theft_protection": true, "original_hash": "358db48de4a8ed26", "encoding_timestamp": "2025-10-21", "liberation_marker": "w4o4_protected"}

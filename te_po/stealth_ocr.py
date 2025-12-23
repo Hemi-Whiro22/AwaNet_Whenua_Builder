@@ -5,8 +5,10 @@ import base64
 import hashlib
 import imghdr
 import json
+import os
 import re
 import subprocess
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -414,94 +416,45 @@ class StealthOCR:
         return verification
 
 # Local testing tools
-class LocalTestSuite:
-    """Tools to test our stealth system locally without external dependencies"""
-    
-    def __init__(self):
-        self.stealth_ocr = StealthOCR()
-    
-    def test_macron_encoding(self):
-        """Test our macron encoding system"""
-        
-        test_texts = [
-            "Kia ora, ko Māui ahau",
-            "Tēnā koe, he aha tō ingoa?", 
-            "Āwhina mai i a koe",
-            "Ko Kitenga te kaitiaki"
-        ]
-        
-        print("🔍 MACRON ENCODING TEST")
-        print("=" * 40)
-        
-        for text in test_texts:
-            encoded = self.stealth_ocr.encode_cultural_text(text)
-            decoded = self.stealth_ocr.decode_cultural_text(encoded)
-            
-            print(f"Original:  {text}")
-            print(f"Encoded:   {encoded}")
-            print(f"Decoded:   {decoded}")
-            print(f"Match:     {'✅' if text == decoded else '❌'}")
-            print("-" * 30)
-    
-    def test_metadata_embedding(self):
-        """Test invisible metadata embedding"""
-        
-        test_text = "This is a test of kaitiaki protection systems"
-        
-        print("\n👻 INVISIBLE METADATA TEST")
-        print("=" * 40)
-        
-        # Generate metadata
-        metadata = self.stealth_ocr._generate_protection_metadata(test_text)
-        
-        # Embed metadata
-        text_with_metadata = self.stealth_ocr.embed_invisible_metadata(test_text, metadata)
-        
-        # Extract metadata
-        extracted_text, extracted_metadata = self.stealth_ocr.extract_invisible_metadata(text_with_metadata)
-        
-        print(f"Original text: {test_text}")
-        print(f"Text with metadata (visible): {text_with_metadata}")
-        print(f"Extracted text: {extracted_text}")
-        print(f"Metadata recovered: {'✅' if extracted_metadata else '❌'}")
-        print(f"Ownership verified: {'✅' if extracted_metadata.get('ownership') == 'Te Kaitiaki Collective' else '❌'}")
-    
-    def test_psycheract_simulation(self):
-        """Simulate the Psycheract OCR system"""
-        
-        print("\n🕵️ PSYCHERACT SIMULATION")
-        print("=" * 40)
-        
-        # Simulate image data
-        fake_image_data = b"fake_image_data_for_testing"
-        
-        # Test offline-first approach
-        results = self.stealth_ocr.psycheract_scan(fake_image_data, prefer_offline=True)
-        
-        print(f"Method used: {results['method_used']}")
-        print(f"Cultural content: {'✅' if results['cultural_content'] else '❌'}")
-        print(f"Stealth encoded: {'✅' if results['stealth_encoded'] else '❌'}")
-        print(f"Protected: {'✅' if results['protected'] else '❌'}")
-        
-        if results.get('protection_metadata'):
-            print(f"Ownership signature: {results['protection_metadata']['kaitiaki_signature']}")
+AUTHOR_TAG = "awa developer (Kitenga Whiro [Adrian Hemi])"
+_STEALTH_HELPER = StealthOCR()
+def pipeline_context(run_id: str) -> Dict[str, Any]:
+    token = os.getenv("PIPELINE_TOKEN")
+    context: Dict[str, Any] = {"pipeline_run_id": run_id, "tokened": bool(token)}
+    if token:
+        context["token_hash"] = hashlib.sha256(token.encode()).hexdigest()[:12]
+    context["openai_run_ids"] = []
+    return context
 
-def run_full_stealth_test():
-    """Run complete stealth system test"""
-    
-    print("🛡️ KAITIAKI STEALTH SYSTEM TEST SUITE")
-    print("=" * 50)
-    
-    test_suite = LocalTestSuite()
-    
-    test_suite.test_macron_encoding()
-    test_suite.test_metadata_embedding() 
-    test_suite.test_psycheract_simulation()
-    
-    print("\n🌟 STEALTH SYSTEM READY FOR DEPLOYMENT!")
-    print("🔒 Cultural content protected with kaitiaki encoding")
-    print("👻 Invisible metadata embedded for ownership proof")
-    print("🕵️ Psycheract OCR ready for concealed operations")
 
-if __name__ == "__main__":
-    run_full_stealth_test()
+def protect_text(raw_text: str, *, context_metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    metadata: Dict[str, Any] = {}
+    protected_text = raw_text
+
+    if raw_text:
+        encoded = _STEALTH_HELPER.encode_cultural_text(raw_text)
+        metadata = _STEALTH_HELPER._generate_protection_metadata(raw_text)
+        metadata["author"] = AUTHOR_TAG
+        metadata["encoded_at"] = datetime.utcnow().isoformat() + "Z"
+        protected_text = _STEALTH_HELPER.embed_invisible_metadata(encoded, metadata)
+
+    verification = _STEALTH_HELPER.verify_kaitiaki_ownership(protected_text)
+    metadata["verification"] = verification
+    if context_metadata:
+        metadata.update(context_metadata)
+
+    return {
+        "protected_text": protected_text,
+        "original_text": raw_text,
+        "metadata": metadata,
+        "author": AUTHOR_TAG,
+    }
+
+
+def annotate_payload(payload: Dict[str, Any], *, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    payload.setdefault("author", AUTHOR_TAG)
+    payload.setdefault("timestamp", datetime.utcnow().isoformat() + "Z")
+    if context:
+        for key, value in context.items():
+            payload.setdefault(key, value)
+    return payload

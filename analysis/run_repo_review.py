@@ -15,6 +15,9 @@ import re
 import subprocess
 import datetime
 from pathlib import Path
+from typing import Any, Dict
+
+from analysis import metadata as analysis_metadata
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ANALYSIS_DIR = REPO_ROOT / "analysis"
@@ -44,6 +47,17 @@ def _load_payload_module():
         return None, str(exc)
 
 _PAYLOAD_MODULE, _PAYLOAD_LOAD_ERROR = _load_payload_module()
+
+
+def _write_json_with_meta(path: Path, data: Any, resource: str) -> Dict[str, Any]:
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    return analysis_metadata.write_metadata_file(path, resource)
+
+
+def _write_markdown_with_meta(path: Path, text: str, resource: str) -> None:
+    path.write_text(text, encoding="utf-8")
+    meta = analysis_metadata.write_metadata_file(path, resource)
+    analysis_metadata.append_markdown_footer(path, meta)
 
 KARAKIA_OPEN = """
 🌿  KARAKIA TIMATANGA
@@ -192,22 +206,18 @@ def summarise_routes(routes):
 
 def write_outputs(routes, summary, scripts):
     ANALYSIS_DIR.mkdir(exist_ok=True)
-    with open(ROUTES_FILE, "w", encoding="utf-8") as f:
-        json.dump(routes, f, indent=2)
+    _write_json_with_meta(ROUTES_FILE, routes, "analysis_routes_json")
     summary = update_routes_summary(summary)
-    with open(SUMMARY_FILE, "w", encoding="utf-8") as f:
-        json.dump(summary, f, indent=2)
-    with open(COMPACT_FILE, "w", encoding="utf-8") as f:
-        f.write("| Method | Path | File |\n|--------|------|------|\n")
-        for r in routes:
-            f.write(f"| {r['method']} | {r['path']} | {r['file']} |\n")
+    _write_json_with_meta(SUMMARY_FILE, summary, "analysis_routes_summary_json")
+    compact_lines = ["| Method | Path | File |", "|--------|------|------|"]
+    compact_lines += [f"| {r['method']} | {r['path']} | {r['file']} |" for r in routes]
+    _write_markdown_with_meta(COMPACT_FILE, "\n".join(compact_lines), "analysis_routes_compact_md")
 
     tools_manifest = gather_mcp_tools()
     update_manifest_file(tools_manifest, scripts)
 
     content = build_markdown(routes, summary, tools_manifest, scripts)
-    with open(ROUTES_MD_FILE, "w", encoding="utf-8") as f:
-        f.write(content)
+    _write_markdown_with_meta(ROUTES_MD_FILE, content, "analysis_routes_md")
 
 
 def describe_domain_summary(summary):
@@ -270,6 +280,7 @@ def update_manifest_file(tools_manifest: dict, script_tools: dict):
     with open(TOOLS_MANIFEST_FILE, "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2, ensure_ascii=False)
     log(f"Updated {TOOLS_MANIFEST_FILE.name} with {len(script_entries)} script tool entries.")
+    analysis_metadata.write_metadata_file(TOOLS_MANIFEST_FILE, "analysis_mcp_manifest")
 
 
 def build_markdown(routes, summary, tools_manifest, script_tools):

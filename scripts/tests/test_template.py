@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Lightweight regression test for te_hau/project_template."""
-
 from __future__ import annotations
 
+"""Lightweight regression test for te_hau/project_template."""
+__author__ = "awa developer (Kitenga Whiro [Adrian Hemi])"
+
 import json
+import os
 import shutil
 import subprocess
 import tempfile
@@ -13,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 TEMPLATE_DIR = ROOT / "te_hau" / "project_template"
 
 
-def run(cmd, cwd, input_text: str | None = None):
+def run(cmd, cwd, input_text: str | None = None, env: dict | None = None):
     result = subprocess.run(
         cmd,
         cwd=cwd,
@@ -21,6 +23,7 @@ def run(cmd, cwd, input_text: str | None = None):
         text=True,
         input=input_text,
         capture_output=True,
+        env={**os.environ, **(env or {})},
     )
     return result.stdout.strip()
 
@@ -64,7 +67,12 @@ def main() -> None:
         assert_contains(dest / ".github" / "workflows" / "cloudflare-pages.yml", "projectName: te-ao-test")
 
         # Run bootstrap.sh (respond with bearer token)
-        run(["./scripts/bootstrap.sh"], dest, input_text="token123\n")
+        run(
+            ["./scripts/bootstrap.sh"],
+            dest,
+            input_text="token123\n",
+            env={"BOOTSTRAP_SKIP_INSTALL": "1"},
+        )
 
         # Inspect bootstrap log output
         env_text = (dest / ".env").read_text(encoding="utf-8")

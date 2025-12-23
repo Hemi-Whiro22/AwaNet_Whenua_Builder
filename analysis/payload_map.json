@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-23T12:03:49.096149",
+  "timestamp": "2025-12-23T20:49:10.358732",
   "mauri_score": 10,
   "realm": {
     "name": "Te Pō Assistant",
@@ -1137,6 +1137,65 @@
       "parameters": [],
       "registered": false,
       "mauri_score": 1
+    },
+    {
+      "path": "/memory-ingest",
+      "method": "POST",
+      "function": "ingest_chat_memory",
+      "module": "te_po.routes.chat",
+      "whakapapa_path": "te_po/routes/chat.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "ChatMemoryIngestRequest",
+          "model": "ChatMemoryIngestRequest",
+          "model_fields": [
+            {
+              "name": "session_id",
+              "type": "str",
+              "default": "Field(..., description='Chat session identifier')"
+            },
+            {
+              "name": "text",
+              "type": "str",
+              "default": "Field(..., description='Raw chat text to save and vectorize')"
+            },
+            {
+              "name": "role",
+              "type": "str",
+              "default": "Field('user', description='Role that generated this text (user/assistant)')"
+            },
+            {
+              "name": "thread_id",
+              "type": "Optional[str]",
+              "default": "Field(None, description='Optional thread id for continuity')"
+            },
+            {
+              "name": "assistant_reply",
+              "type": "Optional[str]",
+              "default": "Field(None, description='Assistant reply to accompany the user text')"
+            }
+          ],
+          "example_payload": {
+            "session_id": "example_session_id",
+            "text": "example_text",
+            "role": "example_role",
+            "thread_id": "example_thread_id",
+            "assistant_reply": "example_assistant_reply"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "session_id": "example_session_id",
+          "text": "example_text",
+          "role": "example_role",
+          "thread_id": "example_thread_id",
+          "assistant_reply": "example_assistant_reply"
+        }
+      }
     },
     {
       "path": "/save-session",
@@ -4042,7 +4101,9 @@
     }
   ],
   "drift": {
-    "added": [],
+    "added": [
+      "POST /memory-ingest"
+    ],
     "removed": [],
     "changed": []
   }

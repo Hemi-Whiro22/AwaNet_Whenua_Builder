@@ -8,7 +8,7 @@ from pathlib import Path
 from te_po.mauri import MAURI
 from te_po.services.local_storage import list_files, load, save, timestamp
 from te_po.utils.audit import log_event
-from te_po.utils.openai_client import client, DEFAULT_EMBED_MODEL
+from te_po.utils.openai_client import client, DEFAULT_EMBED_MODEL, last_openai_run_id, record_openai_run
 
 VECTOR_STORE_ID = os.getenv("OPENAI_VECTOR_STORE_ID")
 GLYPH = (
@@ -77,6 +77,7 @@ def _push_remote_vector(entry_id: str, text: str, vector, metadata: dict | None 
             "batch_id": getattr(batch_resp, "id", None),
             "batch_status": getattr(batch_resp, "status", None),
             "response": batch_payload,
+            "openai_run_id": last_openai_run_id(),
         }
     except Exception as exc:
         return {"pushed": False, "reason": str(exc)}
@@ -95,8 +96,10 @@ def embed_text(text: str, metadata: dict | None = None, record_type: str = "embe
             model=DEFAULT_EMBED_MODEL,
             input=text,
         )
+        record_openai_run(rsp)
         vec = rsp.data[0].embedding
         entry_id = f"vec_{uuid.uuid4().hex}"
+        openai_run_id = last_openai_run_id()
 
         remote = _push_remote_vector(entry_id, text, vec, metadata=metadata)
 
@@ -117,7 +120,13 @@ def embed_text(text: str, metadata: dict | None = None, record_type: str = "embe
             ),
         )
         _log_remote(entry_id, text, vec, remote, metadata=metadata)
-        return {"id": entry_id, "vector": vec, "saved": True, "remote": remote}
+        return {
+            "id": entry_id,
+            "vector": vec,
+            "saved": True,
+            "remote": remote,
+            "openai_run_id": openai_run_id,
+        }
     except Exception as exc:
         return {"id": None, "vector": [], "saved": False, "error": str(exc)}
 

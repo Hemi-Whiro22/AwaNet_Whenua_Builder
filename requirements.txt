@@ -64,6 +64,7 @@ pgvector==0.4.1
 pillow==10.2.0
 postgrest==2.24.0
 propcache==0.4.1
+prometheus-client==0.23.1
 psycopg==3.2.13
 psycopg-binary==3.2.13
 psycopg2-binary==2.9.11

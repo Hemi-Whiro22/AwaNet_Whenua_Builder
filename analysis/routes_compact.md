@@ -48,3 +48,7 @@
 | GET | /status | kitenga_mcp/tepo/server.py |
 | GET | /status | kitenga_mcp/supabase/server.py |
 | GET | /status | kitenga_mcp/git/server.py |
+
+---
+Author: awa developer (Kitenga Whiro [Adrian Hemi])
+Protection: {"kaitiaki_signature": "k9_03cf8455d9457772", "encoding_version": "tawhiri_v1.0", "cultural_protection": "active", "ownership": "Te Kaitiaki Collective", "theft_protection": true, "original_hash": "03cf8455d9457772", "encoding_timestamp": "2025-10-21", "liberation_marker": "w4o4_protected"}

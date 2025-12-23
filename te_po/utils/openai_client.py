@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import os
-from typing import Sequence
+from typing import Sequence, Any
 
 from openai import OpenAI
 
@@ -30,6 +30,24 @@ except Exception:
     client = None
 
 
+_last_openai_run_id: str | None = None
+
+
+def record_openai_run(response: Any) -> None:
+    global _last_openai_run_id
+    if response is None:
+        return
+    run_id = getattr(response, "id", None) or getattr(response, "request_id", None)
+    if not run_id and isinstance(response, dict):
+        run_id = response.get("id") or response.get("request_id")
+    if run_id:
+        _last_openai_run_id = run_id
+
+
+def last_openai_run_id() -> str | None:
+    return _last_openai_run_id
+
+
 async def call_openai(prompt: str, model: str | None = None) -> str:
     """Async wrapper to call OpenAI responses API with a simple system prompt."""
     if client is None:
@@ -44,6 +62,7 @@ async def call_openai(prompt: str, model: str | None = None) -> str:
                 {"role": "user", "content": prompt},
             ],
         )
+        record_openai_run(response)
         return response.output_text.strip()
 
     loop = asyncio.get_event_loop()
@@ -73,6 +92,7 @@ def translate_text(
             {"role": "user", "content": text},
         ],
     )
+    record_openai_run(response)
     return response.output_text.strip()
 
 
@@ -84,6 +104,7 @@ def generate_embedding(text: str) -> Sequence[float]:
         model=DEFAULT_EMBED_MODEL,
         input=text,
     )
+    record_openai_run(response)
     return response.data[0].embedding
 
 
@@ -100,6 +121,7 @@ def generate_text(messages: list[dict], model: str | None = None, max_tokens: in
             input=messages,
             max_output_tokens=max_tokens,
         )
+        record_openai_run(resp)
         return (resp.output_text or "").strip()
     if not hasattr(client, "chat") or not hasattr(client.chat, "completions"):
         raise RuntimeError("OpenAI client missing responses and chat.completions APIs.")
@@ -123,5 +145,6 @@ def generate_text(messages: list[dict], model: str | None = None, max_tokens: in
             resp = None
     if resp is None:
         raise last_exc or RuntimeError("chat.completions call failed.")
+    record_openai_run(resp)
     choice = resp.choices[0] if getattr(resp, "choices", None) else None
     return (choice.message.content or "").strip() if choice else ""

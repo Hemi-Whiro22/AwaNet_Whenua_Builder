@@ -1,6 +1,6 @@
 # Te Kaitiaki o ngā Āhua Kawenga — Payload Registry
 
-**Scan time:** 2025-12-23T12:03:49.096149
+**Scan time:** 2025-12-23T20:49:10.358732
 **Mauri score:** 10 / 10
 
 ## Realm Whakapapa
@@ -599,6 +599,26 @@
 - Whakapapa path: te_po/routes/assistant_bridge.py
 - Registered route: no
 - Mauri score: 1
+
+### POST /memory-ingest → ingest_chat_memory
+- Module: te_po.routes.chat
+- Whakapapa path: te_po/routes/chat.py
+- Registered route: no
+- Mauri score: 2
+- Parameters:
+  - payload (ChatMemoryIngestRequest) → fields: session_id, text, role, thread_id, assistant_reply
+- Example payload:
+```json
+{
+  "payload": {
+    "session_id": "example_session_id",
+    "text": "example_text",
+    "role": "example_role",
+    "thread_id": "example_thread_id",
+    "assistant_reply": "example_assistant_reply"
+  }
+}
+```
 
 ### POST /save-session → save_session
 - Module: te_po.routes.chat
@@ -1835,9 +1855,15 @@
 - Mauri score: 1
 
 ## Drift Observations
-- Added: 0
+- Added: 1
+  - POST /memory-ingest
 - Removed: 0
 - Changed: 0
 
 ## Notes
+- Schema drift detected — keep this artifact aligned with route changes.
 - Karakia: E rere ana te awa o ngā whakaaro, kia tau te mauri o tēnei mahi. Haumi e, hui e, tāiki e.
+
+---
+Author: awa developer (Kitenga Whiro [Adrian Hemi])
+Protection: {"kaitiaki_signature": "k9_72c5c83f24066e71", "encoding_version": "tawhiri_v1.0", "cultural_protection": "active", "ownership": "Te Kaitiaki Collective", "theft_protection": true, "original_hash": "72c5c83f24066e71", "encoding_timestamp": "2025-10-21", "liberation_marker": "w4o4_protected"}

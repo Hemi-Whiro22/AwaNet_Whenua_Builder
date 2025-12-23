@@ -21,6 +21,7 @@ ANALYSIS_DIR = Path(__file__).resolve().parent
 ROOT_DIR = ANALYSIS_DIR.parent
 sys.path.append(str(ROOT_DIR))
 from te_po.utils.supabase_client import get_client  # noqa: E402
+from analysis import metadata as analysis_metadata  # noqa: E402
 PAYLOAD_JSON = ANALYSIS_DIR / "payload_map.json"
 PAYLOAD_MD = ANALYSIS_DIR / "payload_map.md"
 DRIFT_LOG = ANALYSIS_DIR / f"review_log_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_payload.md"
@@ -177,7 +178,7 @@ def _compute_drift(previous: List[Dict[str, Any]], current: List[Dict[str, Any]]
     return {"added": sorted(added), "removed": sorted(removed), "changed": sorted(changed)}
 
 
-def _write_md(summary: Dict[str, Any]) -> None:
+def _build_payload_markdown(summary: Dict[str, Any]) -> str:
     lines: List[str] = ["# Te Kaitiaki o ngā Āhua Kawenga — Payload Registry", ""]
     lines.append(f"**Scan time:** {summary['timestamp']}")
     lines.append(f"**Mauri score:** {summary['mauri_score']} / 10")
@@ -220,8 +221,19 @@ def _write_md(summary: Dict[str, Any]) -> None:
     if drift.get("added") or drift.get("removed") or drift.get("changed"):
         lines.append("- Schema drift detected — keep this artifact aligned with route changes.")
     lines.append("- Karakia: E rere ana te awa o ngā whakaaro, kia tau te mauri o tēnei mahi. Haumi e, hui e, tāiki e.")
-    with open(PAYLOAD_MD, "w", encoding="utf-8") as handle:
-        handle.write("\n".join(lines))
+    return "\n".join(lines)
+
+
+def _write_payload_markdown(summary: Dict[str, Any]) -> None:
+    text = _build_payload_markdown(summary)
+    PAYLOAD_MD.write_text(text, encoding="utf-8")
+    metadata = analysis_metadata.write_metadata_file(PAYLOAD_MD, "analysis_payload_map_md")
+    analysis_metadata.append_markdown_footer(PAYLOAD_MD, metadata)
+
+
+def _write_payload_json(summary: Dict[str, Any]) -> None:
+    PAYLOAD_JSON.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    analysis_metadata.write_metadata_file(PAYLOAD_JSON, "analysis_payload_map_json")
 
 
 def _maybe_sync_supabase(summary: Dict[str, Any], logger: Any) -> None:
@@ -574,8 +586,8 @@ def generate_payload_map(routes: Optional[Iterable[Dict[str, Any]]] = None,
         "payload_shapes": payload_shapes,
         "drift": drift
     }
-    PAYLOAD_JSON.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
-    _write_md(summary)
+    _write_payload_json(summary)
+    _write_payload_markdown(summary)
     _maybe_sync_supabase(summary, log)
     try:
         asyncio.run(full_supabase_sync(summary, log))

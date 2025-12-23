@@ -1,0 +1,54 @@
+{
+  "timestamp": "2025-12-23T20:45:19.631405Z",
+  "author": "awa developer (Kitenga Whiro [Adrian Hemi])",
+  "openai_last_run_id": null,
+  "todo": {
+    "kaitiaki": [
+      "Rerun context sync when tool manifests change",
+      "Ensure chat memory pushes include pipeline_metadata",
+      "Refresh OpenAI vector run IDs nightly"
+    ],
+    "issues": [
+      "supabase_tools.json missing author tag",
+      "openai_tools.json missing author tag",
+      "cloudflare_tools.json missing author tag",
+      "git_commands_hardened.json missing author tag",
+      "render_commands_hardened.json missing author tag",
+      "tepo_tools.json missing author tag",
+      "Batch vsfb_ibj_69336a83260881f4aef818a923988990 missing OPENAI run id",
+      "Batch vsfb_ibj_69336ab52d3881f488b4e567b074f9c9 missing OPENAI run id",
+      "Batch vsfb_ibj_69336c0e1d9c81f4bc295eea1b14d58f missing OPENAI run id",
+      "Batch vsfb_ibj_69336ff62ac481f4a78b096846394f08 missing OPENAI run id",
+      "Batch vsfb_ibj_693371c3316481f4a50b2d75c3b6ccf5 missing OPENAI run id"
+    ]
+  },
+  "context": {
+    "todo": [],
+    "context": {
+      "review_log_20251224_010346.md": [
+        "🌿  KARAKIA TIMATANGA",
+        "E rere ana te awa o ngā whakaaro,",
+        "kia tau te mauri o tēnei mahi.",
+        "Haumi e, hui e, tāiki e.",
+        "Starting Repo Review at 2025-12-24T01:03:47.098413",
+        "Updated mcp_tools_manifest.json with 13 script tool entries."
+      ],
+      "review_log_20251224_005222.md": [
+        "🌿  KARAKIA TIMATANGA",
+        "E rere ana te awa o ngā whakaaro,",
+        "kia tau te mauri o tēnei mahi.",
+        "Haumi e, hui e, tāiki e.",
+        "Starting Repo Review at 2025-12-24T00:52:22.644872",
+        "Updated mcp_tools_manifest.json with 13 script tool entries."
+      ],
+      "review_log_20251223_224437.md": [
+        "🌿  KARAKIA TIMATANGA",
+        "E rere ana te awa o ngā whakaaro,",
+        "kia tau te mauri o tēnei mahi.",
+        "Haumi e, hui e, tāiki e.",
+        "Starting Repo Review at 2025-12-23T22:44:38.198986",
+        "Updated mcp_tools_manifest.json with 13 script tool entries."
+      ]
+    }
+  }
+}

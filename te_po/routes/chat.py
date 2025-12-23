@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Optional
 
+from pydantic import BaseModel, Field
+
 from fastapi import APIRouter, HTTPException
 
 from te_po.core.config import settings
@@ -9,9 +11,51 @@ from te_po.utils.supabase_client import get_client
 from te_po.utils.openai_client import client as oa_client, DEFAULT_BACKEND_MODEL, generate_text
 from te_po.services.vector_service import embed_text
 from te_po.services.chat_memory import retrieve_context
+from te_po.services.supabase_service import log_chat_entry
 from te_po.utils.audit import log_event
+from te_po.pipeline.orchestrator.pipeline_orchestrator import run_pipeline
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
+
+
+class ChatMemoryIngestRequest(BaseModel):
+    session_id: str = Field(..., description="Chat session identifier")
+    text: str = Field(..., description="Raw chat text to save and vectorize")
+    role: str = Field("user", description="Role that generated this text (user/assistant)")
+    thread_id: Optional[str] = Field(None, description="Optional thread id for continuity")
+    assistant_reply: Optional[str] = Field(None, description="Assistant reply to accompany the user text")
+
+
+@router.post("/memory-ingest")
+async def ingest_chat_memory(payload: ChatMemoryIngestRequest):
+    if not payload.text.strip():
+        raise HTTPException(status_code=400, detail="text is required")
+
+    pipeline_result = run_pipeline(
+        payload.text.encode("utf-8"),
+        filename=f"{payload.session_id}_{payload.role}.txt",
+        source="chat_memory",
+        generate_summary=False,
+    )
+
+    log_chat_entry(
+        session_id=payload.session_id,
+        thread_id=payload.thread_id,
+        user_message=payload.text if payload.role == "user" else "",
+        assistant_reply=payload.assistant_reply if payload.role == "assistant" else "",
+        mode="chat_memory",
+        vector_batch_id=pipeline_result.get("vector_batch_id"),
+        pipeline_result=pipeline_result,
+        metadata={"pipeline_context": pipeline_result.get("pipeline_metadata")},
+    )
+
+    return {
+        "status": "ok",
+        "session_id": payload.session_id,
+        "role": payload.role,
+        "vector_batch_id": pipeline_result.get("vector_batch_id"),
+        "pipeline_metadata": pipeline_result.get("pipeline_metadata"),
+    }
 
 
 @router.post("/save-session")

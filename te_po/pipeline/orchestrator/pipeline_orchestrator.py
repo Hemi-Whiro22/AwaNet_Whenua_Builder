@@ -2,6 +2,7 @@ import base64
 import hashlib
 import io
 import json
+import os
 import re
 import uuid
 from typing import Any, Dict, Tuple
@@ -11,6 +12,7 @@ from te_po.pipeline.cleaner.text_cleaner import clean_text
 from te_po.pipeline.chunker.chunk_engine import chunk_text
 from te_po.pipeline.embedder.embed_engine import embed_text
 from te_po.pipeline.ocr.ocr_engine import run_ocr
+from te_po.stealth_ocr import AUTHOR_TAG, annotate_payload, pipeline_context, protect_text
 from te_po.pipeline.supabase_writer.writer import save_chunk
 from te_po.services.local_storage import save, timestamp
 from te_po.services.vector_service import push_chunk_embedding
@@ -22,7 +24,12 @@ from te_po.services.supabase_service import (
     log_chunks_metadata,
     log_vector_batch,
 )
-from te_po.utils.openai_client import client as oa_client, DEFAULT_BACKEND_MODEL, generate_text
+from te_po.utils.openai_client import (
+    client as oa_client,
+    DEFAULT_BACKEND_MODEL,
+    generate_text,
+    last_openai_run_id,
+)
 from te_po.pipeline.metrics import log_memory_usage
 
 IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp"}
@@ -122,6 +129,15 @@ def _html_to_text(raw: str) -> str:
         return re.sub(r"<[^>]+>", " ", raw)
 
 
+def _note_openai_run(pipeline_meta: Dict[str, Any]) -> None:
+    run_id = last_openai_run_id()
+    if not run_id:
+        return
+    pipeline_meta.setdefault("openai_run_ids", [])
+    if run_id not in pipeline_meta["openai_run_ids"]:
+        pipeline_meta["openai_run_ids"].append(run_id)
+
+
 def run_pipeline(
     file_bytes: bytes,
     filename: str | None = None,
@@ -131,6 +147,9 @@ def run_pipeline(
     allow_taonga_store: bool = False,
 ) -> dict[str, Any]:
     log_memory_usage("start of pipeline")
+
+    pipeline_run_id = str(uuid.uuid4())
+    pipeline_meta = pipeline_context(pipeline_run_id)
 
     taonga_restricted = (mode or source) == "taonga" and not allow_taonga_store
     raw_file, raw_upload, raw_encoded = _persist_raw(
@@ -154,6 +173,21 @@ def run_pipeline(
         ext = name[name.rfind(".") :]
 
     ocr_meta_records: list[dict[str, Any]] = []
+
+    def _protect_and_record(text_value: str, label: str) -> str:
+        if not text_value:
+            return text_value
+        protected = protect_text(text_value, context_metadata=pipeline_meta)
+        ocr_meta_records.append(
+            {
+                "method_used": label,
+                "protected_text": protected["protected_text"],
+                "original_text": protected["original_text"],
+                "protection_metadata": protected["metadata"],
+                "author": protected["author"],
+            }
+        )
+        return protected["protected_text"]
 
     if ext in IMAGE_EXT:
         ocr_result = run_ocr(file_bytes, mode=mode or source, apply_encoding=True)
@@ -197,6 +231,7 @@ def run_pipeline(
                 except Exception:
                     continue
             raw_text = _html_to_text(raw_text)
+        raw_text = _protect_and_record(raw_text, "text_input" if ext not in {".html", ".htm"} else "html_extraction")
     elif ext in PDF_EXT:
         raw_text = _extract_pdf_text(file_bytes)
         if not raw_text:
@@ -205,6 +240,7 @@ def run_pipeline(
                 "reason": "PDF text could not be extracted (install pypdf or check file)",
                 "file": filename,
             }
+        raw_text = _protect_and_record(raw_text, "pdf_extraction")
     elif ext in AUDIO_EXT:
         return {
             "status": "unsupported",
@@ -232,6 +268,7 @@ def run_pipeline(
         "raw_file": raw_file,
         "mode": mode or source,
     }
+    meta.update(pipeline_meta)
 
     stored_chunks = []
     vector_batch_id = None
@@ -239,11 +276,13 @@ def run_pipeline(
         embedding = embed_text(chunk)
         chunk_record = save_chunk(chunk, embedding, meta)
         chunk_hash = hashlib.sha256(chunk.encode("utf-8", errors="ignore")).hexdigest()
+        embedding_metadata = {"source": source, "glyph": glyph}
+        embedding_metadata.update(pipeline_meta)
         remote = push_chunk_embedding(
             chunk_id=chunk_record["id"],
             text=chunk,
             embedding=embedding,
-            metadata={"source": source, "glyph": glyph},
+            metadata=embedding_metadata,
         )
         stored_chunks.append(
             {
@@ -257,14 +296,17 @@ def run_pipeline(
     if not vector_batch_id and isinstance(remote, dict):
         vector_batch_id = remote.get("batch_id")
 
-    log_payload = {
-        "event": "pipeline_run",
-        "source": source,
-        "glyph": meta["glyph"],
-        "raw_file": raw_file,
-        "clean_file": clean_file,
-        "chunks": [c["id"] for c in stored_chunks],
-    }
+    log_payload = annotate_payload(
+        {
+            "event": "pipeline_run",
+            "source": source,
+            "glyph": meta["glyph"],
+            "raw_file": raw_file,
+            "clean_file": clean_file,
+            "chunks": [c["id"] for c in stored_chunks],
+        },
+        context=pipeline_meta,
+    )
     save(
         "logs",
         f"pipeline_{timestamp()}_{uuid.uuid4().hex}.json",
@@ -297,6 +339,7 @@ def run_pipeline(
                 model=DEFAULT_BACKEND_MODEL,
                 max_tokens=500,
             )
+            _note_openai_run(pipeline_meta)
             # Longer contextual summary for storage/research
             summary_long = generate_text(
                 [
@@ -309,17 +352,13 @@ def run_pipeline(
                 model=DEFAULT_BACKEND_MODEL,
                 max_tokens=1800,
             )
+            _note_openai_run(pipeline_meta)
         except Exception:
             summary_result = None
             summary_long = None
 
-    supabase_meta = record_file_metadata(
-        source=source,
-        raw_path=raw_file,
-        clean_path=clean_file,
-        chunks=[c["id"] for c in stored_chunks],
-        vector_batch_id=vector_batch_id,
-        extra={
+    supabase_extra = annotate_payload(
+        {
             "glyph": meta["glyph"],
             "storage": supabase_uploads,
             "raw_sha256": raw_hash,
@@ -331,10 +370,22 @@ def run_pipeline(
             "mode": mode or source,
             "ocr": ocr_meta_records if ocr_meta_records else None,
         },
+        context=pipeline_meta,
+    )
+
+    supabase_meta = record_file_metadata(
+        source=source,
+        raw_path=raw_file,
+        clean_path=clean_file,
+        chunks=[c["id"] for c in stored_chunks],
+        vector_batch_id=vector_batch_id,
+        extra=supabase_extra,
     )
 
     # Best-effort Supabase logging for pipeline/chunks/vector batch
-    log_chunks_metadata(stored_chunks, metadata={"source": source, "glyph": glyph})
+    chunk_log_meta = {"source": source, "glyph": glyph}
+    chunk_log_meta.update(pipeline_meta)
+    log_chunks_metadata(stored_chunks, metadata=chunk_log_meta)
     log_pipeline_run(
         source=source,
         status="ok",
@@ -345,14 +396,14 @@ def run_pipeline(
         vector_batch_id=vector_batch_id,
         storage=supabase_uploads,
         supabase_status=supabase_meta,
-        metadata={"summary_long": summary_long} if summary_long else {},
+        metadata={**pipeline_meta, **({"summary_long": summary_long} if summary_long else {})},
     )
     if vector_batch_id:
         log_vector_batch(
             batch_id=vector_batch_id,
             vector_store_id=None,
             status=(remote.get("batch_status") if isinstance(remote, dict) else None),
-            metadata={"source": source, "glyph": glyph},
+        metadata={**{"source": source, "glyph": glyph}, **pipeline_meta},
         )
 
     log_memory_usage("end of pipeline")
@@ -368,4 +419,5 @@ def run_pipeline(
         "supabase": supabase_meta,
         "summary": summary_result,
         "summary_long": summary_long,
+        "pipeline_metadata": pipeline_meta,
     }

@@ -1,6 +1,20 @@
 {
   "version": "2025-12-23",
   "domain": "tiwhanawhana_backend",
+  "metadata": {
+    "author": "awa developer (Kitenga Whiro [Adrian Hemi])",
+    "resource": "kitenga_tools_manifest",
+    "protection": {
+      "kaitiaki_signature": "k9_12fe09f3cd251163",
+      "encoding_version": "tawhiri_v1.0",
+      "cultural_protection": "active",
+      "ownership": "Te Kaitiaki Collective",
+      "theft_protection": true,
+      "original_hash": "12fe09f3cd251163",
+      "encoding_timestamp": "2025-10-21",
+      "liberation_marker": "w4o4_protected"
+    }
+  },
   "tools": [
     {
       "name": "assistant_run",
@@ -316,6 +330,24 @@
       "params": {},
       "returns": {
         "result": "JSON object"
+      }
+    }
+    ,
+    {
+      "name": "chat_memory_ingest",
+      "method": "POST",
+      "path": "/chat/memory-ingest",
+      "description": "Save chat text, run it through the stealth pipeline, and persist vectors for recall.",
+      "params": {
+        "session_id": "string",
+        "text": "string",
+        "role": "string (user|assistant)",
+        "thread_id": "optional string",
+        "assistant_reply": "optional string"
+      },
+      "returns": {
+        "status": "string",
+        "pipeline_metadata": "object"
       }
     }
   ]

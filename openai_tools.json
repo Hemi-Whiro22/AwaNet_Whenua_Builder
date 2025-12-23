@@ -86,6 +86,56 @@
             }
           }
         }
+        ,
+        "/chat/memory-ingest": {
+          "post": {
+            "summary": "Ingest chat text for memory",
+            "description": "Save chat text as raw content, run the stealth pipeline, and persist vector metadata for short-term recall.",
+            "operationId": "chat_memory_ingest",
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "session_id": {
+                        "type": "string",
+                        "description": "Unique chat session id."
+                      },
+                      "text": {
+                        "type": "string",
+                        "description": "Text payload to save and vectorize."
+                      },
+                      "role": {
+                        "type": "string",
+                        "description": "Contributor identity (user or assistant).",
+                        "default": "user"
+                      },
+                      "thread_id": {
+                        "type": "string",
+                        "description": "Optional thread identifier."
+                      },
+                      "assistant_reply": {
+                        "type": "string",
+                        "description": "Optional assistant response accompanying the user text."
+                      }
+                    },
+                    "required": [
+                      "session_id",
+                      "text"
+                    ]
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Chat text saved + pipeline metadata"
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -104,5 +154,16 @@
     "realm": "Te Pō",
     "language": "mi_NZ.UTF-8",
     "maintainer": "Hemi Whiro"
+  },
+  "author": "awa developer (Kitenga Whiro [Adrian Hemi])",
+  "protection": {
+    "kaitiaki_signature": "k9_2dbcbe38be9aba83",
+    "encoding_version": "tawhiri_v1.0",
+    "cultural_protection": "active",
+    "ownership": "Te Kaitiaki Collective",
+    "theft_protection": true,
+    "original_hash": "2dbcbe38be9aba83",
+    "encoding_timestamp": "2025-10-21",
+    "liberation_marker": "w4o4_protected"
   }
 }
