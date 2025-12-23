@@ -11,7 +11,7 @@
   },
   "api": {
     "type": "openapi",
-    "url": "https://tiwhanawhana-backend.onrender.com/gpt_connect.yaml",
+    "url": "https://tiwhanawhana-backend.onrender.com/openapi-core.json",
     "is_user_authenticated": true
   },
   "logo_url": "https://tiwhanawhana-backend.onrender.com/assets/logo.png",
