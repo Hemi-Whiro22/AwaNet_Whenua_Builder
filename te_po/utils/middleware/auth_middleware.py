@@ -20,6 +20,8 @@ class BearerAuthMiddleware(BaseHTTPMiddleware):
         "/state/public",
         "/state/version",
         "/mcp/health",
+        "/mcp/tools/list",
+        "/mcp/tools/describe",
         "/debug/routes",
     }
     UNPROTECTED_PREFIXES = {"/static"}

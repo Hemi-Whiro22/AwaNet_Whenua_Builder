@@ -145,7 +145,7 @@ def create_app():
             }
 
     # --- MCP health ---
-    @app.get("/mcp/health", tags=["MCP"])
+    @app.get("/health", tags=["MCP"])
     async def health():
             return {
                 "status": "ok",
@@ -321,7 +321,7 @@ def create_app():
             ]
         }
 
-    @app.get("/mcp/health", tags=["MCP"])
+    @app.get("/health", tags=["MCP"])
     async def health_check():
         """Render/GPT health check."""
         return {
@@ -335,7 +335,7 @@ def create_app():
             }
         }
 
-    @app.get("/mcp/tools/list", tags=["MCP"])
+    @app.get("/tools/list", tags=["MCP"])
     async def list_tools_manifest():
         """List all loaded tool domains and their tools from merged manifest."""
         return {
@@ -344,7 +344,7 @@ def create_app():
             "tools": TOOLS_MANIFEST
         }
 
-    @app.get("/mcp/tools/describe", tags=["MCP"])
+    @app.get("/tools/describe", tags=["MCP"])
     async def describe_tools():
         if not TOOLS_MANIFEST:
             raise HTTPException(status_code=404, detail="No tools loaded in manifest.")
@@ -354,7 +354,7 @@ def create_app():
         }
         return {"status": "success", "tools": description, "domains": list(description.keys())}
 
-    @app.post("/mcp/tools/call", tags=["MCP"])
+    @app.post("/tools/call", tags=["MCP"])
     async def call_tool(request: Request):
         data = await request.json()
         domain = data.get("domain")
@@ -415,7 +415,7 @@ def create_app():
             "timestamp": datetime.datetime.utcnow().isoformat()
         }, headers=headers)
 
-    @app.get("/mcp/memory/ping", tags=["MCP"])
+    @app.get("/memory/ping", tags=["MCP"])
     async def memory_ping():
         uptime = (datetime.datetime.utcnow() - SERVICE_START_TIME).total_seconds()
         health = {"uptime_seconds": uptime, "supabase_ok": False, "render_ok": False}
@@ -636,7 +636,7 @@ def log_telemetry(domain, command, stdout, user=None):
             ]
         }
 
-@app.get("/mcp/health", tags=["MCP"])
+@app.get("/health", tags=["MCP"])
 async def health_check():
     """Render/GPT health check."""
     return {
@@ -651,7 +651,7 @@ async def health_check():
     }
 
 
-@app.get("/mcp/tools/list", tags=["MCP"])
+@app.get("/tools/list", tags=["MCP"])
 async def list_tools():
     """List all loaded tool domains and their tools from merged manifest."""
     return {
@@ -663,9 +663,9 @@ async def list_tools():
 
 
 # --------------------------------------------------------
-# 🧭 /mcp/tools/describe — list all loaded tool domains and commands
+# 🧭 /tools/describe — list all loaded tool domains and commands
 # --------------------------------------------------------
-@app.get("/mcp/tools/describe", tags=["MCP"])
+@app.get("/tools/describe", tags=["MCP"])
 async def describe_tools():
     if not TOOLS_MANIFEST:
         raise HTTPException(status_code=404, detail="No tools loaded in manifest.")
@@ -677,7 +677,7 @@ async def describe_tools():
 
 
 
-@app.post("/mcp/tools/call", tags=["MCP"])
+@app.post("/tools/call", tags=["MCP"])
 async def call_tool(request: Request):
     data = await request.json()
     domain = data.get("domain")

@@ -1,24 +1,11 @@
 # Kitenga Whiro Repo Review
 
-**Scan time:** 2025-12-23T19:24:19.477334
+**Scan time:** 2025-12-23T19:52:13.630254
 **Branch:** main
-**Commit:** 8447f6be24a0341684628f04e292e489c652bee9
+**Commit:** 6583781833a99e49434fa315f760299108d53d9a
 **Performed by:** run_repo_review.py
 
 ## Route Catalog
-### Mcp
-
-- GET /mcp/health
-- GET /mcp/health
-- GET /mcp/tools/list
-- GET /mcp/tools/describe
-- POST /mcp/tools/call
-- GET /mcp/memory/ping
-- GET /mcp/health
-- GET /mcp/tools/list
-- GET /mcp/tools/describe
-- POST /mcp/tools/call
-
 ### Other
 
 - GET /
@@ -30,12 +17,22 @@
 - POST /api/events
 - GET /debug/routes
 - POST /awa/loop/test
+- GET /health
 - POST /awa/protocol/event
 - GET /awa/memory/debug
 - POST /awa/memory/search
 - POST /awa/memory/add
 - GET /
+- GET /health
+- GET /tools/list
+- GET /tools/describe
+- POST /tools/call
+- GET /memory/ping
 - GET /
+- GET /health
+- GET /tools/list
+- GET /tools/describe
+- POST /tools/call
 - GET /
 - GET /heartbeat
 - GET /gpt_connect.yaml

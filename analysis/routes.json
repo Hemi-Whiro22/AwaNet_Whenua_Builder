@@ -47,7 +47,7 @@
   {
     "file": "kitenga_mcp/app_server.py",
     "method": "GET",
-    "path": "/mcp/health"
+    "path": "/health"
   },
   {
     "file": "kitenga_mcp/app_server.py",
@@ -77,27 +77,27 @@
   {
     "file": "kitenga_mcp/app_server.py",
     "method": "GET",
-    "path": "/mcp/health"
+    "path": "/health"
   },
   {
     "file": "kitenga_mcp/app_server.py",
     "method": "GET",
-    "path": "/mcp/tools/list"
+    "path": "/tools/list"
   },
   {
     "file": "kitenga_mcp/app_server.py",
     "method": "GET",
-    "path": "/mcp/tools/describe"
+    "path": "/tools/describe"
   },
   {
     "file": "kitenga_mcp/app_server.py",
     "method": "POST",
-    "path": "/mcp/tools/call"
+    "path": "/tools/call"
   },
   {
     "file": "kitenga_mcp/app_server.py",
     "method": "GET",
-    "path": "/mcp/memory/ping"
+    "path": "/memory/ping"
   },
   {
     "file": "kitenga_mcp/app_server.py",
@@ -107,22 +107,22 @@
   {
     "file": "kitenga_mcp/app_server.py",
     "method": "GET",
-    "path": "/mcp/health"
+    "path": "/health"
   },
   {
     "file": "kitenga_mcp/app_server.py",
     "method": "GET",
-    "path": "/mcp/tools/list"
+    "path": "/tools/list"
   },
   {
     "file": "kitenga_mcp/app_server.py",
     "method": "GET",
-    "path": "/mcp/tools/describe"
+    "path": "/tools/describe"
   },
   {
     "file": "kitenga_mcp/app_server.py",
     "method": "POST",
-    "path": "/mcp/tools/call"
+    "path": "/tools/call"
   },
   {
     "file": "te_po/core/main.py",
