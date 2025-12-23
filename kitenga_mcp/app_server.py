@@ -684,6 +684,32 @@ async def list_tools():
     }
 
 
+def _schema_response():
+    if not OPENAPI_CORE_FILE.exists():
+        raise HTTPException(status_code=404, detail="OpenAPI core schema missing.")
+    headers = {
+        "X-Realm-Name": "Te Pō Assistant",
+        "X-Realm-Owner": "AwaNet",
+        "X-Realm-Version": "1.0.0"
+    }
+    return FileResponse(
+        OPENAPI_CORE_FILE,
+        media_type="application/json",
+        headers=headers
+    )
+
+
+@app.get("/openapi-core.json", include_in_schema=False)
+async def openapi_core():
+    """Trimmed OpenAPI schema for GPT Builder"""
+    return _schema_response()
+
+
+@app.get("/.well-known/openapi-core.json", include_in_schema=False)
+async def openapi_core_well_known():
+    return _schema_response()
+
+
 
 # --------------------------------------------------------
 # 🧭 /tools/describe — list all loaded tool domains and commands
