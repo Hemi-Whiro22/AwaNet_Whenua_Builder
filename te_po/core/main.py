@@ -61,6 +61,7 @@ app = FastAPI(
     title="Te Pō — Kitenga Whiro Backend",
     version="1.0.0",
     description="Awa Network core backend orchestrator — Māori Intelligence Engine",
+    servers=[{"url": "https://tiwhanawhana-backend.onrender.com", "description": "Render deployment"}],
 )
 
 # Enforce UTF-8 locale early
