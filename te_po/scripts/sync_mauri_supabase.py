@@ -30,7 +30,7 @@ def collect_targets() -> List[Path]:
     targets = [
         ROOT / "mauri" / "global_env.json",
         ROOT / "mauri" / "context.md",
-        ROOT / "te_po" / "openai_tools.json",
+        ROOT / "kitenga_mcp" / "openai_tools.json",
         ROOT / "te_po" / "openai_assistants.json",
     ]
     targets += list((ROOT / "mauri" / "state").glob("*.json"))

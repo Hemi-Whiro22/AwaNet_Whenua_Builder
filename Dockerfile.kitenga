@@ -1,0 +1,33 @@
+FROM python:3.12-slim
+
+# Working directory inside the container
+WORKDIR /app
+
+# Install OS dependencies needed for Te Pō / Kitenga tooling
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Locale + encoding defaults for Māori text
+ENV LANG=mi_NZ.UTF-8 \
+    LC_ALL=mi_NZ.UTF-8 \
+    PYTHONIOENCODING=utf-8 \
+    PYTHONUNBUFFERED=1
+
+# Copy requirements and install shared dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy the entire repository (Render sets the build context to the repo root)
+COPY . .
+
+# Healthcheck against the MCP service
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-10000}/health || exit 1
+
+# Start the Kitenga MCP service
+CMD ["sh", "-c", "uvicorn kitenga_mcp.app_server:app --host 0.0.0.0 --port ${PORT:-10000}"]

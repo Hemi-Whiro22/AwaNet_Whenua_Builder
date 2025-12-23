@@ -85,8 +85,7 @@
               }
             }
           }
-        }
-        ,
+        },
         "/chat/memory-ingest": {
           "post": {
             "summary": "Ingest chat text for memory",

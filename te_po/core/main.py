@@ -75,7 +75,7 @@ REALM_FILE = REPO_ROOT / "realm.json"
 AWA_LOG_URL = os.getenv("AWA_LOG_URL", "https://tiwhanawhana-backend.onrender.com/awa/log")
 CORE_SPEC_FILE = REPO_ROOT / "app" / "openapi-core.json"
 WELL_KNOWN_DIR = REPO_ROOT / ".well-known"
-OPENAI_TOOLS_FILE = REPO_ROOT / "openai_tools.json"
+OPENAI_TOOLS_FILE = REPO_ROOT / "kitenga_mcp" / "openai_tools.json"
 
 # -------------------------------------------------------------------
 # 🌐 CORS + AUTH MIDDLEWARE

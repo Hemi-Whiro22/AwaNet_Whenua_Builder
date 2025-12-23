@@ -1,6 +1,6 @@
 ## Te Ao Tooling & Assistants
 
-- Load `te_po/openai_tools.json` for tool definitions. Base URL comes from `TE_PO_BASE_URL`, auth token from `PIPELINE_TOKEN`.
+- Load `kitenga_mcp/openai_tools.json` for tool definitions. Base URL comes from `TE_PO_BASE_URL`, auth token from `PIPELINE_TOKEN`.
 - Assistant IDs: use `OPENAI_ASSISTANT_ID_QA` for the chat panel, `OPENAI_ASSISTANT_ID_OPS` for broader tool access. Pass `OPENAI_VECTOR_STORE_ID` to assistants so retrieval covers ingested docs.
 - UI tips:
   - Show assistant + vector store info in the panel header.

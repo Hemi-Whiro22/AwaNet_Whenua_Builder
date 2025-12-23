@@ -4,7 +4,7 @@
     "qa": "OPENAI_ASSISTANT_ID_QA",
     "ops": "OPENAI_ASSISTANT_ID_OPS"
   },
-  "tools_spec_path": "../../te_po/openai_tools.json",
+  "tools_spec_path": "../../kitenga_mcp/openai_tools.json",
   "notes": [
     "Load tools from the spec path and inject Authorization: Bearer $PIPELINE_TOKEN for protected endpoints.",
     "Pass OPENAI_VECTOR_STORE_ID to the QA assistant so retrieval covers ingested documents.",

@@ -13,7 +13,7 @@ import httpx
 router = APIRouter()
 
 # Load tool config
-TOOLS_PATH = Path(__file__).resolve().parents[1] / "openai_tools.json"
+TOOLS_PATH = Path(__file__).resolve().parents[2] / "kitenga_mcp" / "openai_tools.json"
 TOOL_REGISTRY = []
 
 if TOOLS_PATH.exists():

@@ -18,7 +18,7 @@ sys.path.append(str(ROOT))
 from te_po.core.env_loader import load_env  # noqa: E402
 from te_po.core.config import settings  # noqa: E402
 MAURI_STATE = ROOT / "mauri" / "state" / "te_po_state.json"
-TOOLS_PATH = ROOT / "te_po" / "openai_tools.json"
+TOOLS_PATH = ROOT / "kitenga_mcp" / "openai_tools.json"
 ASSISTANTS_PATH = ROOT / "te_po" / "openai_assistants.json"
 
 

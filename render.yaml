@@ -58,6 +58,51 @@ services:
         value: "$PORT"
       - key: TE_PO_HOST
         value: "0.0.0.0"
+  - type: web
+    name: kitenga-main
+    env: docker
+    plan: starter
+    branch: main
+    rootDir: .
+    dockerfilePath: Dockerfile.kitenga
+    dockerBuildArgs: []
+    numInstances: 1
+    healthCheckPath: /health
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - kitenga_mcp/**
+        - Dockerfile.kitenga
+        - requirements.txt
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_BACKEND_MODEL
+        value: gpt-4o-mini
+      - key: OPENAI_TRANSLATION_MODEL
+        value: gpt-4o-mini
+      - key: OPENAI_VISION_MODEL
+        value: gpt-4o-mini
+      - key: OPENAI_UI_MODEL
+        value: gpt-4o
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: LANG
+        value: mi_NZ.UTF-8
+      - key: LC_ALL
+        value: mi_NZ.UTF-8
+      - key: PYTHONIOENCODING
+        value: utf-8
+      - key: PIPELINE_TOKEN
+        sync: false
+      - key: AWA_LOG_URL
+        value: "https://tiwhanawhana-backend.onrender.com/awa/log"
 
 # ===== OPTIONAL MULTI-SERVICE SETUP =====
 # Uncomment below to deploy te_ao (frontend) alongside te_po
