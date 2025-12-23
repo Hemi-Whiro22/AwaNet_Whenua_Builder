@@ -11,6 +11,8 @@ class BearerAuthMiddleware(BaseHTTPMiddleware):
         "/health",
         "/docs",
         "/openapi.json",
+        "/openapi-core.json",
+        "/.well-known/openapi-core.json",
         "/gpt_connect.yaml",
         "/realm.json",
         "/assistant/health",
