@@ -102,3 +102,12 @@ mcpServers:
 ---
 
 Each service is a self-contained carving - solid mauri fueled context that can't be dropped. 🤙
+
+## Live Tooling Checklist
+
+- **Manifest readiness** – Run `./scripts/check_kitenga_manifest.sh` from the repo root to export `PIPELINE_TOKEN`, call `https://kitenga-main.onrender.com/tools/list`, and pipe the JSON through `jq`. If that succeeds, the manifest is available for GPT Builder / the Kitenga Whiro app.
+- **Trigger a tool call** – Use `./scripts/run_kitenga_tool_call.sh` with a JSON body (via STDIN or `-f`) to POST to `/tools/call`. The helper logs the bearer header for you, so you can test GET/POST operations (e.g. `{"domain":"kitenga","command":"kitenga_gpt_whisper","input":{"whisper":"Test"}}`).
+- **Grab the trimmed schema** – Fetch `https://kitenga-main.onrender.com/openapi-core.json` (or `/.well-known/openapi-core.json`) to expose the 30-path schema with the `servers` metadata that GPT Builder expects.
+- **Point GPT at kitenga-main** – Update GPT Builder/OpenAI apps to import `https://kitenga-main.onrender.com/openai_tools.json` (with `Authorization: Bearer $PIPELINE_TOKEN`) and use the `/openapi-core.json` schema so the same tool set is shared between the builder, the app, and your automation.
+
+This keeps every live test running through `kitenga-main`, so the bearer token, stealth metadata, and vector logging stay centralized while you prep GPT to hit those endpoints.

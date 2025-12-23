@@ -22,7 +22,7 @@ import uuid
 from pathlib import Path
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request, Header, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from te_po.utils.middleware.auth_middleware import apply_bearer_middleware
@@ -72,6 +72,7 @@ def load_tool_manifests():
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_DIR = REPO_ROOT
 TOOLS_MANIFEST = load_tool_manifests()
+OPENAPI_CORE_FILE = SCHEMA_DIR / "kitenga_mcp" / "openapi-core.json"
 
 def create_app():
     import json, logging, glob, uuid, asyncio, datetime
@@ -343,6 +344,28 @@ def create_app():
             "kaitiaki": "Kitenga Whiro",
             "tools": TOOLS_MANIFEST
         }
+
+    def _schema_response():
+        if not OPENAPI_CORE_FILE.exists():
+            raise HTTPException(status_code=404, detail="OpenAPI core schema missing.")
+        headers = {
+            "X-Realm-Name": "Te Pō Assistant",
+            "X-Realm-Owner": "AwaNet",
+            "X-Realm-Version": "1.0.0"
+        }
+        return FileResponse(
+            OPENAPI_CORE_FILE,
+            media_type="application/json",
+            headers=headers
+        )
+
+    @app.get("/openapi-core.json", include_in_schema=False)
+    async def openapi_core():
+        return _schema_response()
+
+    @app.get("/.well-known/openapi-core.json", include_in_schema=False)
+    async def openapi_core_well_known():
+        return _schema_response()
 
     @app.get("/tools/describe", tags=["MCP"])
     async def describe_tools():
