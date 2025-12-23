@@ -1,0 +1,20 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Te Pō Assistant Bridge",
+  "name_for_model": "te_po_assistant_bridge",
+  "description_for_human": "Gateway between Kitenga Whiro intelligence and GPT Builder via Te Pō.",
+  "description_for_model": "Use this bridge to call Te Pō assistant flows, health, and vector tooling.",
+  "auth": {
+    "type": "service_http",
+    "authorization_type": "bearer",
+    "verification_tokens": {}
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://tiwhanawhana-backend.onrender.com/gpt_connect.yaml",
+    "is_user_authenticated": true
+  },
+  "logo_url": "https://tiwhanawhana-backend.onrender.com/assets/logo.png",
+  "contact_email": "kaitiaki@awanet.nz",
+  "legal_info_url": "https://tiwhanawhana-backend.onrender.com/legal"
+}

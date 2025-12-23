@@ -1,8 +1,13 @@
 from datetime import datetime
+import httpx
+import json
+import logging
 import os
+from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import BackgroundTasks, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse
 
 # Middleware imports
 from te_po.utils.middleware.auth_middleware import BearerAuthMiddleware
@@ -49,6 +54,8 @@ from te_po.routes import (
 # 🧠 APP INITIALIZATION
 # -------------------------------------------------------------------
 
+logger = logging.getLogger("te_po.core.main")
+
 # Create the app once (do NOT redeclare)
 app = FastAPI(
     title="Te Pō — Kitenga Whiro Backend",
@@ -58,6 +65,11 @@ app = FastAPI(
 
 # Enforce UTF-8 locale early
 enforce_utf8_locale()
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SPEC_FILE = REPO_ROOT / "gpt_connect.yaml"
+REALM_FILE = REPO_ROOT / "realm.json"
+AWA_LOG_URL = os.getenv("AWA_LOG_URL", "https://tiwhanawhana-backend.onrender.com/awa/log")
 
 # -------------------------------------------------------------------
 # 🌐 CORS + AUTH MIDDLEWARE
@@ -108,6 +120,55 @@ async def heartbeat():
         "status": "alive",
         "timestamp": datetime.utcnow().isoformat() + "Z",
     }
+
+
+async def _send_awa_log(path: str, realm: dict):
+    async with httpx.AsyncClient(timeout=5) as client:
+        try:
+            await client.post(
+                AWA_LOG_URL,
+                json={"path": path, "realm": realm, "event": "schema_access"},
+            )
+        except Exception as exc:  # pragma: no cover - best-effort logging
+            logger.warning("Awa log failed for %s: %s", path, exc)
+
+
+def _load_realm():
+    if not REALM_FILE.exists():
+        return {}
+    try:
+        return json.loads(REALM_FILE.read_text(encoding="utf-8"))
+    except Exception as exc:  # pragma: no cover - defensive
+        logger.warning("Failed to load realm.json: %s", exc)
+        return {}
+
+
+@app.get("/gpt_connect.yaml", include_in_schema=False)
+async def serve_gpt_connect(background_tasks: BackgroundTasks):
+    realm = _load_realm()
+    background_tasks.add_task(_send_awa_log, "/gpt_connect.yaml", realm)
+
+    headers = {
+        "X-Realm-Name": realm.get("name", "Te Pō Assistant"),
+        "X-Realm-Owner": realm.get("realm", "AwaNet"),
+        "X-Realm-Version": realm.get("version", "1.0.0"),
+    }
+
+    if not SPEC_FILE.exists():
+        return JSONResponse({"error": "Spec file not found"}, status_code=404)
+
+    return FileResponse(
+        SPEC_FILE,
+        media_type="text/yaml; charset=utf-8",
+        headers=headers,
+    )
+
+
+@app.get("/realm.json", include_in_schema=False)
+async def serve_realm():
+    if not REALM_FILE.exists():
+        return JSONResponse({"error": "realm.json missing"}, status_code=404)
+    return FileResponse(REALM_FILE, media_type="application/json")
 
 # -------------------------------------------------------------------
 # 🔗 ROUTER REGISTRATION

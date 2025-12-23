@@ -17,6 +17,8 @@
     "GET /",
     "GET /",
     "GET /heartbeat",
+    "GET /gpt_connect.yaml",
+    "GET /realm.json",
     "POST /ocr",
     "POST /translate",
     "POST /speak",

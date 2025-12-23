@@ -1,8 +1,8 @@
 # Kitenga Whiro Repo Review
 
-**Scan time:** 2025-12-23T15:13:17.675846
+**Scan time:** 2025-12-23T17:21:05.631371
 **Branch:** main
-**Commit:** d7d105a05ac51519bd7c525953434b1ef36c6648
+**Commit:** 4a23ef56e2e6571eb06d0d4a0b2288a7078e28a8
 **Performed by:** run_repo_review.py
 
 ## Route Catalog
@@ -38,6 +38,8 @@
 - GET /
 - GET /
 - GET /heartbeat
+- GET /gpt_connect.yaml
+- GET /realm.json
 - POST /ocr
 - POST /translate
 - POST /speak

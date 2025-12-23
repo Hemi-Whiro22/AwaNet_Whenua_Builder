@@ -27,6 +27,8 @@
 | POST | /mcp/tools/call | kitenga_mcp/app_server.py |
 | GET | / | te_po/core/main.py |
 | GET | /heartbeat | te_po/core/main.py |
+| GET | /gpt_connect.yaml | te_po/core/main.py |
+| GET | /realm.json | te_po/core/main.py |
 | POST | /ocr | te_po/core/kitenga_cards.py |
 | POST | /translate | te_po/core/kitenga_cards.py |
 | POST | /speak | te_po/core/kitenga_cards.py |

@@ -1,65 +1,108 @@
 {
-  "openapi": "3.1.0",
-  "info": {
-    "title": "Te Pō Assistant Bridge",
-    "version": "1.0.0",
-    "description": "Gateway between GPT Builder and the Kitenga Whiro / Te Pō backend assistant."
+  "schema_version": "v1",
+  "id": "tiwhanawhana_backend_onrender_com__jit_plugin",
+  "name_for_human": "Te Pō Assistant Bridge",
+  "name_for_model": "tiwhanawhana_backend_onrender_com__jit_plugin",
+  "description_for_human": "Gateway between GPT Builder and the Kitenga Whiro / Te Pō backend assistant.",
+  "auth": {
+    "type": "bearer",
+    "authorization_type": "Bearer",
+    "bearer_token": "<PIPELINE_TOKEN>"
   },
-  "servers": [
-    {
-      "url": "https://tiwhanawhana-backend.onrender.com"
-    }
-  ],
-  "paths": {
-    "/assistant/run": {
-      "post": {
-        "summary": "Run the Kitenga Whiro Assistant",
-        "description": "Posts text or file info to the Te Pō backend, which relays to the OpenAI Assistant (asst_WvuWFEv2FpNWwEn11gbvSbHA) and connected vector store (vs_692ee26573688191817773029871850d).",
-        "operationId": "assistant_run",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "text": {
-                    "type": "string",
-                    "description": "User text to send to the assistant."
-                  },
-                  "thread_id": {
-                    "type": "string",
-                    "description": "Optional thread id for continuity."
-                  },
-                  "metadata": {
+  "api": {
+    "type": "openapi",
+    "url": "https://tiwhanawhana-backend.onrender.com/openapi.json",
+    "spec": {
+      "openapi": "3.1.0",
+      "info": {
+        "title": "Te Pō Assistant Bridge",
+        "version": "1.0.0",
+        "description": "Gateway between GPT Builder and the Kitenga Whiro / Te Pō backend assistant.",
+        "contact": {
+          "name": "AwaNet Devs",
+          "url": "https://kitenga-whiro.den-of-the-pack.com",
+          "email": "dev@awanet-kaitiaki.net"
+        },
+        "x-mauri": {
+          "realm": "Te Pō",
+          "owner": "Hemi Whiro",
+          "environment": "render",
+          "awa_version": "1.0.0"
+        }
+      },
+      "servers": [
+        {
+          "url": "https://tiwhanawhana-backend.onrender.com"
+        }
+      ],
+      "paths": {
+        "/assistant/run": {
+          "post": {
+            "summary": "Run the Kitenga Whiro Assistant",
+            "description": "Posts text or file info to the Te Pō backend, which relays to the OpenAI Assistant and connected vector store.",
+            "operationId": "assistant_run",
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
                     "type": "object",
-                    "description": "Optional metadata or tags for logging."
+                    "properties": {
+                      "text": {
+                        "type": "string",
+                        "description": "User text to send to the assistant."
+                      },
+                      "thread_id": {
+                        "type": "string",
+                        "description": "Optional thread id for continuity."
+                      },
+                      "metadata": {
+                        "type": "object",
+                        "description": "Optional metadata or tags for logging."
+                      }
+                    },
+                    "required": [
+                      "text"
+                    ]
                   }
-                },
-                "required": [
-                  "text"
-                ]
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Assistant output JSON"
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Assistant output JSON"
-          }
-        }
-      }
-    },
-    "/assistant/health": {
-      "get": {
-        "summary": "Health check for the bridge",
-        "operationId": "assistant_health",
-        "responses": {
-          "200": {
-            "description": "Status JSON showing ok/missing keys"
+        "/assistant/health": {
+          "get": {
+            "summary": "Health check for the bridge",
+            "operationId": "assistant_health",
+            "responses": {
+              "200": {
+                "description": "Status JSON showing ok/missing keys"
+              }
+            }
           }
         }
       }
     }
+  },
+  "runtime": {
+    "request_headers": {
+      "Authorization": "Bearer <PIPELINE_TOKEN>",
+      "Content-Type": "application/json"
+    },
+    "test_endpoints": {
+      "health": "https://tiwhanawhana-backend.onrender.com/assistant/health",
+      "run": "https://tiwhanawhana-backend.onrender.com/assistant/run"
+    }
+  },
+  "meta": {
+    "owner": "AwaNet",
+    "realm": "Te Pō",
+    "language": "mi_NZ.UTF-8",
+    "maintainer": "Hemi Whiro"
   }
 }

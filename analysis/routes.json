@@ -135,6 +135,16 @@
     "path": "/heartbeat"
   },
   {
+    "file": "te_po/core/main.py",
+    "method": "GET",
+    "path": "/gpt_connect.yaml"
+  },
+  {
+    "file": "te_po/core/main.py",
+    "method": "GET",
+    "path": "/realm.json"
+  },
+  {
     "file": "te_po/core/kitenga_cards.py",
     "method": "POST",
     "path": "/ocr"

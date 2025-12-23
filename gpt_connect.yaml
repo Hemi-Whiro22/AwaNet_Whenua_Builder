@@ -1,0 +1,71 @@
+openapi: 3.1.0
+info:
+  title: Te Pō Assistant API
+  version: 1.0.0
+  description: >
+    Gateway between GPT Builder and the Kitenga Whiro / Te Pō backend assistant.
+    Handles pipeline execution, health checks, and conversation flow for AwaNet.
+
+servers:
+  - url: https://tiwhanawhana-backend.onrender.com
+    description: Render deployment of Te Pō Assistant
+
+paths:
+  /assistant/health:
+    get:
+      summary: Health check for Te Pō Assistant
+      operationId: getHealth
+      responses:
+        "200":
+          description: Service is alive
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+  /assistant/run:
+    post:
+      summary: Run assistant pipeline
+      operationId: runAssistant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: User query or instruction
+                  example: "He aha te tikanga o te karakia nei?"
+                context:
+                  type: object
+                  additionalProperties: true
+      responses:
+        "200":
+          description: Assistant response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reply:
+                    type: string
+                    example: "Ko te tikanga o te karakia nei he whakatau i te mauri."
+                  metadata:
+                    type: object
+                    additionalProperties: true
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []
