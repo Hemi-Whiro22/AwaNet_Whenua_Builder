@@ -1,11 +1,11 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Kitenga Whiro \u2014 Te P\u014d Core Orchestration",
+    "title": "Kitenga Whiro — Te Pō Core Orchestration",
     "version": "1.0.0",
-    "description": "Core orchestration schema for GPT Builder bridge to Te P\u014d backend.",
+    "description": "Core orchestration schema for GPT Builder bridge to Te Pō backend.",
     "x-mauri": {
-      "realm": "Te P\u014d",
+      "realm": "Te Pō",
       "owner": "AwaNet",
       "maintainer": "Hemi Whiro",
       "environment": "render",
@@ -23,7 +23,7 @@
         "tags": [
           "Assistant"
         ],
-        "summary": "Run the Te P\u014d assistant",
+        "summary": "Run the Te Pō assistant",
         "operationId": "assistant_run",
         "responses": {
           "200": {
@@ -32,7 +32,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -44,7 +45,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -65,7 +67,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -87,7 +90,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -99,7 +103,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -120,7 +125,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -142,7 +148,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -164,7 +171,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -186,7 +194,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -198,7 +207,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -219,7 +229,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -231,7 +242,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -252,7 +264,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -264,7 +277,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -285,7 +299,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -297,7 +312,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -318,7 +334,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -330,7 +347,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -342,7 +360,7 @@
         "tags": [
           "Reo"
         ],
-        "summary": "Translate to te reo M\u0101ori",
+        "summary": "Translate to te reo Māori",
         "operationId": "reo_translate",
         "responses": {
           "200": {
@@ -351,7 +369,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -363,7 +382,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -384,7 +404,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -396,7 +417,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -417,7 +439,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -429,7 +452,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -441,7 +465,7 @@
         "tags": [
           "Pipeline"
         ],
-        "summary": "Run the Te P\u014d pipeline",
+        "summary": "Run the Te Pō pipeline",
         "operationId": "pipeline_run",
         "responses": {
           "200": {
@@ -450,7 +474,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -462,7 +487,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -483,7 +509,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -495,7 +522,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -516,7 +544,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -548,7 +577,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -570,7 +600,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -582,7 +613,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -603,7 +635,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -615,7 +648,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -636,7 +670,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -658,7 +693,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -670,7 +706,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -691,7 +728,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -713,7 +751,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -725,7 +764,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -746,7 +786,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -758,7 +799,8 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {}
               }
             }
           }
@@ -779,7 +821,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -801,7 +844,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -823,7 +867,8 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "properties": {}
                 }
               }
             }
@@ -839,7 +884,8 @@
         "scheme": "bearer",
         "bearerFormat": "API Key"
       }
-    }
+    },
+    "schemas": {}
   },
   "security": [
     {
