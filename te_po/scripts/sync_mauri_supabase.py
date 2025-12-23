@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import List
 
 from te_po.core.env_loader import load_env
-from te_po.utils.supabase_client import get_client
+from te_po.services.supabase_service import get_client
 
 ROOT = Path(__file__).resolve().parents[2]
 

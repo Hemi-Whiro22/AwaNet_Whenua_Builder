@@ -2,8 +2,8 @@
 
 # Smoke test for state endpoints
 
-BASE_URL="http://localhost:10000"
-BEARER_TOKEN="your_bearer_token_here"
+BASE_URL="${STATE_BASE_URL:-${API_URL:-http://localhost:10000}}"
+BEARER_TOKEN="${PIPELINE_TOKEN:-${HUMAN_BEARER_KEY:-}}"
 
 # Test /heartbeat
 curl -v "$BASE_URL/heartbeat" || {
@@ -18,17 +18,21 @@ curl -v "$BASE_URL/state/public" || {
 }
 
 # Test /state/private with Bearer token
-curl -v -H "Authorization: Bearer $BEARER_TOKEN" "$BASE_URL/state/private" || {
-  echo "[FAIL] /state/private endpoint is not reachable or Bearer token is invalid."
-  exit 1
-}
+if [ -n "$BEARER_TOKEN" ]; then
+  curl -v -H "Authorization: Bearer $BEARER_TOKEN" "$BASE_URL/state/private" || {
+    echo "[FAIL] /state/private endpoint is not reachable or Bearer token is invalid."
+    exit 1
+  }
 
-# Test /state/private without Bearer token (should fail)
-curl -v "$BASE_URL/state/private" && {
-  echo "[FAIL] /state/private endpoint is accessible without Bearer token."
-  exit 1
-} || {
-  echo "[PASS] /state/private endpoint is protected as expected."
-}
+  # Test /state/private without Bearer token (should fail)
+  curl -v "$BASE_URL/state/private" && {
+    echo "[FAIL] /state/private endpoint is accessible without Bearer token."
+    exit 1
+  } || {
+    echo "[PASS] /state/private endpoint is protected as expected."
+  }
+else
+  echo "[WARN] PIPELINE_TOKEN / HUMAN_BEARER_KEY not set; skipping private state tests."
+fi
 
 echo "[PASS] All state endpoints are working as expected."

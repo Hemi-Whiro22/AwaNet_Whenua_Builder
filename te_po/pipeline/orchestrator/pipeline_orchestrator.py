@@ -14,17 +14,15 @@ from te_po.pipeline.ocr.ocr_engine import run_ocr
 from te_po.pipeline.supabase_writer.writer import save_chunk
 from te_po.services.local_storage import save, timestamp
 from te_po.services.vector_service import push_chunk_embedding
-from te_po.services.supabase_uploader import (
+from te_po.services.supabase_service import (
     record_file_metadata,
     upload_bytes,
     detect_content_type,
-)
-from te_po.utils.openai_client import client as oa_client, DEFAULT_BACKEND_MODEL, generate_text
-from te_po.services.supabase_logging import (
     log_pipeline_run,
     log_chunks_metadata,
     log_vector_batch,
 )
+from te_po.utils.openai_client import client as oa_client, DEFAULT_BACKEND_MODEL, generate_text
 from te_po.pipeline.metrics import log_memory_usage
 
 IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp"}

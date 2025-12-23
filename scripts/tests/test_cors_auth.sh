@@ -3,19 +3,20 @@
 # Usage: ./scripts/test_cors_auth.sh [local|render]
 
 TARGET="${1:-local}"
+API_OVERRIDE="${2:-}"
 
-if [ "$TARGET" = "local" ]; then
-    API_URL="http://localhost:10000"
-    HEARTBEAT_ROUTE="/heartbeat"
-    PROTECTED_ROUTE="/api/intake"
-elif [ "$TARGET" = "render" ]; then
-    API_URL="https://tiwhanawhana-backend.onrender.com"
-    HEARTBEAT_ROUTE="/heartbeat"
-    PROTECTED_ROUTE="/api/intake"
-else
-    echo "Usage: $0 [local|render]"
-    exit 1
-fi
+case "$TARGET" in
+  render)
+    API_DEFAULT="https://tiwhanawhana-backend.onrender.com"
+    ;;
+  *)
+    API_DEFAULT="http://localhost:10000"
+    ;;
+esac
+
+API_URL="${API_OVERRIDE:-$API_DEFAULT}"
+HEARTBEAT_ROUTE="/heartbeat"
+PROTECTED_ROUTE="/api/intake"
 
 # Get token from environment
 TOKEN="${PIPELINE_TOKEN:-${HUMAN_BEARER_KEY}}"

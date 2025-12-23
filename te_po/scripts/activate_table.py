@@ -1,25 +1,29 @@
-import os
-from supabase import create_client
+"""
+Utility to ensure a Supabase table is accessible.
+"""
 
-# Load environment variables
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+from __future__ import annotations
 
-if not SUPABASE_URL or not SUPABASE_SERVICE_ROLE_KEY:
-    raise ValueError("Supabase URL or Service Role Key is not set in the environment variables.")
+from te_po.core.env_loader import load_env
+from te_po.services.supabase_service import get_client
+from pathlib import Path
+import sys
 
-# Initialize Supabase client
-supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+ROOT = Path(__file__).resolve().parents[2]
 
-# Define the table activation logic
+
 def activate_table():
+    load_env(str(ROOT / "te_po" / "core" / ".env"))
+    client = get_client()
+    if client is None:
+        raise RuntimeError("Supabase client not configured.")
     try:
-        # Example query to ensure the table is accessible
-        response = supabase.table("project_state_public").select("*").limit(1).execute()
+        response = client.table("project_state_public").select("*").limit(1).execute()
         print("Table activation successful. Response:")
-        print(response.data)
-    except Exception as e:
-        print("Error activating table:", e)
+        print(getattr(response, "data", None))
+    except Exception as exc:
+        print("Error activating table:", exc)
+
 
 if __name__ == "__main__":
     activate_table()

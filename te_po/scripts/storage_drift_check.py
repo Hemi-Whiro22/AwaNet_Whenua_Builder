@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(ROOT))
 
 from te_po.core.env_loader import load_env  # noqa: E402
-from te_po.utils.supabase_client import get_client  # noqa: E402
+from te_po.services.supabase_service import get_client  # noqa: E402
 
 
 def fetch_tepo_files(client):

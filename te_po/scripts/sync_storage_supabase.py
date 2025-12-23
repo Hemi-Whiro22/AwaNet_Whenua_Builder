@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(ROOT))
 
 from te_po.core.env_loader import load_env  # noqa: E402
-from te_po.utils.supabase_client import get_client  # noqa: E402
+from te_po.services.supabase_service import get_client, upload_file, insert_record
 
 ROOT = Path(__file__).resolve().parents[2]
 STORAGE_ROOT = ROOT / "te_po" / "storage"
@@ -85,41 +85,25 @@ def upload_and_record(client, entries: list[dict], live: bool):
     uploaded = 0
     for e in entries:
         rel_path = f"{e['bucket']}/{e['name']}"
-        # Compute content type and hash for metadata
-        ctype, _ = guess_type(e["name"])
-        sha = None
         try:
-            h = hashlib.sha256()
-            with open(e["path"], "rb") as fh:
-                for chunk in iter(lambda: fh.read(8192), b""):
-                    h.update(chunk)
-            sha = h.hexdigest()
-        except Exception:
-            sha = None
-
-        upload_result = None
-        if live:
-            try:
-                with open(e["path"], "rb") as fh:
-                    upload_result = client.storage.from_(BUCKET_NAME).upload(rel_path, fh)
-            except Exception as exc:
-                if "Duplicate" not in str(exc):
-                    print(f"[warn] upload failed {rel_path}: {exc}")
-            # Always attempt metadata upsert
-            try:
-                client.table(TABLE_NAME).upsert(
+            if live:
+                upload_res = upload_file(e["path"], rel_path)
+                if upload_res.get("status") != "ok":
+                    print(f"[warn] upload failed {rel_path}: {upload_res.get('reason')}")
+                insert_record(
+                    TABLE_NAME,
                     {
                         "storage_bucket": BUCKET_NAME,
                         "storage_path": rel_path,
                         "filename": e["name"],
                         "size": e["size"],
-                        "content_type": ctype,
-                        "sha256": sha,
+                        "content_type": guess_type(e["name"])[0],
+                        "sha256": hashlib.sha256(Path(e["path"]).read_bytes()).hexdigest(),
                     },
-                    on_conflict="storage_path",
-                ).execute()
-            except Exception as exc:
-                print(f"[warn] upsert failed {rel_path}: {exc}")
+                    upsert=True,
+                )
+        except Exception as exc:
+            print(f"[warn] upload failed {rel_path}: {exc}")
         uploaded += 1
     print(f"[live] processed {uploaded} files (uploads may be duplicates; metadata upserts attempted)")
 

@@ -6,17 +6,8 @@ import subprocess
 from pathlib import Path
 
 import yaml
-from supabase import create_client
 from te_po.core.config import settings
-
-# Remove redundant dotenv calls
-SUPABASE_URL = settings.supabase_url
-SUPABASE_KEY = settings.supabase_service_role_key
-
-if not SUPABASE_URL or not SUPABASE_KEY:
-    raise EnvironmentError("SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is not set.")
-
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+from te_po.services.supabase_service import get_client
 
 STATE_FILE = Path(__file__).resolve().parents[1] / "state.yaml"
 
@@ -70,7 +61,10 @@ def publish_state(dry_run: bool) -> None:
         print(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True))
         return
 
-    res = supabase.table("project_state_public").upsert(payload).execute()
+    client = get_client()
+    if client is None:
+        raise RuntimeError("Supabase client not configured.")
+    res = client.table("project_state_public").upsert(payload).execute()
     if getattr(res, "error", None):
         raise RuntimeError(f"Failed to publish state: {res.error}")
 
