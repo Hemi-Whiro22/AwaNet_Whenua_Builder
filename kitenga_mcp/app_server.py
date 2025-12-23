@@ -41,18 +41,32 @@ async def log_tool_usage(domain, command, input_data, result, caller_meta):
 def load_tool_manifests():
     base = Path(__file__).parent / "tools" / "manifests"
     merged = {}
-    for path in glob.glob(str(base / "*.json")):
+    manifest_paths = list(base.glob("*.json"))
+    root_manifest = Path(__file__).parent / "tools" / "manifest.json"
+    if root_manifest.exists():
+        manifest_paths.append(root_manifest)
+
+    for path in manifest_paths:
         try:
             with open(path, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                for domain, content in data.items():
-                    if domain not in merged:
-                        merged[domain] = {"tools": []}
-                    if isinstance(content, dict) and "tools" in content:
-                        merged[domain]["tools"].extend(content["tools"])
         except Exception as e:
             logging.warning(f"⚠️ Failed to load {path}: {e}")
-    logging.info(f"✅ Loaded {len(merged)} tool domains from {base}")
+            continue
+
+        if isinstance(data, dict) and "tools" in data and "version" in data:
+            domain = data.get("domain") or path.stem
+            merged.setdefault(domain, {"tools": []})
+            merged[domain]["tools"].extend(data.get("tools", []))
+            continue
+
+        for domain, content in data.items():
+            if domain not in merged:
+                merged[domain] = {"tools": []}
+            if isinstance(content, dict) and "tools" in content:
+                merged[domain]["tools"].extend(content["tools"])
+
+    logging.info(f"✅ Loaded {len(merged)} tool domains from manifests")
     return merged
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -523,7 +537,7 @@ logger = logging.getLogger("kitenga_mcp")
 STATIC_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8000",
-    "https://kitenga-core-js.onrender.com",
+    "https://tiwhanawhana-backend.onrender.com",
 ]
 app.add_middleware(
     CORSMiddleware,

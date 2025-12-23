@@ -1,0 +1,322 @@
+{
+  "version": "2025-12-23",
+  "domain": "tiwhanawhana_backend",
+  "tools": [
+    {
+      "name": "assistant_run",
+      "method": "POST",
+      "path": "/assistant/run",
+      "description": "Run the Te Pō assistant",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "assistant_health",
+      "method": "GET",
+      "path": "/assistant/health",
+      "description": "Health check for the assistant",
+      "params": {},
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "assistant_create",
+      "method": "POST",
+      "path": "/assistant/create",
+      "description": "Create a new assistant session",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "assistant_list",
+      "method": "GET",
+      "path": "/assistant/list",
+      "description": "List assistant sessions",
+      "params": {},
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "assistant_vector_stores",
+      "method": "GET",
+      "path": "/assistant/vector-stores",
+      "description": "List vector stores",
+      "params": {},
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "assistant_version",
+      "method": "GET",
+      "path": "/assistant/version",
+      "description": "Assistant version metadata",
+      "params": {},
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "vision_ocr",
+      "method": "POST",
+      "path": "/kitenga/vision-ocr",
+      "description": "Vision OCR processing",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "kitenga_translate",
+      "method": "POST",
+      "path": "/kitenga/tool/translate",
+      "description": "Translate text via Kitenga",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "kitenga_ask",
+      "method": "POST",
+      "path": "/kitenga/ask",
+      "description": "Ask Kitenga a question",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "kitenga_whisper",
+      "method": "POST",
+      "path": "/kitenga/gpt-whisper",
+      "description": "Whisper / GPT request",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "kitenga_query_kb",
+      "method": "POST",
+      "path": "/kitenga/query_knowledge_base",
+      "description": "Query the knowledge base",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "reo_translate",
+      "method": "POST",
+      "path": "/reo/translate",
+      "description": "Translate to te reo Māori",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "reo_explain",
+      "method": "POST",
+      "path": "/reo/explain",
+      "description": "Explain te reo context",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "reo_pronounce",
+      "method": "POST",
+      "path": "/reo/pronounce",
+      "description": "Pronounce text",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "pipeline_run",
+      "method": "POST",
+      "path": "/pipeline/run",
+      "description": "Run the Te Pō pipeline",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "pipeline_enqueue",
+      "method": "POST",
+      "path": "/pipeline/enqueue",
+      "description": "Enqueue pipeline work",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "pipeline_status",
+      "method": "GET",
+      "path": "/pipeline/status/{job_id}",
+      "description": "Query pipeline job status",
+      "params": {
+        "job_id": "string"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "pipeline_jobs_recent",
+      "method": "GET",
+      "path": "/pipeline/jobs/recent",
+      "description": "List recent pipeline jobs",
+      "params": {},
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "vector_embed",
+      "method": "POST",
+      "path": "/vector/embed",
+      "description": "Embed text into vector store",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "vector_search",
+      "method": "POST",
+      "path": "/vector/search",
+      "description": "Search vectors",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "vector_recent",
+      "method": "GET",
+      "path": "/vector/recent",
+      "description": "List recent vector batches",
+      "params": {},
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "memory_retrieve",
+      "method": "POST",
+      "path": "/memory/retrieve",
+      "description": "Retrieve stored memory",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "kitenga_db_memory",
+      "method": "GET",
+      "path": "/kitenga/db/memory",
+      "description": "Browse DB memory",
+      "params": {},
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "research_stacked",
+      "method": "POST",
+      "path": "/research/stacked",
+      "description": "Stacked research run",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "research_web_search",
+      "method": "POST",
+      "path": "/research/web_search",
+      "description": "Web search for research",
+      "params": {
+        "body": "JSON payload per schema"
+      },
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "logs_recent",
+      "method": "GET",
+      "path": "/logs/recent",
+      "description": "Recent log entries",
+      "params": {},
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "logs_ledger",
+      "method": "GET",
+      "path": "/logs/ledger",
+      "description": "Ledger log history",
+      "params": {},
+      "returns": {
+        "result": "JSON object"
+      }
+    },
+    {
+      "name": "logs_state",
+      "method": "GET",
+      "path": "/logs/state",
+      "description": "State snapshots",
+      "params": {},
+      "returns": {
+        "result": "JSON object"
+      }
+    }
+  ]
+}
