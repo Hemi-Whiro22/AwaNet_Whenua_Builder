@@ -24,6 +24,7 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request, Header, status
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from te_po.utils.middleware.auth_middleware import apply_bearer_middleware
 
 # --- Helper functions ---
@@ -54,6 +55,8 @@ def load_tool_manifests():
     logging.info(f"✅ Loaded {len(merged)} tool domains from {base}")
     return merged
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SCHEMA_DIR = REPO_ROOT
 TOOLS_MANIFEST = load_tool_manifests()
 
 def create_app():
@@ -515,6 +518,22 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("kitenga_mcp")
 
 # --------------------------------------------------------
+# === CORS helpers for Render ===
+# --------------------------------------------------------
+STATIC_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "https://kitenga-core-js.onrender.com",
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=STATIC_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["GET", "HEAD", "OPTIONS"],
+    allow_headers=["*"],
+)
+
+# --------------------------------------------------------
 # 🔒 Bearer token middleware for /mcp routes
 # --------------------------------------------------------
 from fastapi import Request, HTTPException
@@ -699,6 +718,21 @@ async def call_tool(request: Request):
 # - Health auto-report back to AwaNet dashboard
 # - Auth middleware improvements (token expiry, scopes)
 # - More robust error handling and validation
+
+# --------------------------------------------------------
+# === Static schema exposure for Render ===
+# --------------------------------------------------------
+app.mount("/", StaticFiles(directory=str(SCHEMA_DIR), html=False), name="repo_schema")
+logger.info(f"✅ Static schema assets available at {SCHEMA_DIR}, '/' now serves JSON files like openai_tools.json.")
+
+
+@app.middleware("http")
+async def _json_content_safety(request: Request, call_next):
+    response = await call_next(request)
+    if request.url.path.endswith(".json"):
+        response.headers.setdefault("Content-Type", "application/json")
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    return response
 
 # --------------------------------------------------------
 # 🧪 Testing instructions
