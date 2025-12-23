@@ -31,6 +31,9 @@
 | GET | /realm.json | te_po/core/main.py |
 | GET | /openapi-core.json | te_po/core/main.py |
 | GET | /.well-known/openapi-core.json | te_po/core/main.py |
+| GET | /openai_tools.json | te_po/core/main.py |
+| GET | /analysis/sync-status | te_po/core/main.py |
+| GET | /analysis/documents/latest | te_po/core/main.py |
 | POST | /ocr | te_po/core/kitenga_cards.py |
 | POST | /translate | te_po/core/kitenga_cards.py |
 | POST | /speak | te_po/core/kitenga_cards.py |

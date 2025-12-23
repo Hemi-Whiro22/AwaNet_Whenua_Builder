@@ -23,6 +23,9 @@ class BearerAuthMiddleware(BaseHTTPMiddleware):
         "/mcp/tools/list",
         "/mcp/tools/describe",
         "/debug/routes",
+        "/analysis/sync-status",
+        "/analysis/documents/latest",
+        "/openai_tools.json",
     }
     UNPROTECTED_PREFIXES = {"/static"}
 

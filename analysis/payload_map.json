@@ -1,0 +1,4049 @@
+{
+  "timestamp": "2025-12-23T12:03:49.096149",
+  "mauri_score": 10,
+  "realm": {
+    "name": "Te Pō Assistant",
+    "realm": "AwaNet",
+    "version": "1.0.0",
+    "maintainer": "Hemi Whiro",
+    "description": "The living bridge between Kitenga Whiro intelligence and the Awa Network.",
+    "mauri": "flowing",
+    "contact": "mailto:kaitiaki@awanet.nz"
+  },
+  "payload_shapes": [
+    {
+      "path": "/",
+      "method": "GET",
+      "function": "read_root",
+      "module": "te_po.app",
+      "whakapapa_path": "te_po/app.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/api/status",
+      "method": "GET",
+      "function": "status",
+      "module": "te_hau.app",
+      "whakapapa_path": "te_hau/app.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/api/ocr",
+      "method": "POST",
+      "function": "ocr_proxy",
+      "module": "te_hau.app",
+      "whakapapa_path": "te_hau/app.py",
+      "parameters": [
+        {
+          "name": "file",
+          "annotation": "UploadFile"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2
+    },
+    {
+      "path": "/api/kaitiaki",
+      "method": "GET",
+      "function": "kaitiaki_list",
+      "module": "te_hau.app",
+      "whakapapa_path": "te_hau/app.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/api/kaitiaki",
+      "method": "POST",
+      "function": "kaitiaki_create",
+      "module": "te_hau.app",
+      "whakapapa_path": "te_hau/app.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "dict"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2
+    },
+    {
+      "path": "/api/events",
+      "method": "GET",
+      "function": "events",
+      "module": "te_hau.app",
+      "whakapapa_path": "te_hau/app.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/api/events",
+      "method": "POST",
+      "function": "push",
+      "module": "te_hau.app",
+      "whakapapa_path": "te_hau/app.py",
+      "parameters": [
+        {
+          "name": "event",
+          "annotation": "dict"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2
+    },
+    {
+      "path": "/health",
+      "method": "GET",
+      "function": "health_check",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/tools/list",
+      "method": "GET",
+      "function": "list_tools",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/tools/describe",
+      "method": "GET",
+      "function": "describe_tools",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/tools/call",
+      "method": "POST",
+      "function": "call_tool",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "Request"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2
+    },
+    {
+      "path": "/debug/routes",
+      "method": "GET",
+      "function": "debug_routes",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/awa/loop/test",
+      "method": "POST",
+      "function": "awa_loop_test",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/health",
+      "method": "GET",
+      "function": "health",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/awa/protocol/event",
+      "method": "POST",
+      "function": "receive_awa_event",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "Request"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2
+    },
+    {
+      "path": "/awa/memory/debug",
+      "method": "GET",
+      "function": "memory_debug",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/awa/memory/search",
+      "method": "POST",
+      "function": "search_memory",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "Request"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2
+    },
+    {
+      "path": "/awa/memory/add",
+      "method": "POST",
+      "function": "add_memory",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "Request"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "function": "root",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/health",
+      "method": "GET",
+      "function": "health_check",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/tools/list",
+      "method": "GET",
+      "function": "list_tools_manifest",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/tools/describe",
+      "method": "GET",
+      "function": "describe_tools",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/tools/call",
+      "method": "POST",
+      "function": "call_tool",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "Request"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2
+    },
+    {
+      "path": "/memory/ping",
+      "method": "GET",
+      "function": "memory_ping",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/env",
+      "method": "GET",
+      "function": "get_env",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/routes",
+      "method": "GET",
+      "function": "list_routes",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/health/full",
+      "method": "GET",
+      "function": "full_health",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "function": "root",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/jobs",
+      "method": "GET",
+      "function": "get_recent_jobs",
+      "module": "kitenga_mcp.pipeline",
+      "whakapapa_path": "kitenga_mcp/pipeline.py",
+      "parameters": [
+        {
+          "name": "realm",
+          "annotation": "str"
+        },
+        {
+          "name": "limit",
+          "annotation": "int"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/enqueue",
+      "method": "POST",
+      "function": "enqueue_job",
+      "module": "kitenga_mcp.pipeline",
+      "whakapapa_path": "kitenga_mcp/pipeline.py",
+      "parameters": [
+        {
+          "name": "realm",
+          "annotation": "str"
+        },
+        {
+          "name": "payload",
+          "annotation": "dict"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/search",
+      "method": "POST",
+      "function": "memory_search",
+      "module": "kitenga_mcp.memory",
+      "whakapapa_path": "kitenga_mcp/memory.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "MemorySearchRequest",
+          "model": "MemorySearchRequest",
+          "model_fields": [
+            {
+              "name": "query",
+              "type": "str",
+              "default": "Field(..., description='Text to semantically search.')"
+            },
+            {
+              "name": "realm",
+              "type": "str",
+              "default": "Field('te_ao', description='Realm to search in.')"
+            }
+          ],
+          "example_payload": {
+            "query": "example_query",
+            "realm": "example_realm"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "query": "example_query",
+          "realm": "example_realm"
+        }
+      }
+    },
+    {
+      "path": "/store",
+      "method": "POST",
+      "function": "store_fragment",
+      "module": "kitenga_mcp.memory",
+      "whakapapa_path": "kitenga_mcp/memory.py",
+      "parameters": [
+        {
+          "name": "realm",
+          "annotation": "str"
+        },
+        {
+          "name": "content",
+          "annotation": "str"
+        },
+        {
+          "name": "tapu_level",
+          "annotation": "int"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 4
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "function": "root",
+      "module": "te_po.core.main",
+      "whakapapa_path": "te_po/core/main.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/heartbeat",
+      "method": "GET",
+      "function": "heartbeat",
+      "module": "te_po.core.main",
+      "whakapapa_path": "te_po/core/main.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/gpt_connect.yaml",
+      "method": "GET",
+      "function": "serve_gpt_connect",
+      "module": "te_po.core.main",
+      "whakapapa_path": "te_po/core/main.py",
+      "parameters": [
+        {
+          "name": "background_tasks",
+          "annotation": "BackgroundTasks"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2
+    },
+    {
+      "path": "/realm.json",
+      "method": "GET",
+      "function": "serve_realm",
+      "module": "te_po.core.main",
+      "whakapapa_path": "te_po/core/main.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/openapi-core.json",
+      "method": "GET",
+      "function": "serve_openapi_core",
+      "module": "te_po.core.main",
+      "whakapapa_path": "te_po/core/main.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/.well-known/openapi-core.json",
+      "method": "GET",
+      "function": "serve_openapi_core_well_known",
+      "module": "te_po.core.main",
+      "whakapapa_path": "te_po/core/main.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/openai_tools.json",
+      "method": "GET",
+      "function": "serve_openai_tools",
+      "module": "te_po.core.main",
+      "whakapapa_path": "te_po/core/main.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/analysis/sync-status",
+      "method": "GET",
+      "function": "analysis_sync_status_endpoint",
+      "module": "te_po.core.main",
+      "whakapapa_path": "te_po/core/main.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/analysis/documents/latest",
+      "method": "GET",
+      "function": "analysis_latest_document",
+      "module": "te_po.core.main",
+      "whakapapa_path": "te_po/core/main.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/awa/gpt/invoke",
+      "method": "POST",
+      "function": "awa_gpt_invoke",
+      "module": "te_po.core.awa_gpt",
+      "whakapapa_path": "te_po/core/awa_gpt.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "Request"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/awa/gpt/realtime/toggle",
+      "method": "POST",
+      "function": "toggle_realtime",
+      "module": "te_po.core.awa_realtime",
+      "whakapapa_path": "te_po/core/awa_realtime.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/awa/gpt/realtime/status",
+      "method": "GET",
+      "function": "realtime_status",
+      "module": "te_po.core.awa_realtime",
+      "whakapapa_path": "te_po/core/awa_realtime.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/ocr",
+      "method": "POST",
+      "function": "ocr",
+      "module": "te_po.core.kitenga_cards",
+      "whakapapa_path": "te_po/core/kitenga_cards.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "OCRPayload",
+          "model": "OCRPayload",
+          "model_fields": [
+            {
+              "name": "image_base64",
+              "type": "str",
+              "default": "Field(..., max_length=MAX_BASE64_SIZE)"
+            }
+          ],
+          "example_payload": {
+            "image_base64": "example_image_base64"
+          }
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "image_base64": "example_image_base64"
+        }
+      }
+    },
+    {
+      "path": "/translate",
+      "method": "POST",
+      "function": "translate_text",
+      "module": "te_po.core.kitenga_cards",
+      "whakapapa_path": "te_po/core/kitenga_cards.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "TranslateRequest",
+          "model": "TranslateRequest",
+          "model_fields": [
+            {
+              "name": "text",
+              "type": "str",
+              "default": "Field(..., max_length=MAX_TEXT_LENGTH)"
+            },
+            {
+              "name": "target_lang",
+              "type": "str",
+              "default": "Field(default='en', max_length=10)"
+            }
+          ],
+          "example_payload": {
+            "text": "example_text",
+            "target_lang": "example_target_lang"
+          }
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "text": "example_text",
+          "target_lang": "example_target_lang"
+        }
+      }
+    },
+    {
+      "path": "/speak",
+      "method": "POST",
+      "function": "speak_text",
+      "module": "te_po.core.kitenga_cards",
+      "whakapapa_path": "te_po/core/kitenga_cards.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "SpeakRequest",
+          "model": "SpeakRequest",
+          "model_fields": [
+            {
+              "name": "text",
+              "type": "str",
+              "default": "Field(..., max_length=MAX_TEXT_LENGTH)"
+            }
+          ],
+          "example_payload": {
+            "text": "example_text"
+          }
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "text": "example_text"
+        }
+      }
+    },
+    {
+      "path": "/scribe",
+      "method": "POST",
+      "function": "scribe",
+      "module": "te_po.core.kitenga_cards",
+      "whakapapa_path": "te_po/core/kitenga_cards.py",
+      "parameters": [
+        {
+          "name": "entry",
+          "annotation": "ScribeEntry",
+          "model": "ScribeEntry",
+          "model_fields": [
+            {
+              "name": "speaker",
+              "type": "str",
+              "default": "Field(..., max_length=100)"
+            },
+            {
+              "name": "text",
+              "type": "str",
+              "default": "Field(..., max_length=MAX_TEXT_LENGTH)"
+            },
+            {
+              "name": "tone",
+              "type": "str",
+              "default": "Field(default='neutral', max_length=50)"
+            },
+            {
+              "name": "glyph_id",
+              "type": "str",
+              "default": "Field(default='glyph-auto', max_length=100)"
+            },
+            {
+              "name": "translate",
+              "type": "bool",
+              "default": "False"
+            }
+          ],
+          "example_payload": {
+            "speaker": "example_speaker",
+            "text": "example_text",
+            "tone": "example_tone",
+            "glyph_id": "example_glyph_id",
+            "translate": false
+          }
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2,
+      "example_payload": {
+        "entry": {
+          "speaker": "example_speaker",
+          "text": "example_text",
+          "tone": "example_tone",
+          "glyph_id": "example_glyph_id",
+          "translate": false
+        }
+      }
+    },
+    {
+      "path": "/gpt-whisper",
+      "method": "POST",
+      "function": "gpt_whisper",
+      "module": "te_po.core.kitenga_cards",
+      "whakapapa_path": "te_po/core/kitenga_cards.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "Request"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2
+    },
+    {
+      "path": "/scan-image",
+      "method": "POST",
+      "function": "scan_image",
+      "module": "te_po.routes.cards",
+      "whakapapa_path": "te_po/routes/cards.py",
+      "parameters": [
+        {
+          "name": "image",
+          "annotation": "UploadFile"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/estimate-value",
+      "method": "POST",
+      "function": "estimate_value",
+      "module": "te_po.routes.cards",
+      "whakapapa_path": "te_po/routes/cards.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "Dict[str, Any]"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/build-row",
+      "method": "POST",
+      "function": "build_row",
+      "module": "te_po.routes.cards",
+      "whakapapa_path": "te_po/routes/cards.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "Dict[str, Any]"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/build-csv",
+      "method": "POST",
+      "function": "build_csv",
+      "module": "te_po.routes.cards",
+      "whakapapa_path": "te_po/routes/cards.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "Dict[str, Any]"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/value",
+      "method": "POST",
+      "function": "card_value",
+      "module": "te_po.routes.cards",
+      "whakapapa_path": "te_po/routes/cards.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "Dict[str, Any]"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/upload-image",
+      "method": "POST",
+      "function": "upload_image",
+      "module": "te_po.routes.cards",
+      "whakapapa_path": "te_po/routes/cards.py",
+      "parameters": [
+        {
+          "name": "image",
+          "annotation": "UploadFile"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/run",
+      "method": "POST",
+      "function": "pipeline_run",
+      "module": "te_po.routes.pipeline",
+      "whakapapa_path": "te_po/routes/pipeline.py",
+      "parameters": [
+        {
+          "name": "file",
+          "annotation": "UploadFile | None"
+        },
+        {
+          "name": "text",
+          "annotation": "str | None"
+        },
+        {
+          "name": "source",
+          "annotation": "str"
+        },
+        {
+          "name": "authorization",
+          "annotation": "str | None"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 5
+    },
+    {
+      "path": "/enqueue",
+      "method": "POST",
+      "function": "enqueue_pipeline",
+      "module": "te_po.routes.pipeline",
+      "whakapapa_path": "te_po/routes/pipeline.py",
+      "parameters": [
+        {
+          "name": "file",
+          "annotation": "UploadFile"
+        },
+        {
+          "name": "x_realm",
+          "annotation": "str | None"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/status/{job_id}",
+      "method": "GET",
+      "function": "pipeline_status",
+      "module": "te_po.routes.pipeline",
+      "whakapapa_path": "te_po/routes/pipeline.py",
+      "parameters": [
+        {
+          "name": "job_id",
+          "annotation": "str"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/jobs/recent",
+      "method": "GET",
+      "function": "get_recent_jobs_endpoint",
+      "module": "te_po.routes.pipeline",
+      "whakapapa_path": "te_po/routes/pipeline.py",
+      "parameters": [
+        {
+          "name": "limit",
+          "annotation": "int"
+        },
+        {
+          "name": "realm",
+          "annotation": "str | None"
+        },
+        {
+          "name": "queue",
+          "annotation": "str | None"
+        },
+        {
+          "name": "status",
+          "annotation": "str | None"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 5
+    },
+    {
+      "path": "/batch",
+      "method": "POST",
+      "function": "enqueue_batch",
+      "module": "te_po.routes.pipeline",
+      "whakapapa_path": "te_po/routes/pipeline.py",
+      "parameters": [
+        {
+          "name": "files",
+          "annotation": "List[UploadFile]"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/batch-status/{batch_id}",
+      "method": "GET",
+      "function": "batch_status",
+      "module": "te_po.routes.pipeline",
+      "whakapapa_path": "te_po/routes/pipeline.py",
+      "parameters": [
+        {
+          "name": "batch_id",
+          "annotation": "str"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/cancel/{job_id}",
+      "method": "POST",
+      "function": "cancel_job",
+      "module": "te_po.routes.pipeline",
+      "whakapapa_path": "te_po/routes/pipeline.py",
+      "parameters": [
+        {
+          "name": "job_id",
+          "annotation": "str"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/health/queue",
+      "method": "GET",
+      "function": "queue_health",
+      "module": "te_po.routes.pipeline",
+      "whakapapa_path": "te_po/routes/pipeline.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/profiles",
+      "method": "GET",
+      "function": "document_profiles",
+      "module": "te_po.routes.documents",
+      "whakapapa_path": "te_po/routes/documents.py",
+      "parameters": [
+        {
+          "name": "limit",
+          "annotation": "int"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/research/query",
+      "method": "POST",
+      "function": "research",
+      "module": "te_po.routes.research",
+      "whakapapa_path": "te_po/routes/research.py",
+      "parameters": [
+        {
+          "name": "body",
+          "annotation": "dict"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/research/web_search",
+      "method": "POST",
+      "function": "research_web_search",
+      "module": "te_po.routes.research",
+      "whakapapa_path": "te_po/routes/research.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "dict"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/research/stacked",
+      "method": "POST",
+      "function": "research_stacked",
+      "module": "te_po.routes.research",
+      "whakapapa_path": "te_po/routes/research.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "dict"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/run",
+      "method": "POST",
+      "function": "assistant_run",
+      "module": "te_po.routes.assistant",
+      "whakapapa_path": "te_po/routes/assistant.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "dict"
+        },
+        {
+          "name": "authorization",
+          "annotation": "str | None"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/create",
+      "method": "POST",
+      "function": "create_assistant",
+      "module": "te_po.routes.assistant",
+      "whakapapa_path": "te_po/routes/assistant.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "dict"
+        },
+        {
+          "name": "authorization",
+          "annotation": "str | None"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/list",
+      "method": "GET",
+      "function": "list_assistants",
+      "module": "te_po.routes.assistant",
+      "whakapapa_path": "te_po/routes/assistant.py",
+      "parameters": [
+        {
+          "name": "authorization",
+          "annotation": "str | None"
+        },
+        {
+          "name": "limit",
+          "annotation": "int"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/vector-stores",
+      "method": "GET",
+      "function": "list_vector_stores",
+      "module": "te_po.routes.assistant",
+      "whakapapa_path": "te_po/routes/assistant.py",
+      "parameters": [
+        {
+          "name": "authorization",
+          "annotation": "str | None"
+        },
+        {
+          "name": "limit",
+          "annotation": "int"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/run",
+      "method": "POST",
+      "function": "run_assistant",
+      "module": "te_po.routes.assistant_bridge",
+      "whakapapa_path": "te_po/routes/assistant_bridge.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "dict[str, Any]"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/health",
+      "method": "GET",
+      "function": "health_check",
+      "module": "te_po.routes.assistant_bridge",
+      "whakapapa_path": "te_po/routes/assistant_bridge.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/version",
+      "method": "GET",
+      "function": "version",
+      "module": "te_po.routes.assistant_bridge",
+      "whakapapa_path": "te_po/routes/assistant_bridge.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/save-session",
+      "method": "POST",
+      "function": "save_session",
+      "module": "te_po.routes.chat",
+      "whakapapa_path": "te_po/routes/chat.py",
+      "parameters": [
+        {
+          "name": "session_id",
+          "annotation": "str"
+        },
+        {
+          "name": "title",
+          "annotation": "Optional[str]"
+        },
+        {
+          "name": "tags",
+          "annotation": "Optional[str]"
+        },
+        {
+          "name": "summarize",
+          "annotation": "bool"
+        },
+        {
+          "name": "summary_words",
+          "annotation": "int"
+        },
+        {
+          "name": "write_ari",
+          "annotation": "bool"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 7
+    },
+    {
+      "path": "/status",
+      "method": "GET",
+      "function": "status",
+      "module": "te_po.routes.status",
+      "whakapapa_path": "te_po/routes/status.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/status/openai",
+      "method": "GET",
+      "function": "status_openai",
+      "module": "te_po.routes.status",
+      "whakapapa_path": "te_po/routes/status.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/status/full",
+      "method": "GET",
+      "function": "status_full",
+      "module": "te_po.routes.status",
+      "whakapapa_path": "te_po/routes/status.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/embed",
+      "method": "POST",
+      "function": "vector_embed",
+      "module": "te_po.routes.vector",
+      "whakapapa_path": "te_po/routes/vector.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "EmbedRequest",
+          "model": "EmbedRequest",
+          "model_fields": [
+            {
+              "name": "text",
+              "type": "str",
+              "default": ""
+            }
+          ],
+          "example_payload": {
+            "text": "example_text"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "text": "example_text"
+        }
+      }
+    },
+    {
+      "path": "/search",
+      "method": "POST",
+      "function": "vector_search",
+      "module": "te_po.routes.vector",
+      "whakapapa_path": "te_po/routes/vector.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "SearchRequest",
+          "model": "SearchRequest",
+          "model_fields": [
+            {
+              "name": "query",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "top_k",
+              "type": "Optional[int]",
+              "default": "5"
+            }
+          ],
+          "example_payload": {
+            "query": "example_query",
+            "top_k": 0
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "query": "example_query",
+          "top_k": 0
+        }
+      }
+    },
+    {
+      "path": "/retrieval-test",
+      "method": "POST",
+      "function": "vector_retrieval_test",
+      "module": "te_po.routes.vector",
+      "whakapapa_path": "te_po/routes/vector.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "SearchRequest",
+          "model": "SearchRequest",
+          "model_fields": [
+            {
+              "name": "query",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "top_k",
+              "type": "Optional[int]",
+              "default": "5"
+            }
+          ],
+          "example_payload": {
+            "query": "example_query",
+            "top_k": 0
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "query": "example_query",
+          "top_k": 0
+        }
+      }
+    },
+    {
+      "path": "/recent",
+      "method": "GET",
+      "function": "vector_recent",
+      "module": "te_po.routes.vector",
+      "whakapapa_path": "te_po/routes/vector.py",
+      "parameters": [
+        {
+          "name": "limit",
+          "annotation": "int"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/batch-status",
+      "method": "GET",
+      "function": "vector_batch_status",
+      "module": "te_po.routes.vector",
+      "whakapapa_path": "te_po/routes/vector.py",
+      "parameters": [
+        {
+          "name": "batch_id",
+          "annotation": "str"
+        },
+        {
+          "name": "vector_store_id",
+          "annotation": "str | None"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/status",
+      "method": "GET",
+      "function": "kitenga_db_status",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/stats",
+      "method": "GET",
+      "function": "kitenga_db_stats",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/logs",
+      "method": "POST",
+      "function": "create_log",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "LogEventRequest",
+          "model": "LogEventRequest",
+          "model_fields": [
+            {
+              "name": "event",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "detail",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "source",
+              "type": "str",
+              "default": "'kitenga_whiro'"
+            },
+            {
+              "name": "data",
+              "type": "Optional[Dict[str, Any]]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "event": "example_event",
+            "detail": "example_detail",
+            "source": "example_source",
+            "data": {}
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "event": "example_event",
+          "detail": "example_detail",
+          "source": "example_source",
+          "data": {}
+        }
+      }
+    },
+    {
+      "path": "/logs/recent",
+      "method": "GET",
+      "function": "recent_logs",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [
+        {
+          "name": "limit",
+          "annotation": "int"
+        },
+        {
+          "name": "source",
+          "annotation": "str"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/memory",
+      "method": "POST",
+      "function": "create_memory",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "MemoryRequest",
+          "model": "MemoryRequest",
+          "model_fields": [
+            {
+              "name": "content",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "metadata",
+              "type": "Optional[Dict[str, Any]]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "content": "example_content",
+            "metadata": {}
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "content": "example_content",
+          "metadata": {}
+        }
+      }
+    },
+    {
+      "path": "/memory/search",
+      "method": "POST",
+      "function": "search_memory_route",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "SearchRequest",
+          "model": "SearchRequest",
+          "model_fields": [
+            {
+              "name": "query",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "limit",
+              "type": "int",
+              "default": "10"
+            }
+          ],
+          "example_payload": {
+            "query": "example_query",
+            "limit": 0
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "query": "example_query",
+          "limit": 0
+        }
+      }
+    },
+    {
+      "path": "/chat/log",
+      "method": "POST",
+      "function": "create_chat_log",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "ChatLogRequest",
+          "model": "ChatLogRequest",
+          "model_fields": [
+            {
+              "name": "session_id",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "user_message",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "assistant_reply",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "thread_id",
+              "type": "Optional[str]",
+              "default": "None"
+            },
+            {
+              "name": "mode",
+              "type": "str",
+              "default": "'chat'"
+            },
+            {
+              "name": "metadata",
+              "type": "Optional[Dict[str, Any]]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "session_id": "example_session_id",
+            "user_message": "example_user_message",
+            "assistant_reply": "example_assistant_reply",
+            "thread_id": "example_thread_id",
+            "mode": "example_mode",
+            "metadata": {}
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "session_id": "example_session_id",
+          "user_message": "example_user_message",
+          "assistant_reply": "example_assistant_reply",
+          "thread_id": "example_thread_id",
+          "mode": "example_mode",
+          "metadata": {}
+        }
+      }
+    },
+    {
+      "path": "/chat/history/{session_id}",
+      "method": "GET",
+      "function": "chat_history",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [
+        {
+          "name": "session_id",
+          "annotation": "str"
+        },
+        {
+          "name": "limit",
+          "annotation": "int"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/taonga",
+      "method": "POST",
+      "function": "create_taonga",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "TaongaRequest",
+          "model": "TaongaRequest",
+          "model_fields": [
+            {
+              "name": "title",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "content",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "metadata",
+              "type": "Optional[Dict[str, Any]]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "title": "example_title",
+            "content": "example_content",
+            "metadata": {}
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "title": "example_title",
+          "content": "example_content",
+          "metadata": {}
+        }
+      }
+    },
+    {
+      "path": "/taonga/{taonga_id}",
+      "method": "GET",
+      "function": "get_taonga",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [
+        {
+          "name": "taonga_id",
+          "annotation": "str"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/taonga/search",
+      "method": "POST",
+      "function": "search_taonga_route",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "SearchRequest",
+          "model": "SearchRequest",
+          "model_fields": [
+            {
+              "name": "query",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "limit",
+              "type": "int",
+              "default": "10"
+            }
+          ],
+          "example_payload": {
+            "query": "example_query",
+            "limit": 0
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "query": "example_query",
+          "limit": 0
+        }
+      }
+    },
+    {
+      "path": "/pipeline/recent",
+      "method": "GET",
+      "function": "recent_pipelines",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [
+        {
+          "name": "limit",
+          "annotation": "int"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/whakapapa",
+      "method": "POST",
+      "function": "create_whakapapa",
+      "module": "te_po.routes.kitenga_db",
+      "whakapapa_path": "te_po/routes/kitenga_db.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "WhakapapaRequest",
+          "model": "WhakapapaRequest",
+          "model_fields": [
+            {
+              "name": "id",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "title",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "category",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "summary",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "content_type",
+              "type": "str",
+              "default": "'event'"
+            },
+            {
+              "name": "data",
+              "type": "Optional[Dict[str, Any]]",
+              "default": "None"
+            },
+            {
+              "name": "author",
+              "type": "str",
+              "default": "'kitenga_whiro'"
+            }
+          ],
+          "example_payload": {
+            "id": "example_id",
+            "title": "example_title",
+            "category": "example_category",
+            "summary": "example_summary",
+            "content_type": "example_content_type",
+            "data": {},
+            "author": "example_author"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "id": "example_id",
+          "title": "example_title",
+          "category": "example_category",
+          "summary": "example_summary",
+          "content_type": "example_content_type",
+          "data": {},
+          "author": "example_author"
+        }
+      }
+    },
+    {
+      "path": "/envelope",
+      "method": "POST",
+      "function": "wrap_envelope",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "EnvelopeRequest",
+          "model": "EnvelopeRequest",
+          "model_fields": [
+            {
+              "name": "message",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "realm",
+              "type": "Optional[str]",
+              "default": "None"
+            },
+            {
+              "name": "metadata",
+              "type": "Optional[Dict[str, Any]]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "message": "example_message",
+            "realm": "example_realm",
+            "metadata": {}
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "message": "example_message",
+          "realm": "example_realm",
+          "metadata": {}
+        }
+      }
+    },
+    {
+      "path": "/task",
+      "method": "POST",
+      "function": "execute_task",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "TaskRequest",
+          "model": "TaskRequest",
+          "model_fields": [
+            {
+              "name": "kaitiaki",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "task",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "input",
+              "type": "Dict[str, Any]",
+              "default": ""
+            },
+            {
+              "name": "priority",
+              "type": "str",
+              "default": "'normal'"
+            },
+            {
+              "name": "realm",
+              "type": "Optional[str]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "kaitiaki": "example_kaitiaki",
+            "task": "example_task",
+            "input": {},
+            "priority": "example_priority",
+            "realm": "example_realm"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "kaitiaki": "example_kaitiaki",
+          "task": "example_task",
+          "input": {},
+          "priority": "example_priority",
+          "realm": "example_realm"
+        }
+      }
+    },
+    {
+      "path": "/handoff",
+      "method": "POST",
+      "function": "handoff_task",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "HandoffRequest",
+          "model": "HandoffRequest",
+          "model_fields": [
+            {
+              "name": "from_kaitiaki",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "to_kaitiaki",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "task_id",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "context",
+              "type": "Optional[Dict[str, Any]]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "from_kaitiaki": "example_from_kaitiaki",
+            "to_kaitiaki": "example_to_kaitiaki",
+            "task_id": "example_task_id",
+            "context": {}
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "from_kaitiaki": "example_from_kaitiaki",
+          "to_kaitiaki": "example_to_kaitiaki",
+          "task_id": "example_task_id",
+          "context": {}
+        }
+      }
+    },
+    {
+      "path": "/memory/query",
+      "method": "POST",
+      "function": "query_memory",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "MemoryQueryRequest",
+          "model": "MemoryQueryRequest",
+          "model_fields": [
+            {
+              "name": "query",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "top_k",
+              "type": "int",
+              "default": "5"
+            },
+            {
+              "name": "threshold",
+              "type": "float",
+              "default": "0.7"
+            },
+            {
+              "name": "realm",
+              "type": "Optional[str]",
+              "default": "None"
+            },
+            {
+              "name": "tapu_level",
+              "type": "Optional[int]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "query": "example_query",
+            "top_k": 0,
+            "threshold": 0,
+            "realm": "example_realm",
+            "tapu_level": 0
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "query": "example_query",
+          "top_k": 0,
+          "threshold": 0,
+          "realm": "example_realm",
+          "tapu_level": 0
+        }
+      }
+    },
+    {
+      "path": "/memory/store",
+      "method": "POST",
+      "function": "store_memory",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "MemoryStoreRequest",
+          "model": "MemoryStoreRequest",
+          "model_fields": [
+            {
+              "name": "content",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "metadata",
+              "type": "Optional[Dict[str, Any]]",
+              "default": "None"
+            },
+            {
+              "name": "realm",
+              "type": "Optional[str]",
+              "default": "None"
+            },
+            {
+              "name": "tapu_level",
+              "type": "int",
+              "default": "0"
+            }
+          ],
+          "example_payload": {
+            "content": "example_content",
+            "metadata": {},
+            "realm": "example_realm",
+            "tapu_level": 0
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "content": "example_content",
+          "metadata": {},
+          "realm": "example_realm",
+          "tapu_level": 0
+        }
+      }
+    },
+    {
+      "path": "/log",
+      "method": "POST",
+      "function": "log_activity",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "LogRequest",
+          "model": "LogRequest",
+          "model_fields": [
+            {
+              "name": "event_type",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "details",
+              "type": "Dict[str, Any]",
+              "default": ""
+            },
+            {
+              "name": "realm",
+              "type": "Optional[str]",
+              "default": "None"
+            },
+            {
+              "name": "severity",
+              "type": "str",
+              "default": "'info'"
+            }
+          ],
+          "example_payload": {
+            "event_type": "example_event_type",
+            "details": {},
+            "realm": "example_realm",
+            "severity": "example_severity"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "event_type": "example_event_type",
+          "details": {},
+          "realm": "example_realm",
+          "severity": "example_severity"
+        }
+      }
+    },
+    {
+      "path": "/notify",
+      "method": "POST",
+      "function": "send_notification",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "NotifyRequest",
+          "model": "NotifyRequest",
+          "model_fields": [
+            {
+              "name": "recipient",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "message",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "channel",
+              "type": "str",
+              "default": "'default'"
+            },
+            {
+              "name": "priority",
+              "type": "str",
+              "default": "'normal'"
+            }
+          ],
+          "example_payload": {
+            "recipient": "example_recipient",
+            "message": "example_message",
+            "channel": "example_channel",
+            "priority": "example_priority"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "recipient": "example_recipient",
+          "message": "example_message",
+          "channel": "example_channel",
+          "priority": "example_priority"
+        }
+      }
+    },
+    {
+      "path": "/kaitiaki/register",
+      "method": "POST",
+      "function": "register_kaitiaki",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "KaitiakiregisterRequest",
+          "model": "KaitiakiregisterRequest",
+          "model_fields": [
+            {
+              "name": "name",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "role",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "system_prompt",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "tools",
+              "type": "Optional[List[str]]",
+              "default": "None"
+            },
+            {
+              "name": "realm",
+              "type": "Optional[str]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "name": "example_name",
+            "role": "example_role",
+            "system_prompt": "example_system_prompt",
+            "tools": [],
+            "realm": "example_realm"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "name": "example_name",
+          "role": "example_role",
+          "system_prompt": "example_system_prompt",
+          "tools": [],
+          "realm": "example_realm"
+        }
+      }
+    },
+    {
+      "path": "/kaitiaki/context",
+      "method": "POST",
+      "function": "get_kaitiaki_context",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [
+        {
+          "name": "kaitiaki",
+          "annotation": "str"
+        },
+        {
+          "name": "realm",
+          "annotation": "Optional[str]"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/kaitiaki",
+      "method": "GET",
+      "function": "list_kaitiaki",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/vector/embed",
+      "method": "POST",
+      "function": "generate_embeddings",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "VectorEmbedRequest",
+          "model": "VectorEmbedRequest",
+          "model_fields": [
+            {
+              "name": "text",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "model",
+              "type": "Optional[str]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "text": "example_text",
+            "model": "example_model"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "text": "example_text",
+          "model": "example_model"
+        }
+      }
+    },
+    {
+      "path": "/vector/search",
+      "method": "POST",
+      "function": "semantic_search",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "MemoryQueryRequest",
+          "model": "MemoryQueryRequest",
+          "model_fields": [
+            {
+              "name": "query",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "top_k",
+              "type": "int",
+              "default": "5"
+            },
+            {
+              "name": "threshold",
+              "type": "float",
+              "default": "0.7"
+            },
+            {
+              "name": "realm",
+              "type": "Optional[str]",
+              "default": "None"
+            },
+            {
+              "name": "tapu_level",
+              "type": "Optional[int]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "query": "example_query",
+            "top_k": 0,
+            "threshold": 0,
+            "realm": "example_realm",
+            "tapu_level": 0
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "query": "example_query",
+          "top_k": 0,
+          "threshold": 0,
+          "realm": "example_realm",
+          "tapu_level": 0
+        }
+      }
+    },
+    {
+      "path": "/pipeline",
+      "method": "POST",
+      "function": "run_pipeline",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "PipelineRequest",
+          "model": "PipelineRequest",
+          "model_fields": [
+            {
+              "name": "name",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "input",
+              "type": "Dict[str, Any]",
+              "default": ""
+            },
+            {
+              "name": "wait",
+              "type": "bool",
+              "default": "False"
+            },
+            {
+              "name": "realm",
+              "type": "Optional[str]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "name": "example_name",
+            "input": {},
+            "wait": false,
+            "realm": "example_realm"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "name": "example_name",
+          "input": {},
+          "wait": false,
+          "realm": "example_realm"
+        }
+      }
+    },
+    {
+      "path": "/pipelines",
+      "method": "GET",
+      "function": "list_pipelines",
+      "module": "te_po.routes.awa_protocol",
+      "whakapapa_path": "te_po/routes/awa_protocol.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/tools/run",
+      "method": "POST",
+      "function": "run_tool",
+      "module": "te_po.routes.kitenga_tool_router",
+      "whakapapa_path": "te_po/routes/kitenga_tool_router.py",
+      "parameters": [
+        {
+          "name": "call",
+          "annotation": "ToolCall",
+          "model": "ToolCall",
+          "model_fields": [
+            {
+              "name": "tool_name",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "payload",
+              "type": "Dict[str, Any]",
+              "default": ""
+            }
+          ],
+          "example_payload": {
+            "tool_name": "example_tool_name",
+            "payload": {}
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "call": {
+          "tool_name": "example_tool_name",
+          "payload": {}
+        }
+      }
+    },
+    {
+      "path": "/tools/list",
+      "method": "GET",
+      "function": "list_tools",
+      "module": "te_po.routes.kitenga_tool_router",
+      "whakapapa_path": "te_po/routes/kitenga_tool_router.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/profiles",
+      "method": "GET",
+      "function": "assistant_profiles",
+      "module": "te_po.routes.assistants_meta",
+      "whakapapa_path": "te_po/routes/assistants_meta.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/review",
+      "method": "POST",
+      "function": "review_code",
+      "module": "te_po.routes.llama3",
+      "whakapapa_path": "te_po/routes/llama3.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "CodeReviewRequest",
+          "model": "CodeReviewRequest",
+          "model_fields": [
+            {
+              "name": "code",
+              "type": "str",
+              "default": "Field(..., description='Code to review')"
+            },
+            {
+              "name": "language",
+              "type": "str",
+              "default": "Field(default='python', description='Programming language')"
+            },
+            {
+              "name": "focus",
+              "type": "Optional[str]",
+              "default": "Field(None, description=\"Specific areas to focus on (e.g., 'performance', 'security')\")"
+            }
+          ],
+          "example_payload": {
+            "code": "example_code",
+            "language": "example_language",
+            "focus": "example_focus"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "code": "example_code",
+          "language": "example_language",
+          "focus": "example_focus"
+        }
+      }
+    },
+    {
+      "path": "/docstring",
+      "method": "POST",
+      "function": "generate_docstring",
+      "module": "te_po.routes.llama3",
+      "whakapapa_path": "te_po/routes/llama3.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "DocstringRequest",
+          "model": "DocstringRequest",
+          "model_fields": [
+            {
+              "name": "code",
+              "type": "str",
+              "default": "Field(..., description='Code to document')"
+            },
+            {
+              "name": "language",
+              "type": "str",
+              "default": "Field(default='python', description='Programming language')"
+            },
+            {
+              "name": "style",
+              "type": "str",
+              "default": "Field(default='numpy', description='Docstring style (numpy, google, sphinx)')"
+            }
+          ],
+          "example_payload": {
+            "code": "example_code",
+            "language": "example_language",
+            "style": "example_style"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "code": "example_code",
+          "language": "example_language",
+          "style": "example_style"
+        }
+      }
+    },
+    {
+      "path": "/analyze-error",
+      "method": "POST",
+      "function": "analyze_error",
+      "module": "te_po.routes.llama3",
+      "whakapapa_path": "te_po/routes/llama3.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "ErrorAnalysisRequest",
+          "model": "ErrorAnalysisRequest",
+          "model_fields": [
+            {
+              "name": "error",
+              "type": "str",
+              "default": "Field(..., description='Error message or traceback')"
+            },
+            {
+              "name": "context",
+              "type": "Optional[str]",
+              "default": "Field(None, description='Code context or error description')"
+            },
+            {
+              "name": "language",
+              "type": "Optional[str]",
+              "default": "Field(None, description='Programming language')"
+            }
+          ],
+          "example_payload": {
+            "error": "example_error",
+            "context": "example_context",
+            "language": "example_language"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "error": "example_error",
+          "context": "example_context",
+          "language": "example_language"
+        }
+      }
+    },
+    {
+      "path": "/status",
+      "method": "GET",
+      "function": "llama3_status",
+      "module": "te_po.routes.llama3",
+      "whakapapa_path": "te_po/routes/llama3.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/{realm_id}/recall",
+      "method": "POST",
+      "function": "realm_recall",
+      "module": "te_po.routes.recall",
+      "whakapapa_path": "te_po/routes/recall.py",
+      "parameters": [
+        {
+          "name": "realm_id",
+          "annotation": "str"
+        },
+        {
+          "name": "payload",
+          "annotation": "RecallRequest",
+          "model": "RecallRequest",
+          "model_fields": [
+            {
+              "name": "query",
+              "type": "str",
+              "default": "Field(..., description='User query to recall context for.')"
+            },
+            {
+              "name": "thread_id",
+              "type": "str | None",
+              "default": "Field(default=None, description='Optional thread/session identifier.')"
+            },
+            {
+              "name": "top_k",
+              "type": "int | None",
+              "default": "Field(default=None, ge=1, le=50, description='Maximum matches to return.')"
+            },
+            {
+              "name": "vector_store",
+              "type": "str | None",
+              "default": "Field(default=None, description=\"Vector store backend hint (e.g., 'supabase', 'openai').\")"
+            }
+          ],
+          "example_payload": {
+            "query": "example_query",
+            "thread_id": "example_thread_id",
+            "top_k": 0,
+            "vector_store": "example_vector_store"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3,
+      "example_payload": {
+        "payload": {
+          "query": "example_query",
+          "thread_id": "example_thread_id",
+          "top_k": 0,
+          "vector_store": "example_vector_store"
+        }
+      }
+    },
+    {
+      "path": "/origins",
+      "method": "GET",
+      "function": "list_origins",
+      "module": "te_po.routes.cors_manager",
+      "whakapapa_path": "te_po/routes/cors_manager.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/origins/add",
+      "method": "POST",
+      "function": "add_origin",
+      "module": "te_po.routes.cors_manager",
+      "whakapapa_path": "te_po/routes/cors_manager.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "OriginRequest",
+          "model": "OriginRequest",
+          "model_fields": [
+            {
+              "name": "origin",
+              "type": "str",
+              "default": ""
+            }
+          ],
+          "example_payload": {
+            "origin": "example_origin"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "origin": "example_origin"
+        }
+      }
+    },
+    {
+      "path": "/origins/remove",
+      "method": "POST",
+      "function": "remove_origin",
+      "module": "te_po.routes.cors_manager",
+      "whakapapa_path": "te_po/routes/cors_manager.py",
+      "parameters": [
+        {
+          "name": "req",
+          "annotation": "OriginRequest",
+          "model": "OriginRequest",
+          "model_fields": [
+            {
+              "name": "origin",
+              "type": "str",
+              "default": ""
+            }
+          ],
+          "example_payload": {
+            "origin": "example_origin"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "req": {
+          "origin": "example_origin"
+        }
+      }
+    },
+    {
+      "path": "/origins/reset",
+      "method": "POST",
+      "function": "reset_origins",
+      "module": "te_po.routes.cors_manager",
+      "whakapapa_path": "te_po/routes/cors_manager.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/query_card_context",
+      "method": "POST",
+      "function": "query_card_context",
+      "module": "te_po.routes.roshi",
+      "whakapapa_path": "te_po/routes/roshi.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "Dict[str, Any]"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "function": "memory_index",
+      "module": "te_po.routes.memory",
+      "whakapapa_path": "te_po/routes/memory.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/retrieve",
+      "method": "POST",
+      "function": "memory_retrieve",
+      "module": "te_po.routes.memory",
+      "whakapapa_path": "te_po/routes/memory.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "MemoryQuery",
+          "model": "MemoryQuery",
+          "model_fields": [
+            {
+              "name": "query",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "top_k",
+              "type": "int | None",
+              "default": "5"
+            },
+            {
+              "name": "min_similarity",
+              "type": "float | None",
+              "default": "0.0"
+            }
+          ],
+          "example_payload": {
+            "query": "example_query",
+            "top_k": 0,
+            "min_similarity": 0
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "query": "example_query",
+          "top_k": 0,
+          "min_similarity": 0
+        }
+      }
+    },
+    {
+      "path": "/translate",
+      "method": "POST",
+      "function": "reo_translate",
+      "module": "te_po.routes.reo",
+      "whakapapa_path": "te_po/routes/reo.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "ReoRequest",
+          "model": "ReoRequest",
+          "model_fields": [
+            {
+              "name": "text",
+              "type": "str",
+              "default": ""
+            }
+          ],
+          "example_payload": {
+            "text": "example_text"
+          }
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "text": "example_text"
+        }
+      }
+    },
+    {
+      "path": "/explain",
+      "method": "POST",
+      "function": "reo_explain",
+      "module": "te_po.routes.reo",
+      "whakapapa_path": "te_po/routes/reo.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "ReoRequest",
+          "model": "ReoRequest",
+          "model_fields": [
+            {
+              "name": "text",
+              "type": "str",
+              "default": ""
+            }
+          ],
+          "example_payload": {
+            "text": "example_text"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "text": "example_text"
+        }
+      }
+    },
+    {
+      "path": "/pronounce",
+      "method": "POST",
+      "function": "reo_pronounce",
+      "module": "te_po.routes.reo",
+      "whakapapa_path": "te_po/routes/reo.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "ReoRequest",
+          "model": "ReoRequest",
+          "model_fields": [
+            {
+              "name": "text",
+              "type": "str",
+              "default": ""
+            }
+          ],
+          "example_payload": {
+            "text": "example_text"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "text": "example_text"
+        }
+      }
+    },
+    {
+      "path": "/create",
+      "method": "POST",
+      "function": "create_realm",
+      "module": "te_po.routes.realm_generator",
+      "whakapapa_path": "te_po/routes/realm_generator.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "RealmCreateRequest",
+          "model": "RealmCreateRequest",
+          "model_fields": [
+            {
+              "name": "realm_name",
+              "type": "str",
+              "default": "Field(..., description='Name of the realm (e.g., Te Wai)')"
+            },
+            {
+              "name": "kaitiaki_name",
+              "type": "Optional[str]",
+              "default": "Field(None, description='Name of the guardian')"
+            },
+            {
+              "name": "kaitiaki_role",
+              "type": "Optional[str]",
+              "default": "Field(None, description='Role/title of the guardian')"
+            },
+            {
+              "name": "kaitiaki_instructions",
+              "type": "Optional[str]",
+              "default": "Field(None, description='Custom instructions for the AI assistant')"
+            },
+            {
+              "name": "description",
+              "type": "Optional[str]",
+              "default": "Field(None, description='Description of the realm and its purpose')"
+            },
+            {
+              "name": "selected_apis",
+              "type": "Optional[list]",
+              "default": "Field(None, description='List of APIs to enable')"
+            },
+            {
+              "name": "template",
+              "type": "Optional[str]",
+              "default": "Field('basic', description='Template type: basic, with-kaitiaki, with-storage, full')"
+            },
+            {
+              "name": "cloudflare_hostname",
+              "type": "Optional[str]",
+              "default": "Field(None, description='Custom Cloudflare hostname')"
+            },
+            {
+              "name": "pages_project",
+              "type": "Optional[str]",
+              "default": "Field(None, description='Cloudflare Pages project name')"
+            },
+            {
+              "name": "backend_url",
+              "type": "Optional[str]",
+              "default": "Field(None, description='Custom backend URL')"
+            },
+            {
+              "name": "github_org",
+              "type": "Optional[str]",
+              "default": "Field(None, description='GitHub organization for suggested repo URL')"
+            }
+          ],
+          "example_payload": {
+            "realm_name": "example_realm_name",
+            "kaitiaki_name": "example_kaitiaki_name",
+            "kaitiaki_role": "example_kaitiaki_role",
+            "kaitiaki_instructions": "example_kaitiaki_instructions",
+            "description": "example_description",
+            "selected_apis": [],
+            "template": "example_template",
+            "cloudflare_hostname": "example_cloudflare_hostname",
+            "pages_project": "example_pages_project",
+            "backend_url": "example_backend_url",
+            "github_org": "example_github_org"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "request": {
+          "realm_name": "example_realm_name",
+          "kaitiaki_name": "example_kaitiaki_name",
+          "kaitiaki_role": "example_kaitiaki_role",
+          "kaitiaki_instructions": "example_kaitiaki_instructions",
+          "description": "example_description",
+          "selected_apis": [],
+          "template": "example_template",
+          "cloudflare_hostname": "example_cloudflare_hostname",
+          "pages_project": "example_pages_project",
+          "backend_url": "example_backend_url",
+          "github_org": "example_github_org"
+        }
+      }
+    },
+    {
+      "path": "/status/github",
+      "method": "GET",
+      "function": "github_status",
+      "module": "te_po.routes.realm_generator",
+      "whakapapa_path": "te_po/routes/realm_generator.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/list",
+      "method": "GET",
+      "function": "list_all_realms",
+      "module": "te_po.routes.realm_generator",
+      "whakapapa_path": "te_po/routes/realm_generator.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/{realm_slug}",
+      "method": "GET",
+      "function": "get_realm_info",
+      "module": "te_po.routes.realm_generator",
+      "whakapapa_path": "te_po/routes/realm_generator.py",
+      "parameters": [
+        {
+          "name": "realm_slug",
+          "annotation": "str"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/{realm_slug}/sql",
+      "method": "GET",
+      "function": "get_realm_sql",
+      "module": "te_po.routes.realm_generator",
+      "whakapapa_path": "te_po/routes/realm_generator.py",
+      "parameters": [
+        {
+          "name": "realm_slug",
+          "annotation": "str"
+        },
+        {
+          "name": "kaitiaki_name",
+          "annotation": "str"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/template/info",
+      "method": "GET",
+      "function": "get_template_info",
+      "module": "te_po.routes.realm_generator",
+      "whakapapa_path": "te_po/routes/realm_generator.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/{realm_slug}",
+      "method": "DELETE",
+      "function": "delete_realm",
+      "module": "te_po.routes.realm_generator",
+      "whakapapa_path": "te_po/routes/realm_generator.py",
+      "parameters": [
+        {
+          "name": "realm_slug",
+          "annotation": "str"
+        },
+        {
+          "name": "confirm",
+          "annotation": "bool"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/metrics",
+      "method": "GET",
+      "function": "metrics",
+      "module": "te_po.routes.metrics",
+      "whakapapa_path": "te_po/routes/metrics.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/recent",
+      "method": "GET",
+      "function": "recent_logs",
+      "module": "te_po.routes.logs",
+      "whakapapa_path": "te_po/routes/logs.py",
+      "parameters": [
+        {
+          "name": "limit",
+          "annotation": "int"
+        },
+        {
+          "name": "contains",
+          "annotation": "str | None"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/ocr/scan",
+      "method": "POST",
+      "function": "scan",
+      "module": "te_po.routes.ocr",
+      "whakapapa_path": "te_po/routes/ocr.py",
+      "parameters": [
+        {
+          "name": "file",
+          "annotation": "UploadFile"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/ocr/stealth",
+      "method": "POST",
+      "function": "stealth_scan",
+      "module": "te_po.routes.ocr",
+      "whakapapa_path": "te_po/routes/ocr.py",
+      "parameters": [
+        {
+          "name": "file",
+          "annotation": "UploadFile"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/ocr/stealth-testit",
+      "method": "POST",
+      "function": "stealth_scan_testit",
+      "module": "te_po.routes.ocr",
+      "whakapapa_path": "te_po/routes/ocr.py",
+      "parameters": [
+        {
+          "name": "file",
+          "annotation": "UploadFile"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/ocr",
+      "method": "POST",
+      "function": "intake_ocr",
+      "module": "te_po.routes.intake",
+      "whakapapa_path": "te_po/routes/intake.py",
+      "parameters": [
+        {
+          "name": "file",
+          "annotation": "UploadFile"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2
+    },
+    {
+      "path": "/summarize",
+      "method": "POST",
+      "function": "intake_summarize",
+      "module": "te_po.routes.intake",
+      "whakapapa_path": "te_po/routes/intake.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "SummarizeRequest",
+          "model": "SummarizeRequest",
+          "model_fields": [
+            {
+              "name": "text",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "mode",
+              "type": "str",
+              "default": ""
+            }
+          ],
+          "example_payload": {
+            "text": "example_text",
+            "mode": "example_mode"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "text": "example_text",
+          "mode": "example_mode"
+        }
+      }
+    },
+    {
+      "path": "/bridge/test",
+      "method": "GET",
+      "function": "bridge_test",
+      "module": "te_po.routes.awa",
+      "whakapapa_path": "te_po/routes/awa.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/awa/orchestrate",
+      "method": "POST",
+      "function": "awa_orchestrate",
+      "module": "te_po.routes.awa",
+      "whakapapa_path": "te_po/routes/awa.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "Request"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/gpt/bridge",
+      "method": "POST",
+      "function": "gpt_bridge",
+      "module": "te_po.routes.awa",
+      "whakapapa_path": "te_po/routes/awa.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "Request"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/add_to_csv",
+      "method": "POST",
+      "function": "add_to_csv",
+      "module": "te_po.routes.sell",
+      "whakapapa_path": "te_po/routes/sell.py",
+      "parameters": [
+        {
+          "name": "data",
+          "annotation": "Dict[str, Any]"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/vision-ocr",
+      "method": "POST",
+      "function": "vision_ocr",
+      "module": "te_po.routes.kitenga_backend",
+      "whakapapa_path": "te_po/routes/kitenga_backend.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "VisionOCRRequest",
+          "model": "VisionOCRRequest",
+          "model_fields": [
+            {
+              "name": "image_base64",
+              "type": "str",
+              "default": "Field(..., max_length=MAX_BASE64_SIZE)"
+            },
+            {
+              "name": "save_vector",
+              "type": "bool",
+              "default": "False"
+            },
+            {
+              "name": "run_pipeline",
+              "type": "bool",
+              "default": "False"
+            },
+            {
+              "name": "pipeline_source",
+              "type": "str | None",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "image_base64": "example_image_base64",
+            "save_vector": false,
+            "run_pipeline": false,
+            "pipeline_source": "example_pipeline_source"
+          }
+        },
+        {
+          "name": "authorization",
+          "annotation": "str | None"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3,
+      "example_payload": {
+        "payload": {
+          "image_base64": "example_image_base64",
+          "save_vector": false,
+          "run_pipeline": false,
+          "pipeline_source": "example_pipeline_source"
+        }
+      }
+    },
+    {
+      "path": "/cards/scan",
+      "method": "POST",
+      "function": "scan_cards",
+      "module": "te_po.routes.kitenga_backend",
+      "whakapapa_path": "te_po/routes/kitenga_backend.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "Request"
+        },
+        {
+          "name": "front",
+          "annotation": "UploadFile | None"
+        },
+        {
+          "name": "back",
+          "annotation": "UploadFile | None"
+        },
+        {
+          "name": "payload",
+          "annotation": "CardScanRequest | None"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 5
+    },
+    {
+      "path": "/tool/ocr",
+      "method": "POST",
+      "function": "ocr_tool_handler",
+      "module": "te_po.routes.kitenga_backend",
+      "whakapapa_path": "te_po/routes/kitenga_backend.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "OcrToolRequest",
+          "model": "OcrToolRequest",
+          "model_fields": [
+            {
+              "name": "file_url",
+              "type": "str",
+              "default": "Field(..., description='Remote URL with the bytes to OCR')"
+            },
+            {
+              "name": "taonga_mode",
+              "type": "bool",
+              "default": "Field(default=False, description='Preserve stealth metadata when true')"
+            },
+            {
+              "name": "prefer_offline",
+              "type": "bool",
+              "default": "Field(default=True, description='Try local OCR before OpenAI vision')"
+            }
+          ],
+          "example_payload": {
+            "file_url": "example_file_url",
+            "taonga_mode": false,
+            "prefer_offline": false
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "file_url": "example_file_url",
+          "taonga_mode": false,
+          "prefer_offline": false
+        }
+      }
+    },
+    {
+      "path": "/tool/translate",
+      "method": "POST",
+      "function": "translate_tool_handler",
+      "module": "te_po.routes.kitenga_backend",
+      "whakapapa_path": "te_po/routes/kitenga_backend.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "TranslateToolRequest",
+          "model": "TranslateToolRequest",
+          "model_fields": [
+            {
+              "name": "text",
+              "type": "str",
+              "default": "Field(..., max_length=MAX_TEXT_LENGTH, description='Text to translate')"
+            },
+            {
+              "name": "target_language",
+              "type": "str",
+              "default": "Field(default='mi', description='Language code e.g., mi/en')"
+            },
+            {
+              "name": "context",
+              "type": "str | None",
+              "default": "Field(default=None, description='Optional translation context or guidance')"
+            }
+          ],
+          "example_payload": {
+            "text": "example_text",
+            "target_language": "example_target_language",
+            "context": "example_context"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "text": "example_text",
+          "target_language": "example_target_language",
+          "context": "example_context"
+        }
+      }
+    },
+    {
+      "path": "/ask",
+      "method": "POST",
+      "function": "ask_kitenga",
+      "module": "te_po.routes.kitenga_backend",
+      "whakapapa_path": "te_po/routes/kitenga_backend.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "KitengaAskRequest",
+          "model": "KitengaAskRequest",
+          "model_fields": [
+            {
+              "name": "prompt",
+              "type": "str",
+              "default": "Field(..., max_length=MAX_TEXT_LENGTH)"
+            },
+            {
+              "name": "session_id",
+              "type": "str | None",
+              "default": "Field(default=None, description='Supabase logging session id')"
+            },
+            {
+              "name": "thread_id",
+              "type": "str | None",
+              "default": "Field(default=None, description='Assistant thread id for continuity')"
+            },
+            {
+              "name": "metadata",
+              "type": "Dict[str, Any] | None",
+              "default": "Field(default=None, description='Optional metadata stored in logs')"
+            }
+          ],
+          "example_payload": {
+            "prompt": "example_prompt",
+            "session_id": "example_session_id",
+            "thread_id": "example_thread_id",
+            "metadata": {}
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "request": {
+          "prompt": "example_prompt",
+          "session_id": "example_session_id",
+          "thread_id": "example_thread_id",
+          "metadata": {}
+        }
+      }
+    },
+    {
+      "path": "/gpt-whisper",
+      "method": "POST",
+      "function": "gpt_whisper",
+      "module": "te_po.routes.kitenga_backend",
+      "whakapapa_path": "te_po/routes/kitenga_backend.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "Request"
+        },
+        {
+          "name": "payload",
+          "annotation": "WhisperRequest | None"
+        },
+        {
+          "name": "file",
+          "annotation": "UploadFile | None"
+        },
+        {
+          "name": "whisper",
+          "annotation": "str | None"
+        },
+        {
+          "name": "session_id",
+          "annotation": "str | None"
+        },
+        {
+          "name": "session_id_q",
+          "annotation": "str | None"
+        },
+        {
+          "name": "thread_id",
+          "annotation": "str | None"
+        },
+        {
+          "name": "system_prompt",
+          "annotation": "str | None"
+        },
+        {
+          "name": "run_pipeline",
+          "annotation": "bool | str"
+        },
+        {
+          "name": "save_vector",
+          "annotation": "bool | str"
+        },
+        {
+          "name": "use_retrieval",
+          "annotation": "bool | str"
+        },
+        {
+          "name": "use_openai_summary",
+          "annotation": "bool | str"
+        },
+        {
+          "name": "use_openai_translation",
+          "annotation": "bool | str"
+        },
+        {
+          "name": "mode",
+          "annotation": "str | None"
+        },
+        {
+          "name": "allow_taonga_store",
+          "annotation": "bool | str"
+        },
+        {
+          "name": "source",
+          "annotation": "str | None"
+        },
+        {
+          "name": "authorization",
+          "annotation": "str | None"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 10
+    },
+    {
+      "path": "/run_pipeline",
+      "method": "POST",
+      "function": "run_pipeline_endpoint",
+      "module": "te_po.routes.kitenga_backend",
+      "whakapapa_path": "te_po/routes/kitenga_backend.py",
+      "parameters": [
+        {
+          "name": "pipeline_name",
+          "annotation": "str"
+        },
+        {
+          "name": "input_data",
+          "annotation": "str"
+        },
+        {
+          "name": "realm_name",
+          "annotation": "str"
+        },
+        {
+          "name": "verbose",
+          "annotation": "bool"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 5
+    },
+    {
+      "path": "/query_knowledge_base",
+      "method": "POST",
+      "function": "query_knowledge_base",
+      "module": "te_po.routes.kitenga_backend",
+      "whakapapa_path": "te_po/routes/kitenga_backend.py",
+      "parameters": [
+        {
+          "name": "query",
+          "annotation": "str"
+        },
+        {
+          "name": "top_k",
+          "annotation": "int"
+        },
+        {
+          "name": "min_similarity",
+          "annotation": "float"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 4
+    },
+    {
+      "path": "/ledger",
+      "method": "GET",
+      "function": "ledger",
+      "module": "te_po.routes.state",
+      "whakapapa_path": "te_po/routes/state.py",
+      "parameters": [
+        {
+          "name": "limit",
+          "annotation": "int"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/state",
+      "method": "GET",
+      "function": "state",
+      "module": "te_po.routes.state",
+      "whakapapa_path": "te_po/routes/state.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/state/public",
+      "method": "GET",
+      "function": "get_public_state_endpoint",
+      "module": "te_po.routes.state",
+      "whakapapa_path": "te_po/routes/state.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/state/private",
+      "method": "GET",
+      "function": "get_private_state_endpoint",
+      "module": "te_po.routes.state",
+      "whakapapa_path": "te_po/routes/state.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/state/version",
+      "method": "GET",
+      "function": "get_state_version_endpoint",
+      "module": "te_po.routes.state",
+      "whakapapa_path": "te_po/routes/state.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/ocr",
+      "method": "POST",
+      "function": "dev_ocr",
+      "module": "te_po.routes.dev",
+      "whakapapa_path": "te_po/routes/dev.py",
+      "parameters": [
+        {
+          "name": "file",
+          "annotation": "UploadFile"
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2
+    },
+    {
+      "path": "/clean",
+      "method": "GET",
+      "function": "dev_clean",
+      "module": "te_po.routes.dev",
+      "whakapapa_path": "te_po/routes/dev.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/chunk",
+      "method": "GET",
+      "function": "dev_chunk",
+      "module": "te_po.routes.dev",
+      "whakapapa_path": "te_po/routes/dev.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/openai",
+      "method": "GET",
+      "function": "dev_openai",
+      "module": "te_po.routes.dev",
+      "whakapapa_path": "te_po/routes/dev.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/summarise",
+      "method": "POST",
+      "function": "dev_summarise",
+      "module": "te_po.routes.dev",
+      "whakapapa_path": "te_po/routes/dev.py",
+      "parameters": [
+        {
+          "name": "text",
+          "annotation": "str"
+        },
+        {
+          "name": "mode",
+          "annotation": "str"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 3
+    },
+    {
+      "path": "/ollama",
+      "method": "POST",
+      "function": "dev_ollama",
+      "module": "te_po.routes.dev",
+      "whakapapa_path": "te_po/routes/dev.py",
+      "parameters": [
+        {
+          "name": "prompt",
+          "annotation": "str"
+        },
+        {
+          "name": "system_prompt",
+          "annotation": "str"
+        },
+        {
+          "name": "model",
+          "annotation": "str"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 4
+    },
+    {
+      "path": "/routes",
+      "method": "GET",
+      "function": "list_routes",
+      "module": "te_po.routes.dev",
+      "whakapapa_path": "te_po/routes/dev.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/kitenga-status",
+      "method": "GET",
+      "function": "kitenga_status",
+      "module": "te_po.routes.dev",
+      "whakapapa_path": "te_po/routes/dev.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "function": "get_ui",
+      "module": "te_hau.scripts.realm_ui",
+      "whakapapa_path": "te_hau/scripts/realm_ui.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/api/generate",
+      "method": "POST",
+      "function": "generate_realm",
+      "module": "te_hau.scripts.realm_ui",
+      "whakapapa_path": "te_hau/scripts/realm_ui.py",
+      "parameters": [
+        {
+          "name": "request",
+          "annotation": "RealmRequest",
+          "model": "RealmRequest",
+          "model_fields": [
+            {
+              "name": "name",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "slug",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "kaitiaki_name",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "kaitiaki_role",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "description",
+              "type": "str",
+              "default": "'Specialized realm for The Awa Network'"
+            },
+            {
+              "name": "push_to_git",
+              "type": "Optional[str]",
+              "default": "None"
+            }
+          ],
+          "example_payload": {
+            "name": "example_name",
+            "slug": "example_slug",
+            "kaitiaki_name": "example_kaitiaki_name",
+            "kaitiaki_role": "example_kaitiaki_role",
+            "description": "example_description",
+            "push_to_git": "example_push_to_git"
+          }
+        }
+      ],
+      "registered": true,
+      "mauri_score": 2,
+      "example_payload": {
+        "request": {
+          "name": "example_name",
+          "slug": "example_slug",
+          "kaitiaki_name": "example_kaitiaki_name",
+          "kaitiaki_role": "example_kaitiaki_role",
+          "description": "example_description",
+          "push_to_git": "example_push_to_git"
+        }
+      }
+    },
+    {
+      "path": "/api/status",
+      "method": "GET",
+      "function": "get_status",
+      "module": "te_hau.scripts.realm_ui",
+      "whakapapa_path": "te_hau/scripts/realm_ui.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/status",
+      "method": "GET",
+      "function": "status",
+      "module": "kitenga_mcp.cloudflare.server",
+      "whakapapa_path": "kitenga_mcp/cloudflare/server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/status",
+      "method": "GET",
+      "function": "status",
+      "module": "kitenga_mcp.render.server",
+      "whakapapa_path": "kitenga_mcp/render/server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/status",
+      "method": "GET",
+      "function": "status",
+      "module": "kitenga_mcp.openai.server",
+      "whakapapa_path": "kitenga_mcp/openai/server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/list",
+      "method": "GET",
+      "function": "list_tools",
+      "module": "kitenga_mcp.tools.__init__",
+      "whakapapa_path": "kitenga_mcp/tools/__init__.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/register",
+      "method": "POST",
+      "function": "register_tool",
+      "module": "kitenga_mcp.tools.__init__",
+      "whakapapa_path": "kitenga_mcp/tools/__init__.py",
+      "parameters": [
+        {
+          "name": "tool",
+          "annotation": "ToolDefinition",
+          "model": "ToolDefinition",
+          "model_fields": [
+            {
+              "name": "id",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "name",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "description",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "route",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "method",
+              "type": "str",
+              "default": ""
+            },
+            {
+              "name": "inputs",
+              "type": "Optional[List[ToolInput]]",
+              "default": "None"
+            },
+            {
+              "name": "output_description",
+              "type": "str",
+              "default": ""
+            }
+          ],
+          "example_payload": {
+            "id": "example_id",
+            "name": "example_name",
+            "description": "example_description",
+            "route": "example_route",
+            "method": "example_method",
+            "inputs": [],
+            "output_description": "example_output_description"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "tool": {
+          "id": "example_id",
+          "name": "example_name",
+          "description": "example_description",
+          "route": "example_route",
+          "method": "example_method",
+          "inputs": [],
+          "output_description": "example_output_description"
+        }
+      }
+    },
+    {
+      "path": "/manifests",
+      "method": "GET",
+      "function": "list_manifests",
+      "module": "kitenga_mcp.tools.__init__",
+      "whakapapa_path": "kitenga_mcp/tools/__init__.py",
+      "parameters": [],
+      "registered": false,
+      "mauri_score": 1
+    },
+    {
+      "path": "/manifests/{name}",
+      "method": "GET",
+      "function": "get_manifest",
+      "module": "kitenga_mcp.tools.__init__",
+      "whakapapa_path": "kitenga_mcp/tools/__init__.py",
+      "parameters": [
+        {
+          "name": "name",
+          "annotation": "str"
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2
+    },
+    {
+      "path": "/status",
+      "method": "GET",
+      "function": "status",
+      "module": "kitenga_mcp.tepo.server",
+      "whakapapa_path": "kitenga_mcp/tepo/server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/status",
+      "method": "GET",
+      "function": "status",
+      "module": "kitenga_mcp.supabase.server",
+      "whakapapa_path": "kitenga_mcp/supabase/server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/status",
+      "method": "GET",
+      "function": "status",
+      "module": "kitenga_mcp.git.server",
+      "whakapapa_path": "kitenga_mcp/git/server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    }
+  ],
+  "drift": {
+    "added": [],
+    "removed": [],
+    "changed": []
+  }
+}

@@ -50,6 +50,7 @@ from te_po.routes import (
     cors_manager,
     awa,
 )
+from analysis.sync_status import fetch_analysis_sync_status, fetch_latest_analysis_document_content
 
 # -------------------------------------------------------------------
 # 🧠 APP INITIALIZATION
@@ -74,6 +75,7 @@ REALM_FILE = REPO_ROOT / "realm.json"
 AWA_LOG_URL = os.getenv("AWA_LOG_URL", "https://tiwhanawhana-backend.onrender.com/awa/log")
 CORE_SPEC_FILE = REPO_ROOT / "app" / "openapi-core.json"
 WELL_KNOWN_DIR = REPO_ROOT / ".well-known"
+OPENAI_TOOLS_FILE = REPO_ROOT / "openai_tools.json"
 
 # -------------------------------------------------------------------
 # 🌐 CORS + AUTH MIDDLEWARE
@@ -190,6 +192,28 @@ async def serve_openapi_core():
 async def serve_openapi_core_well_known():
     return _core_spec_response()
 
+
+@app.get("/openai_tools.json", include_in_schema=False)
+async def serve_openai_tools():
+    if not OPENAI_TOOLS_FILE.exists():
+        return JSONResponse({"error": "openai_tools.json missing"}, status_code=404)
+    return FileResponse(OPENAI_TOOLS_FILE, media_type="application/json")
+
+
+@app.get("/analysis/sync-status", tags=["Analysis"])
+async def analysis_sync_status_endpoint():
+    status = fetch_analysis_sync_status()
+    if status.get("status") != "ok":
+        return JSONResponse(status_code=503, content=status)
+    return status
+
+
+@app.get("/analysis/documents/latest", tags=["Analysis"])
+async def analysis_latest_document():
+    doc = fetch_latest_analysis_document_content()
+    if doc.get("status") != "ok":
+        return JSONResponse(status_code=503, content=doc)
+    return doc
 
 if WELL_KNOWN_DIR.exists():
     app.mount("/.well-known", StaticFiles(directory=str(WELL_KNOWN_DIR)), name="well_known")

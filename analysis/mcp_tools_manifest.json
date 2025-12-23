@@ -626,7 +626,7 @@
     },
     {
       "name": "tepo_reo_translate",
-      "description": "Translate text to/from M\u0101ori. Uses context for accuracy.",
+      "description": "Translate text to/from Māori. Uses context for accuracy.",
       "method": "POST",
       "path": "/reo/translate",
       "inputSchema": {
@@ -856,7 +856,7 @@
     },
     {
       "name": "tepo_health_check",
-      "description": "Check Te P\u014d backend health and status.",
+      "description": "Check Te Pō backend health and status.",
       "method": "GET",
       "path": "/heartbeat",
       "inputSchema": {
@@ -875,6 +875,349 @@
       },
       "source": "tepo_tools.json",
       "operationId": "tepo_list_kaitiaki"
+    }
+  ],
+  "script_tools": [
+    {
+      "name": "fastmcp_config.py",
+      "path": "kitenga_mcp/fastmcp_config.py",
+      "functions": [
+        {
+          "name": "get_service_config",
+          "signature": "service_name: str",
+          "async": false
+        },
+        {
+          "name": "get_all_services",
+          "signature": "",
+          "async": false
+        },
+        {
+          "name": "get_server_config",
+          "signature": "",
+          "async": false
+        }
+      ],
+      "fastapi": false,
+      "uses_event_loop": false
+    },
+    {
+      "name": "awa_events.py",
+      "path": "mauri/archived/shared/awa_bus/awa_events.py",
+      "functions": [],
+      "fastapi": false,
+      "uses_event_loop": false
+    },
+    {
+      "name": "test_mcp_import.py",
+      "path": "scripts/tests/test_mcp_import.py",
+      "functions": [],
+      "fastapi": false,
+      "uses_event_loop": false
+    },
+    {
+      "name": "awanui.py",
+      "path": "te_hau/cli/awanui.py",
+      "functions": [
+        {
+          "name": "cli",
+          "signature": "",
+          "async": false
+        },
+        {
+          "name": "main",
+          "signature": "",
+          "async": false
+        }
+      ],
+      "fastapi": false,
+      "uses_event_loop": false
+    },
+    {
+      "name": "awa_bus.py",
+      "path": "te_hau/services/awa_bus.py",
+      "functions": [
+        {
+          "name": "emit",
+          "signature": "event: AwaEvent",
+          "async": false
+        },
+        {
+          "name": "latest",
+          "signature": "n: int = 10",
+          "async": false
+        }
+      ],
+      "fastapi": false,
+      "uses_event_loop": false
+    },
+    {
+      "name": "awa.py",
+      "path": "te_hau/verbs/awa.py",
+      "functions": [
+        {
+          "name": "cmd_awa",
+          "signature": "",
+          "async": false
+        },
+        {
+          "name": "cmd_register",
+          "signature": "realm_name: str, parent: Optional[str], color: Optional[str]",
+          "async": false
+        },
+        {
+          "name": "cmd_unlink",
+          "signature": "source_realm: str, target_realm: str, link_type: Optional[str]",
+          "async": false
+        },
+        {
+          "name": "cmd_tree",
+          "signature": "root: Optional[str], json_out: bool",
+          "async": false
+        },
+        {
+          "name": "cmd_info",
+          "signature": "realm_name: str",
+          "async": false
+        },
+        {
+          "name": "cmd_check_access",
+          "signature": "source_realm: str, target_realm: str, permission: Optional[str]",
+          "async": false
+        },
+        {
+          "name": "cmd_ancestors",
+          "signature": "realm_name: str",
+          "async": false
+        },
+        {
+          "name": "cmd_descendants",
+          "signature": "realm_name: str",
+          "async": false
+        }
+      ],
+      "fastapi": false,
+      "uses_event_loop": true
+    },
+    {
+      "name": "awa_event_loop.py",
+      "path": "te_po/core/awa_event_loop.py",
+      "functions": [
+        {
+          "name": "awa_event_loop",
+          "signature": "",
+          "async": true
+        },
+        {
+          "name": "start_awa_event_loop",
+          "signature": "",
+          "async": false
+        }
+      ],
+      "fastapi": false,
+      "uses_event_loop": true
+    },
+    {
+      "name": "awa_gpt.py",
+      "path": "te_po/core/awa_gpt.py",
+      "functions": [
+        {
+          "name": "call_awa_bridge",
+          "signature": "intent: str, domain: str = None, command: str = None, input: dict = None",
+          "async": true
+        },
+        {
+          "name": "gpt_reason",
+          "signature": "query: str",
+          "async": true
+        },
+        {
+          "name": "awa_gpt_invoke",
+          "signature": "request: Request",
+          "async": true
+        }
+      ],
+      "fastapi": true,
+      "uses_event_loop": true
+    },
+    {
+      "name": "awa_realtime.py",
+      "path": "te_po/core/awa_realtime.py",
+      "functions": [
+        {
+          "name": "awa_realtime_listener",
+          "signature": "",
+          "async": true
+        },
+        {
+          "name": "handle_awa_event",
+          "signature": "event",
+          "async": true
+        },
+        {
+          "name": "toggle_realtime",
+          "signature": "",
+          "async": true
+        },
+        {
+          "name": "realtime_status",
+          "signature": "",
+          "async": true
+        }
+      ],
+      "fastapi": true,
+      "uses_event_loop": true
+    },
+    {
+      "name": "awa_mana.py",
+      "path": "te_po/diagnostics/awa_mana.py",
+      "functions": [],
+      "fastapi": false,
+      "uses_event_loop": false
+    },
+    {
+      "name": "awa.py",
+      "path": "te_po/routes/awa.py",
+      "functions": [
+        {
+          "name": "bridge_test",
+          "signature": "",
+          "async": true
+        },
+        {
+          "name": "awa_orchestrate",
+          "signature": "request: Request",
+          "async": true
+        },
+        {
+          "name": "gpt_bridge",
+          "signature": "request: Request",
+          "async": true
+        }
+      ],
+      "fastapi": true,
+      "uses_event_loop": true
+    },
+    {
+      "name": "awa_protocol.py",
+      "path": "te_po/routes/awa_protocol.py",
+      "functions": [
+        {
+          "name": "wrap_envelope",
+          "signature": "req: EnvelopeRequest",
+          "async": true
+        },
+        {
+          "name": "execute_task",
+          "signature": "req: TaskRequest",
+          "async": true
+        },
+        {
+          "name": "handoff_task",
+          "signature": "req: HandoffRequest",
+          "async": true
+        },
+        {
+          "name": "query_memory",
+          "signature": "req: MemoryQueryRequest",
+          "async": true
+        },
+        {
+          "name": "store_memory",
+          "signature": "req: MemoryStoreRequest",
+          "async": true
+        },
+        {
+          "name": "log_activity",
+          "signature": "req: LogRequest",
+          "async": true
+        },
+        {
+          "name": "send_notification",
+          "signature": "req: NotifyRequest",
+          "async": true
+        },
+        {
+          "name": "register_kaitiaki",
+          "signature": "req: KaitiakiregisterRequest",
+          "async": true
+        },
+        {
+          "name": "get_kaitiaki_context",
+          "signature": "kaitiaki: str, realm: Optional[str] = None",
+          "async": true
+        },
+        {
+          "name": "list_kaitiaki",
+          "signature": "",
+          "async": true
+        },
+        {
+          "name": "generate_embeddings",
+          "signature": "req: VectorEmbedRequest",
+          "async": true
+        },
+        {
+          "name": "semantic_search",
+          "signature": "req: MemoryQueryRequest",
+          "async": true
+        },
+        {
+          "name": "run_pipeline",
+          "signature": "req: PipelineRequest",
+          "async": true
+        },
+        {
+          "name": "list_pipelines",
+          "signature": "",
+          "async": true
+        }
+      ],
+      "fastapi": true,
+      "uses_event_loop": true
+    },
+    {
+      "name": "tepo_mcp_server.py",
+      "path": "tepo_mcp_server.py",
+      "functions": [
+        {
+          "name": "_load_tool_configs",
+          "signature": "",
+          "async": false
+        },
+        {
+          "name": "create_tepo_server",
+          "signature": "",
+          "async": false
+        },
+        {
+          "name": "list_tools",
+          "signature": "",
+          "async": true
+        },
+        {
+          "name": "_to_thread",
+          "signature": "fn, *args, **kwargs",
+          "async": true
+        },
+        {
+          "name": "_call_tool_sync",
+          "signature": "tool: ToolConfig, arguments: Dict[str, Any]",
+          "async": false
+        },
+        {
+          "name": "call_tool",
+          "signature": "name: str, arguments: Dict[str, Any]",
+          "async": true
+        },
+        {
+          "name": "main",
+          "signature": "",
+          "async": true
+        }
+      ],
+      "fastapi": false,
+      "uses_event_loop": true
     }
   ]
 }

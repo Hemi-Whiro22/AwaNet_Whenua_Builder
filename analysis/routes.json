@@ -155,6 +155,21 @@
     "path": "/.well-known/openapi-core.json"
   },
   {
+    "file": "te_po/core/main.py",
+    "method": "GET",
+    "path": "/openai_tools.json"
+  },
+  {
+    "file": "te_po/core/main.py",
+    "method": "GET",
+    "path": "/analysis/sync-status"
+  },
+  {
+    "file": "te_po/core/main.py",
+    "method": "GET",
+    "path": "/analysis/documents/latest"
+  },
+  {
     "file": "te_po/core/kitenga_cards.py",
     "method": "POST",
     "path": "/ocr"

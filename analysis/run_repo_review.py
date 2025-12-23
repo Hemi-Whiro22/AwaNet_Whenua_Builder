@@ -8,11 +8,12 @@ It scans the repo structure, summarises FastAPI and MCP routes, and updates the 
 artifacts (JSON + Markdown) for reflection and continuity.
 """
 
-import os
+import importlib.util
 import json
-import datetime
+import os
 import re
 import subprocess
+import datetime
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -22,8 +23,27 @@ ROUTES_FILE = ANALYSIS_DIR / "routes.json"
 SUMMARY_FILE = ANALYSIS_DIR / "routes_summary.json"
 COMPACT_FILE = ANALYSIS_DIR / "routes_compact.md"
 LOG_FILE = ANALYSIS_DIR / f"review_log_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+SCRIPT_KEYWORDS = ["real_time", "loop", "event", "awa", "mcp", "orchestrate"]
+SCRIPT_EXCLUDE_PARTS = {".venv", "venv", "__pycache__", "node_modules", ".git", "site-packages"}
+OPENAPI_CORE = Path("app/openapi-core.json")
 TOOLS_MANIFEST_FILE = ANALYSIS_DIR / "mcp_tools_manifest.json"
 ROUTES_MD_FILE = ANALYSIS_DIR / "routes.md"
+PAYLOAD_SCRIPT_PATH = ANALYSIS_DIR / "te_kaitiaki_o_nga_ahua_kawenga.py"
+
+def _load_payload_module():
+    if not PAYLOAD_SCRIPT_PATH.exists():
+        return None, "missing script"
+    try:
+        spec = importlib.util.spec_from_file_location(
+            "analysis.te_kaitiaki_o_nga_ahua_kawenga", PAYLOAD_SCRIPT_PATH
+        )
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)  # type: ignore[attr-defined]
+        return module, None
+    except Exception as exc:
+        return None, str(exc)
+
+_PAYLOAD_MODULE, _PAYLOAD_LOAD_ERROR = _load_payload_module()
 
 KARAKIA_OPEN = """
 🌿  KARAKIA TIMATANGA
@@ -42,6 +62,40 @@ def log(message: str):
     print(message)
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(message + "\n")
+
+
+def scan_scripts():
+    scripts = {}
+    for keyword in SCRIPT_KEYWORDS:
+        for path in REPO_ROOT.rglob(f"*{keyword}*.py"):
+            rel = str(path.relative_to(REPO_ROOT))
+            if rel.startswith("analysis/"):
+                continue
+            if SCRIPT_EXCLUDE_PARTS.intersection(path.parts):
+                continue
+            content = path.read_text(encoding="utf-8", errors="ignore")
+            uses_fastapi = "FastAPI" in content or "@router" in content
+            uses_asyncio = "asyncio" in content or "await" in content
+            functions = []
+            for line in content.splitlines():
+                match = re.match(r"\s*(async\s+)?def\s+([a-zA-Z0-9_]+)\s*\(([^)]*)\)", line)
+                if not match:
+                    continue
+                is_async = bool(match.group(1))
+                name = match.group(2)
+                signature = match.group(3).strip()
+                functions.append({
+                    "name": name,
+                    "signature": signature,
+                    "async": is_async,
+                })
+            scripts[rel] = {
+                "path": rel,
+                "functions": functions,
+                "fastapi": uses_fastapi,
+                "asyncio": uses_asyncio,
+            }
+    return scripts
 
 def find_routes():
     """Simple FastAPI route detector scanning for @app.get/post/etc patterns."""
@@ -136,10 +190,11 @@ def summarise_routes(routes):
         summary.setdefault(domain, []).append(f"{r['method']} {r['path']}")
     return summary
 
-def write_outputs(routes, summary):
+def write_outputs(routes, summary, scripts):
     ANALYSIS_DIR.mkdir(exist_ok=True)
     with open(ROUTES_FILE, "w", encoding="utf-8") as f:
         json.dump(routes, f, indent=2)
+    summary = update_routes_summary(summary)
     with open(SUMMARY_FILE, "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2)
     with open(COMPACT_FILE, "w", encoding="utf-8") as f:
@@ -148,10 +203,9 @@ def write_outputs(routes, summary):
             f.write(f"| {r['method']} | {r['path']} | {r['file']} |\n")
 
     tools_manifest = gather_mcp_tools()
-    with open(TOOLS_MANIFEST_FILE, "w", encoding="utf-8") as f:
-        json.dump(tools_manifest, f, indent=2)
+    update_manifest_file(tools_manifest, scripts)
 
-    content = build_markdown(routes, summary, tools_manifest)
+    content = build_markdown(routes, summary, tools_manifest, scripts)
     with open(ROUTES_MD_FILE, "w", encoding="utf-8") as f:
         f.write(content)
 
@@ -166,7 +220,59 @@ def describe_domain_summary(summary):
     return "\n".join(parts).strip()
 
 
-def build_markdown(routes, summary, tools_manifest):
+def load_json_file(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        log(f"⚠️ Failed to parse {path.name}: {exc}")
+        return {}
+
+
+def update_routes_summary(new_summary: dict) -> dict:
+    existing = load_json_file(SUMMARY_FILE)
+    merged = {}
+    for domain in sorted(set(existing) | set(new_summary)):
+        existing_routes = set(existing.get(domain, []))
+        current_routes = set(new_summary.get(domain, []))
+        combined = sorted(existing_routes | current_routes)
+        if combined:
+            merged[domain] = combined
+    return merged
+
+
+def update_manifest_file(tools_manifest: dict, script_tools: dict):
+    existing = load_json_file(TOOLS_MANIFEST_FILE)
+    manifest = existing.copy()
+
+    for domain, entries in tools_manifest.items():
+        manifest[domain] = entries
+
+    script_entries = []
+    for path in sorted(script_tools):
+        info = script_tools[path]
+        script_entries.append(
+            {
+                "name": Path(path).name,
+                "path": info["path"],
+                "functions": info["functions"],
+                "fastapi": info["fastapi"],
+                "uses_event_loop": info["asyncio"],
+            }
+        )
+
+    if script_entries:
+        manifest["script_tools"] = script_entries
+    elif "script_tools" in manifest:
+        manifest.pop("script_tools")
+
+    with open(TOOLS_MANIFEST_FILE, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2, ensure_ascii=False)
+    log(f"Updated {TOOLS_MANIFEST_FILE.name} with {len(script_entries)} script tool entries.")
+
+
+def build_markdown(routes, summary, tools_manifest, script_tools):
     branch, commit = get_git_metadata()
     env_keys = read_env_keys()
     env_highlights = [
@@ -211,6 +317,26 @@ def build_markdown(routes, summary, tools_manifest):
         f"- Top loaded tools: {', '.join(top_tool_names)}." if top_tool_names else "- No tool manifests yet."
     )
 
+    script_count = len(script_tools)
+    script_lines = []
+    if script_count:
+        script_lines.append(f"- Script scan captured {script_count} file(s) matching keywords: {', '.join(SCRIPT_KEYWORDS)}.")
+        limit = 5
+        for path in sorted(script_tools)[:limit]:
+            info = script_tools[path]
+            func_names = ", ".join(f"{fn['name']}" for fn in info['functions'][:3])
+            if len(info["functions"]) > 3:
+                func_names += ", ..."
+            script_lines.append(
+                f"- `{path}` → FastAPI: {info['fastapi']}, event-loop/async: {info['asyncio']}, functions: {func_names or 'n/a'}"
+            )
+        if script_count > limit:
+            script_lines.append(
+                f"- ({script_count - limit} more script tool files recorded.)"
+            )
+    else:
+        script_lines.append("- No keyword-matching scripts detected.")
+
     timestamp = datetime.datetime.now().isoformat()
 
     parts = [
@@ -233,6 +359,9 @@ def build_markdown(routes, summary, tools_manifest):
         f"- Domains captured: {tool_domains}.",
         tool_highlight_line,
         "",
+        "## Script Tool Scan",
+        *script_lines,
+        "",
         "## Key Environment Variables",
         *env_list_lines,
         "",
@@ -253,10 +382,26 @@ def build_markdown(routes, summary, tools_manifest):
 def main():
     log(KARAKIA_OPEN)
     log(f"Starting Repo Review at {datetime.datetime.now().isoformat()}")
+    scripts = scan_scripts()
     routes = find_routes()
     summary = summarise_routes(routes)
-    write_outputs(routes, summary)
+    write_outputs(routes, summary, scripts)
+    if _PAYLOAD_MODULE and hasattr(_PAYLOAD_MODULE, "generate_payload_map"):
+        try:
+            payload_summary = _PAYLOAD_MODULE.generate_payload_map(routes, logger=log, root=REPO_ROOT)
+            drift = payload_summary.get("drift", {})
+            log(
+                f"Payload map: {payload_summary.get('count')} shapes "
+                f"(added {len(drift.get('added', []))}, "
+                f"removed {len(drift.get('removed', []))}, "
+                f"changed {len(drift.get('changed', []))})."
+            )
+        except Exception as exc:
+            log(f"⚠️ Payload mapper failed: {exc}")
+    else:
+        log(f"⚠️ Payload mapper unavailable: {_PAYLOAD_LOAD_ERROR}")
     log(f"Detected {len(routes)} routes across {len(summary)} domains.")
+    log(f"Script scan keywords {', '.join(SCRIPT_KEYWORDS)} touched {len(scripts)} file(s).")
     log("Outputs written to /analysis/")
     log(KARAKIA_CLOSE)
 
