@@ -71,6 +71,7 @@ def load_tool_manifests():
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_DIR = REPO_ROOT
+OPENAPI_TOOLS_FILE = REPO_ROOT / "kitenga_mcp" / "openai_tools.json"
 TOOLS_MANIFEST = load_tool_manifests()
 OPENAPI_CORE_FILE = SCHEMA_DIR / "openapi-core.json"
 
@@ -717,6 +718,14 @@ async def openapi_core():
 @app.get("/.well-known/openapi-core.json", include_in_schema=False)
 async def openapi_core_well_known():
     return _schema_response()
+
+
+@app.get("/openai_tools.json", include_in_schema=False)
+async def openai_tools():
+    """Expose the exported tools manifest to GPT Builder."""
+    if not OPENAPI_TOOLS_FILE.exists():
+        raise HTTPException(status_code=404, detail="openai_tools.json missing")
+    return FileResponse(OPENAPI_TOOLS_FILE, media_type="application/json")
 
 
 
