@@ -14,8 +14,8 @@
   },
   "servers": [
     {
-      "url": "https://kitenga-main.onrender.com",
-      "description": "kitenga-main MCP gateway (Render)"
+      "url": "https://tiwhanawhana-backend.onrender.com",
+      "description": "Kitenga Whiro / Te Pō backend (Render)"
     }
   ],
   "paths": {
