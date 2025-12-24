@@ -25,6 +25,7 @@ fi
 export PYTHONPATH="$ROOT_DIR:${PYTHONPATH:-}"
 
 KITENGA_PORT="${KITENGA_PORT:-8000}"
+KITENGA_MCP_PORT="${KITENGA_MCP_PORT:-10000}"
 CF_TUNNEL_ID="${CF_TUNNEL_ID:-}"
 CF_TUNNEL_NAME="${CF_TUNNEL_NAME:-}"
 CF_TUNNEL_HOSTNAME="${CF_TUNNEL_HOSTNAME:-kitenga-whiro.den-of-the-pack.com}"
@@ -72,16 +73,26 @@ start_cloudflare_tunnel() {
     return
   fi
 
-  mkdir -p "$CLOUDFLARED_DIR"
-
-  if [[ -f "$ROOT_CLOUDFLARED/${CF_TUNNEL_ID}.json" && ! -f "$CLOUDFLARED_CREDS" ]]; then
-    mkdir -p "$CLOUDFLARED_DIR"
-    cp "$ROOT_CLOUDFLARED/${CF_TUNNEL_ID}.json" "$CLOUDFLARED_CREDS"
+  local credential_source="$ROOT_CLOUDFLARED/${CF_TUNNEL_ID}.json"
+  if [[ ! -f "$credential_source" ]]; then
+    credential_source="$(grep -l "$CF_TUNNEL_ID" "$ROOT_CLOUDFLARED"/*.json 2>/dev/null | head -n1 || true)"
+  fi
+  if [[ -n "$credential_source" && ! -f "$CLOUDFLARED_CREDS" ]]; then
+    cp "$credential_source" "$CLOUDFLARED_CREDS"
   fi
 
-  if [[ ! -f "$CLOUDFLARED_CONFIG" ]]; then
-    echo "[cloudflared] creating $CLOUDFLARED_CONFIG for tunnel $CF_TUNNEL_NAME..."
-    cat <<EOF >"$CLOUDFLARED_CONFIG"
+  if [[ ! -f "$CLOUDFLARED_CREDS" ]]; then
+    echo "[cloudflared] credentials file missing; expected ${CLOUDFLARED_CREDS} (source: ${credential_source:-none})"
+    return
+  fi
+
+  if [[ ! -f "$TUNNEL_ORIGIN_CERT" ]]; then
+    echo "[cloudflared] origin cert not found at $TUNNEL_ORIGIN_CERT; skipping tunnel."
+    return
+  fi
+
+  echo "[cloudflared] writing $CLOUDFLARED_CONFIG for tunnel $CF_TUNNEL_NAME..."
+  cat <<EOF >"$CLOUDFLARED_CONFIG"
 tunnel: $CF_TUNNEL_ID
 credentials-file: $CLOUDFLARED_CREDS
 origincert: $TUNNEL_ORIGIN_CERT
@@ -91,7 +102,6 @@ ingress:
     service: http://localhost:$KITENGA_PORT
   - service: http_status:404
 EOF
-  fi
 
   echo "[cloudflared] starting tunnel $CF_TUNNEL_NAME ($CF_TUNNEL_ID)"
   cloudflared tunnel run "$CF_TUNNEL_NAME" >>"$TUNNEL_LOG" 2>&1 &
@@ -104,8 +114,8 @@ if [[ -n "$CF_TUNNEL_ID" && -n "$CF_TUNNEL_NAME" ]]; then
   echo "[env] Tunnel credentials: $CLOUDFLARED_CREDS"
 fi
 
-echo "[kitenga] starting MCP server..."
-python "$ROOT_DIR/te_po/kitenga/start_kitenga.py" >>"$MCP_LOG" 2>&1 &
+echo "[kitenga] starting MCP server (kitenga_mcp.app_server)..."
+uvicorn kitenga_mcp.app_server:app --host 0.0.0.0 --port "$KITENGA_MCP_PORT" >>"$MCP_LOG" 2>&1 &
 pids+=($!)
 
 echo "[te_po] starting FastAPI backend..."
