@@ -1,0 +1,400 @@
+openapi: 3.1.0
+info:
+  title: "Kitenga Whiro \u2014 Te P\u014D Core Orchestration"
+  version: 1.0.0
+  description: "Core orchestration schema for GPT Builder and Kitenga Whiro to drive\
+    \ Te P\u014D backend tools."
+  x-mauri:
+    realm: "Te P\u014D"
+    owner: AwaNet
+    maintainer: Hemi Whiro
+    environment: render
+    awa_version: 1.0.0
+servers:
+- url: https://kitenga-main.onrender.com
+  description: kitenga-main MCP gateway (Render)
+paths:
+  /assistant/run:
+    post:
+      summary: Relay text or file references to the Kitenga assistant
+      operationId: assistant_run
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                file_url:
+                  type: string
+              required:
+              - text
+      responses:
+        '200':
+          description: Assistant response payload
+  /assistant/health:
+    get:
+      summary: Check the assistant bridge health
+      operationId: assistant_health
+      responses:
+        '200':
+          description: Health JSON
+  /assistant/create:
+    post:
+      summary: Spin up an assistant session profile
+      operationId: assistant_create
+      responses:
+        '200':
+          description: Creation details
+  /assistant/list:
+    get:
+      summary: List available assistant instances
+      operationId: assistant_list
+      responses:
+        '200':
+          description: List of assistants
+  /assistant/vector-stores:
+    get:
+      summary: Report available vector stores
+      operationId: assistant_vector_stores
+      responses:
+        '200':
+          description: Vector store metadata
+  /assistant/version:
+    get:
+      summary: Assistant backend version
+      operationId: assistant_version
+      responses:
+        '200':
+          description: Version info
+  /kitenga/vision-ocr:
+    post:
+      summary: OCR an image + optionally push to vector store
+      operationId: kitenga_vision_ocr
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - image_base64
+      responses:
+        '200':
+          description: OCR result
+  /kitenga/tool/translate:
+    post:
+      summary: Translate text with taonga context
+      operationId: kitenga_tool_translate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - text
+              - target_language
+      responses:
+        '200':
+          description: Translation payload
+  /kitenga/tool/ocr:
+    post:
+      summary: OCR remote PDF/image/text file
+      operationId: kitenga_tool_ocr
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - file_url
+      responses:
+        '200':
+          description: OCR response
+  /kitenga/ask:
+    post:
+      summary: Ask the Kitenga reasoning layer a question
+      operationId: kitenga_ask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - query
+      responses:
+        '200':
+          description: Answer payload
+  /kitenga/gpt-whisper:
+    post:
+      summary: Kitenga whisper chat endpoint
+      operationId: kitenga_gpt_whisper
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - whisper
+      responses:
+        '200':
+          description: Whisper output
+  /kitenga/query_knowledge_base:
+    post:
+      summary: Query the Kitenga knowledge base
+      operationId: kitenga_query_kb
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - query
+      responses:
+        '200':
+          description: Knowledge hits
+  /chat/memory-ingest:
+    post:
+      summary: Store chat text as raw memory + vector metadata
+      operationId: chat_memory_ingest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - session_id
+              - text
+      responses:
+        '200':
+          description: Memory ack
+  /reo/translate:
+    post:
+      summary: "Translate into te reo M\u0101ori"
+      operationId: reo_translate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - text
+      responses:
+        '200':
+          description: Translation response
+  /reo/explain:
+    post:
+      summary: Explain a phrase or concept
+      operationId: reo_explain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - text
+      responses:
+        '200':
+          description: Explanation
+  /reo/pronounce:
+    post:
+      summary: Return phonetic guidance
+      operationId: reo_pronounce
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - text
+      responses:
+        '200':
+          description: Pronunciation info
+  /pipeline/run:
+    post:
+      summary: "Fire the Te P\u014D pipeline (clean \u2192 chunk \u2192 embed)"
+      operationId: pipeline_run
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Pipeline job queued
+  /pipeline/enqueue:
+    post:
+      summary: Enqueue pipeline work for background workers
+      operationId: pipeline_enqueue
+      responses:
+        '200':
+          description: Enqueue ack
+  /pipeline/status/{job_id}:
+    get:
+      summary: Check pipeline job status
+      operationId: pipeline_status
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Status JSON
+  /pipeline/jobs/recent:
+    get:
+      summary: Fetch recent pipeline jobs
+      operationId: pipeline_jobs_recent
+      responses:
+        '200':
+          description: Jobs list
+  /vector/embed:
+    post:
+      summary: Embed text to vector store
+      operationId: vector_embed
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - text
+      responses:
+        '200':
+          description: Embedding done
+  /vector/search:
+    post:
+      summary: Execute vector similarity search
+      operationId: vector_search
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - query
+      responses:
+        '200':
+          description: Search hits
+  /vector/recent:
+    get:
+      summary: List recent vector batches
+      operationId: vector_recent
+      responses:
+        '200':
+          description: Vectors list
+  /memory/retrieve:
+    post:
+      summary: Retrieve memory records
+      operationId: memory_retrieve
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Memory payload
+  /kitenga/db/memory:
+    get:
+      summary: Dump memory table rows
+      operationId: kitenga_db_memory
+      responses:
+        '200':
+          description: Memory listing
+  /research/stacked:
+    post:
+      summary: Run stacked research workflow
+      operationId: research_stacked
+      responses:
+        '200':
+          description: Stacked research result
+  /research/web_search:
+    post:
+      summary: Call the research web search pipeline
+      operationId: research_web_search
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - query
+      responses:
+        '200':
+          description: Web search hits
+  /logs/recent:
+    get:
+      summary: Fetch the most recent logs
+      operationId: logs_recent
+      responses:
+        '200':
+          description: Log entries
+  /logs/ledger:
+    get:
+      summary: Read ledger-style log history
+      operationId: logs_ledger
+      responses:
+        '200':
+          description: Ledger rows
+  /logs/state:
+    get:
+      summary: Report log-backed state
+      operationId: logs_state
+      responses:
+        '200':
+          description: State metadata
+  /automation/git-checklist:
+    post:
+      tags:
+      - Automation
+      summary: Run the kaitiaki checklist, commit, then push
+      operationId: automation_git_checklist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: Commit message
+              required:
+              - message
+              additionalProperties: false
+      responses:
+        '200':
+          description: Checklist run information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  output:
+                    type: string
+                required:
+                - status
+                - message
+                additionalProperties: true

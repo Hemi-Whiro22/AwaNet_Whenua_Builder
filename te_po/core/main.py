@@ -48,6 +48,7 @@ from te_po.routes import (
     llama3,
     realm_generator,
     cors_manager,
+    automation,
     awa,
 )
 from analysis.sync_status import fetch_analysis_sync_status, fetch_latest_analysis_document_content
@@ -245,6 +246,7 @@ app.include_router(cards.router)
 app.include_router(roshi.router)
 app.include_router(sell.router)
 app.include_router(metrics.router)
+app.include_router(automation.router)
 app.include_router(awa_protocol.router)
 app.include_router(llama3.router)
 app.include_router(realm_generator.router)

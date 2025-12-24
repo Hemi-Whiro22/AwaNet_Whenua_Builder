@@ -3,899 +3,26 @@
   "info": {
     "title": "Kitenga Whiro — Te Pō Core Orchestration",
     "version": "1.0.0",
-    "description": "Core orchestration schema for GPT Builder bridge to Te Pō backend.",
+    "description": "Core orchestration schema for GPT Builder and Kitenga Whiro to drive Te Pō backend tools.",
     "x-mauri": {
       "realm": "Te Pō",
       "owner": "AwaNet",
       "maintainer": "Hemi Whiro",
       "environment": "render",
       "awa_version": "1.0.0"
-    },
-    "x-author": "awa developer (Kitenga Whiro [Adrian Hemi])",
-    "x-protection": {
-      "kaitiaki_signature": "k9_c0f8a171c095c301",
-      "encoding_version": "tawhiri_v1.0",
-      "cultural_protection": "active",
-      "ownership": "Te Kaitiaki Collective",
-      "theft_protection": true,
-      "original_hash": "c0f8a171c095c301",
-      "encoding_timestamp": "2025-10-21",
-      "liberation_marker": "w4o4_protected"
     }
   },
   "servers": [
     {
-      "url": "https://tiwhanawhana-backend.onrender.com"
+      "url": "https://kitenga-main.onrender.com",
+      "description": "kitenga-main MCP gateway (Render)"
     }
   ],
   "paths": {
     "/assistant/run": {
       "post": {
-        "tags": [
-          "Assistant"
-        ],
-        "summary": "Run the Te Pō assistant",
+        "summary": "Relay text or file references to the Kitenga assistant",
         "operationId": "assistant_run",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/assistant/health": {
-      "get": {
-        "tags": [
-          "Assistant"
-        ],
-        "summary": "Health check for the assistant",
-        "operationId": "assistant_health",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/assistant/create": {
-      "post": {
-        "tags": [
-          "Assistant"
-        ],
-        "summary": "Create a new assistant session",
-        "operationId": "assistant_create",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/assistant/list": {
-      "get": {
-        "tags": [
-          "Assistant"
-        ],
-        "summary": "List assistant sessions",
-        "operationId": "assistant_list",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/assistant/vector-stores": {
-      "get": {
-        "tags": [
-          "Assistant"
-        ],
-        "summary": "List vector stores",
-        "operationId": "assistant_vector_stores",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/assistant/version": {
-      "get": {
-        "tags": [
-          "Assistant"
-        ],
-        "summary": "Assistant version metadata",
-        "operationId": "assistant_version",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/kitenga/vision-ocr": {
-      "post": {
-        "tags": [
-          "Kitenga"
-        ],
-        "summary": "Vision OCR processing",
-        "operationId": "vision_ocr",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/kitenga/tool/translate": {
-      "post": {
-        "tags": [
-          "Kitenga"
-        ],
-        "summary": "Translate text via Kitenga",
-        "operationId": "kitenga_translate",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/kitenga/ask": {
-      "post": {
-        "tags": [
-          "Kitenga"
-        ],
-        "summary": "Ask Kitenga a question",
-        "operationId": "kitenga_ask",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/kitenga/gpt-whisper": {
-      "post": {
-        "tags": [
-          "Kitenga"
-        ],
-        "summary": "Whisper / GPT request",
-        "operationId": "kitenga_whisper",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/kitenga/query_knowledge_base": {
-      "post": {
-        "tags": [
-          "Kitenga"
-        ],
-        "summary": "Query the knowledge base",
-        "operationId": "kitenga_query_kb",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/reo/translate": {
-      "post": {
-        "tags": [
-          "Reo"
-        ],
-        "summary": "Translate to te reo Māori",
-        "operationId": "reo_translate",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/reo/explain": {
-      "post": {
-        "tags": [
-          "Reo"
-        ],
-        "summary": "Explain te reo context",
-        "operationId": "reo_explain",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/reo/pronounce": {
-      "post": {
-        "tags": [
-          "Reo"
-        ],
-        "summary": "Pronounce text",
-        "operationId": "reo_pronounce",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/pipeline/run": {
-      "post": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Run the Te Pō pipeline",
-        "operationId": "pipeline_run",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/pipeline/enqueue": {
-      "post": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Enqueue pipeline work",
-        "operationId": "pipeline_enqueue",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/pipeline/status/{job_id}": {
-      "get": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Query pipeline job status",
-        "operationId": "pipeline_status",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "job_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/pipeline/jobs/recent": {
-      "get": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "List recent pipeline jobs",
-        "operationId": "pipeline_jobs_recent",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/vector/embed": {
-      "post": {
-        "tags": [
-          "Vector"
-        ],
-        "summary": "Embed text into vector store",
-        "operationId": "vector_embed",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/vector/search": {
-      "post": {
-        "tags": [
-          "Vector"
-        ],
-        "summary": "Search vectors",
-        "operationId": "vector_search",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/vector/recent": {
-      "get": {
-        "tags": [
-          "Vector"
-        ],
-        "summary": "List recent vector batches",
-        "operationId": "vector_recent",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/memory/retrieve": {
-      "post": {
-        "tags": [
-          "Memory"
-        ],
-        "summary": "Retrieve stored memory",
-        "operationId": "memory_retrieve",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/kitenga/db/memory": {
-      "get": {
-        "tags": [
-          "Kitenga"
-        ],
-        "summary": "Browse DB memory",
-        "operationId": "kitenga_db_memory",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/research/stacked": {
-      "post": {
-        "tags": [
-          "Research"
-        ],
-        "summary": "Stacked research run",
-        "operationId": "research_stacked",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/research/web_search": {
-      "post": {
-        "tags": [
-          "Research"
-        ],
-        "summary": "Web search for research",
-        "operationId": "research_web_search",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/logs/recent": {
-      "get": {
-        "tags": [
-          "Logs"
-        ],
-        "summary": "Recent log entries",
-        "operationId": "logs_recent",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/logs/ledger": {
-      "get": {
-        "tags": [
-          "Logs"
-        ],
-        "summary": "Ledger log history",
-        "operationId": "logs_ledger",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/logs/state": {
-      "get": {
-        "tags": [
-          "Logs"
-        ],
-        "summary": "State snapshots",
-        "operationId": "logs_state",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {}
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    ,
-    "/chat/memory-ingest": {
-      "post": {
-        "tags": [
-          "Chat"
-        ],
-        "summary": "Ingest chat text for memory",
-        "description": "Save chat text as raw content, run it through the stealth pipeline, and store vector metadata for short-term recall.",
-        "operationId": "chat_memory_ingest",
         "requestBody": {
           "required": true,
           "content": {
@@ -903,28 +30,237 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "session_id": {
-                    "type": "string",
-                    "description": "Unique chat session id."
-                  },
                   "text": {
-                    "type": "string",
-                    "description": "Text payload to save and vectorize."
+                    "type": "string"
                   },
-                  "role": {
-                    "type": "string",
-                    "description": "Contributor identity (user or assistant).",
-                    "default": "user"
-                  },
-                  "thread_id": {
-                    "type": "string",
-                    "description": "Optional thread identifier."
-                  },
-                  "assistant_reply": {
-                    "type": "string",
-                    "description": "Optional assistant response accompanying the user text."
+                  "file_url": {
+                    "type": "string"
                   }
                 },
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assistant response payload"
+          }
+        }
+      }
+    },
+    "/assistant/health": {
+      "get": {
+        "summary": "Check the assistant bridge health",
+        "operationId": "assistant_health",
+        "responses": {
+          "200": {
+            "description": "Health JSON"
+          }
+        }
+      }
+    },
+    "/assistant/create": {
+      "post": {
+        "summary": "Spin up an assistant session profile",
+        "operationId": "assistant_create",
+        "responses": {
+          "200": {
+            "description": "Creation details"
+          }
+        }
+      }
+    },
+    "/assistant/list": {
+      "get": {
+        "summary": "List available assistant instances",
+        "operationId": "assistant_list",
+        "responses": {
+          "200": {
+            "description": "List of assistants"
+          }
+        }
+      }
+    },
+    "/assistant/vector-stores": {
+      "get": {
+        "summary": "Report available vector stores",
+        "operationId": "assistant_vector_stores",
+        "responses": {
+          "200": {
+            "description": "Vector store metadata"
+          }
+        }
+      }
+    },
+    "/assistant/version": {
+      "get": {
+        "summary": "Assistant backend version",
+        "operationId": "assistant_version",
+        "responses": {
+          "200": {
+            "description": "Version info"
+          }
+        }
+      }
+    },
+    "/kitenga/vision-ocr": {
+      "post": {
+        "summary": "OCR an image + optionally push to vector store",
+        "operationId": "kitenga_vision_ocr",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "image_base64"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OCR result"
+          }
+        }
+      }
+    },
+    "/kitenga/tool/translate": {
+      "post": {
+        "summary": "Translate text with taonga context",
+        "operationId": "kitenga_tool_translate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text",
+                  "target_language"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Translation payload"
+          }
+        }
+      }
+    },
+    "/kitenga/tool/ocr": {
+      "post": {
+        "summary": "OCR remote PDF/image/text file",
+        "operationId": "kitenga_tool_ocr",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file_url"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OCR response"
+          }
+        }
+      }
+    },
+    "/kitenga/ask": {
+      "post": {
+        "summary": "Ask the Kitenga reasoning layer a question",
+        "operationId": "kitenga_ask",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Answer payload"
+          }
+        }
+      }
+    },
+    "/kitenga/gpt-whisper": {
+      "post": {
+        "summary": "Kitenga whisper chat endpoint",
+        "operationId": "kitenga_gpt_whisper",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "whisper"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Whisper output"
+          }
+        }
+      }
+    },
+    "/kitenga/query_knowledge_base": {
+      "post": {
+        "summary": "Query the Kitenga knowledge base",
+        "operationId": "kitenga_query_kb",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Knowledge hits"
+          }
+        }
+      }
+    },
+    "/chat/memory-ingest": {
+      "post": {
+        "summary": "Store chat text as raw memory + vector metadata",
+        "operationId": "chat_memory_ingest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
                 "required": [
                   "session_id",
                   "text"
@@ -935,18 +271,356 @@
         },
         "responses": {
           "200": {
-            "description": "Chat text saved + pipeline metadata",
+            "description": "Memory ack"
+          }
+        }
+      }
+    },
+    "/reo/translate": {
+      "post": {
+        "summary": "Translate into te reo Māori",
+        "operationId": "reo_translate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Translation response"
+          }
+        }
+      }
+    },
+    "/reo/explain": {
+      "post": {
+        "summary": "Explain a phrase or concept",
+        "operationId": "reo_explain",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Explanation"
+          }
+        }
+      }
+    },
+    "/reo/pronounce": {
+      "post": {
+        "summary": "Return phonetic guidance",
+        "operationId": "reo_pronounce",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pronunciation info"
+          }
+        }
+      }
+    },
+    "/pipeline/run": {
+      "post": {
+        "summary": "Fire the Te Pō pipeline (clean → chunk → embed)",
+        "operationId": "pipeline_run",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pipeline job queued"
+          }
+        }
+      }
+    },
+    "/pipeline/enqueue": {
+      "post": {
+        "summary": "Enqueue pipeline work for background workers",
+        "operationId": "pipeline_enqueue",
+        "responses": {
+          "200": {
+            "description": "Enqueue ack"
+          }
+        }
+      }
+    },
+    "/pipeline/status/{job_id}": {
+      "get": {
+        "summary": "Check pipeline job status",
+        "operationId": "pipeline_status",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status JSON"
+          }
+        }
+      }
+    },
+    "/pipeline/jobs/recent": {
+      "get": {
+        "summary": "Fetch recent pipeline jobs",
+        "operationId": "pipeline_jobs_recent",
+        "responses": {
+          "200": {
+            "description": "Jobs list"
+          }
+        }
+      }
+    },
+    "/vector/embed": {
+      "post": {
+        "summary": "Embed text to vector store",
+        "operationId": "vector_embed",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Embedding done"
+          }
+        }
+      }
+    },
+    "/vector/search": {
+      "post": {
+        "summary": "Execute vector similarity search",
+        "operationId": "vector_search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search hits"
+          }
+        }
+      }
+    },
+    "/vector/recent": {
+      "get": {
+        "summary": "List recent vector batches",
+        "operationId": "vector_recent",
+        "responses": {
+          "200": {
+            "description": "Vectors list"
+          }
+        }
+      }
+    },
+    "/memory/retrieve": {
+      "post": {
+        "summary": "Retrieve memory records",
+        "operationId": "memory_retrieve",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Memory payload"
+          }
+        }
+      }
+    },
+    "/kitenga/db/memory": {
+      "get": {
+        "summary": "Dump memory table rows",
+        "operationId": "kitenga_db_memory",
+        "responses": {
+          "200": {
+            "description": "Memory listing"
+          }
+        }
+      }
+    },
+    "/research/stacked": {
+      "post": {
+        "summary": "Run stacked research workflow",
+        "operationId": "research_stacked",
+        "responses": {
+          "200": {
+            "description": "Stacked research result"
+          }
+        }
+      }
+    },
+    "/research/web_search": {
+      "post": {
+        "summary": "Call the research web search pipeline",
+        "operationId": "research_web_search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Web search hits"
+          }
+        }
+      }
+    },
+    "/logs/recent": {
+      "get": {
+        "summary": "Fetch the most recent logs",
+        "operationId": "logs_recent",
+        "responses": {
+          "200": {
+            "description": "Log entries"
+          }
+        }
+      }
+    },
+    "/logs/ledger": {
+      "get": {
+        "summary": "Read ledger-style log history",
+        "operationId": "logs_ledger",
+        "responses": {
+          "200": {
+            "description": "Ledger rows"
+          }
+        }
+      }
+    },
+    "/logs/state": {
+      "get": {
+        "summary": "Report log-backed state",
+        "operationId": "logs_state",
+        "responses": {
+          "200": {
+            "description": "State metadata"
+          }
+        }
+      }
+    },
+    "/automation/git-checklist": {
+      "post": {
+        "tags": [
+          "Automation"
+        ],
+        "summary": "Run the kaitiaki checklist, commit, then push",
+        "operationId": "automation_git_checklist",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "Commit message"
+                  }
+                },
+                "required": [
+                  "message"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checklist run information",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {"type": "string"},
-                    "session_id": {"type": "string"},
-                    "role": {"type": "string"},
-                    "vector_batch_id": {"type": "string"},
-                    "pipeline_metadata": {"type": "object", "additionalProperties": true}
-                  }
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "output": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "additionalProperties": true
                 }
               }
             }
@@ -954,20 +628,5 @@
         }
       }
     }
-  },
-  "components": {
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "API Key"
-      }
-    },
-    "schemas": {}
-  },
-  "security": [
-    {
-      "BearerAuth": []
-    }
-  ]
+  }
 }
