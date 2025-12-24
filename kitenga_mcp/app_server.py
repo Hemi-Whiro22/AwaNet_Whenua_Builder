@@ -345,6 +345,11 @@ def create_app():
             "tools": TOOLS_MANIFEST
         }
 
+    @app.get("/mcp/tools/list", tags=["MCP"])
+    async def list_tools_manifest_alias():
+        """Alias for `/tools/list` used by MCP integrations."""
+        return await list_tools_manifest()
+
     def _schema_response():
         if not OPENAPI_CORE_FILE.exists():
             raise HTTPException(status_code=404, detail="OpenAPI core schema missing.")
@@ -365,6 +370,10 @@ def create_app():
 
     @app.get("/.well-known/openapi-core.json", include_in_schema=False)
     async def openapi_core_well_known():
+        return _schema_response()
+
+    @app.get("/mcp/openapi-core.json", include_in_schema=False)
+    async def openapi_core_mcp_alias():
         return _schema_response()
 
     @app.get("/tools/describe", tags=["MCP"])
