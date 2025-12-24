@@ -28,9 +28,11 @@ KITENGA_PORT="${KITENGA_PORT:-8000}"
 CF_TUNNEL_ID="${CF_TUNNEL_ID:-}"
 CF_TUNNEL_NAME="${CF_TUNNEL_NAME:-}"
 CF_TUNNEL_HOSTNAME="${CF_TUNNEL_HOSTNAME:-kitenga-whiro.den-of-the-pack.com}"
-CLOUDFLARED_DIR="${HOME}/.cloudflared"
+CLOUDFLARED_DIR="${CLOUDFLARED_DIR:-${HOME}/.cloudflared}"
 CLOUDFLARED_CONFIG="$CLOUDFLARED_DIR/config.yml"
 CLOUDFLARED_CREDS="$CLOUDFLARED_DIR/${CF_TUNNEL_ID}.json"
+ROOT_CLOUDFLARED="$ROOT_DIR/.cloudflared"
+TUNNEL_ORIGIN_CERT="${TUNNEL_ORIGIN_CERT:-$ROOT_CLOUDFLARED/cert.pem}"
 
 MCP_LOG="$LOG_DIR/kitenga_mcp.log"
 BACKEND_LOG="$LOG_DIR/te_po.log"
@@ -72,11 +74,17 @@ start_cloudflare_tunnel() {
 
   mkdir -p "$CLOUDFLARED_DIR"
 
+  if [[ -f "$ROOT_CLOUDFLARED/${CF_TUNNEL_ID}.json" && ! -f "$CLOUDFLARED_CREDS" ]]; then
+    mkdir -p "$CLOUDFLARED_DIR"
+    cp "$ROOT_CLOUDFLARED/${CF_TUNNEL_ID}.json" "$CLOUDFLARED_CREDS"
+  fi
+
   if [[ ! -f "$CLOUDFLARED_CONFIG" ]]; then
     echo "[cloudflared] creating $CLOUDFLARED_CONFIG for tunnel $CF_TUNNEL_NAME..."
     cat <<EOF >"$CLOUDFLARED_CONFIG"
 tunnel: $CF_TUNNEL_ID
 credentials-file: $CLOUDFLARED_CREDS
+origincert: $TUNNEL_ORIGIN_CERT
 
 ingress:
   - hostname: $CF_TUNNEL_HOSTNAME
