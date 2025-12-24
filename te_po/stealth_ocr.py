@@ -434,6 +434,18 @@ def pipeline_token_hash() -> Optional[str]:
     return hashlib.sha256(token.encode()).hexdigest()[:12]
 
 
+def orchestrator_auth_headers() -> Dict[str, str]:
+    """Headers the orchestrator should reuse so every caller carries the pipeline guard."""
+    headers: Dict[str, str] = {}
+    token = os.getenv("PIPELINE_TOKEN")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+        stealth = pipeline_token_hash()
+        if stealth:
+            headers["X-Kitenga-Stealth"] = stealth
+    return headers
+
+
 def protect_text(raw_text: str, *, context_metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     metadata: Dict[str, Any] = {}
     protected_text = raw_text

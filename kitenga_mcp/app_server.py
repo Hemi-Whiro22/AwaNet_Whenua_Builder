@@ -72,7 +72,7 @@ def load_tool_manifests():
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_DIR = REPO_ROOT
 TOOLS_MANIFEST = load_tool_manifests()
-OPENAPI_CORE_FILE = SCHEMA_DIR / "kitenga_mcp" / "openapi-core.json"
+OPENAPI_CORE_FILE = SCHEMA_DIR / "openapi-core.json"
 
 def create_app():
     import json, logging, glob, uuid, asyncio, datetime
