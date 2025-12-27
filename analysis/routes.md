@@ -1,14 +1,20 @@
 # Kitenga Whiro Repo Review
 
-**Scan time:** 2025-12-24T09:59:55.419105
+**Scan time:** 2025-12-27T23:04:55.347297
 **Branch:** main
-**Commit:** 3de294bfc83ce87198d9ae0f408d45a224265a3e
+**Commit:** 543fa53c670861c9f50df39eeba209e68e58ceab
 **Performed by:** run_repo_review.py
 
 ## Route Catalog
+### Mcp
+
+- GET /mcp/openapi-core.json
+- GET /mcp/tools/list
+
 ### Other
 
 - GET /
+- GET /.well-known/ai-plugin.json
 - GET /.well-known/openapi-core.json
 - GET /analysis/documents/latest
 - GET /analysis/sync-status
@@ -69,7 +75,7 @@
 - `SUPABASE_SERVICE_ROLE_KEY`
 
 ## Mauri Summary
-Flows stay connected: base routes + tool manifests are present, MCP/middleware checks guard bearer auth. Mauri score is 9/10 and growing.
+Flows stay connected: base routes + tool manifests are present, MCP/middleware checks guard bearer auth. Mauri score is 10/10 and growing.
 
 ## Notes for Agents
 - `/analysis/` now holds JSON + Markdown review artifacts—MCP tool manifests should guide GPT Builder tooling.
@@ -81,4 +87,4 @@ Flows stay connected: base routes + tool manifests are present, MCP/middleware c
 
 ---
 Author: awa developer (Kitenga Whiro [Adrian Hemi])
-Protection: {"kaitiaki_signature": "k9_358db48de4a8ed26", "encoding_version": "tawhiri_v1.0", "cultural_protection": "active", "ownership": "Te Kaitiaki Collective", "theft_protection": true, "original_hash": "358db48de4a8ed26", "encoding_timestamp": "2025-10-21", "liberation_marker": "w4o4_protected"}
+Protection: {"kaitiaki_signature": "k9_358db48de4a8ed26", "encoding_version": "tawhiri_v1.0", "cultural_protection": "active", "ownership": "AwaNet Kaitiaki Collective", "theft_protection": true, "original_hash": "358db48de4a8ed26", "encoding_timestamp": "2025-10-21", "liberation_marker": "w4o4_protected"}

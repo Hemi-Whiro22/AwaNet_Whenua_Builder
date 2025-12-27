@@ -1,0 +1,134 @@
+Kaitiaki meta trace results:
+
+.devcontainer/README.md:
+  - Placeholder pattern matched: 'project name'
+
+analysis/mcp_tools_manifest.json:
+  - Placeholder pattern matched: 'project name'
+
+analysis/payload_map.json:
+  - Placeholder pattern matched: 'project name'
+
+analysis/run_kaitiaki_meta_trace.py:
+  - Placeholder pattern matched: 'company name'
+  - Placeholder pattern matched: 'project name'
+  - Placeholder pattern matched: 'Your Brand'
+  - Placeholder pattern matched: 'Lorem Ipsum'
+  - Placeholder pattern matched: '(?<!AwaNet\s)Kaitiaki Collective'
+  - Placeholder pattern matched: 'your startup'
+  - Placeholder pattern matched: 'foo bar'
+  - Suspicious external name found: 'Kaitiaki Collective'
+  - Suspicious external name found: 'Mauri Systems'
+  - Suspicious external name found: 'Kaitiaki Labs'
+
+docs/CONTEXT_PACK.md:
+  - Placeholder pattern matched: 'example\.com'
+
+docs/CORS_AND_AUTH.md:
+  - Placeholder pattern matched: 'example\.com'
+
+docs/architecture/MCP_ALIGNMENT.md:
+  - Placeholder pattern matched: 'example\.com'
+
+docs/archived_documents/md/doc11.md:
+  - Placeholder pattern matched: 'project name'
+
+docs/archived_documents/md/doc9.md:
+  - Placeholder pattern matched: 'project name'
+
+docs/chat/271225_awa_gpt_sync.md:
+  - Placeholder pattern matched: 'company name'
+  - Placeholder pattern matched: 'project name'
+  - Placeholder pattern matched: 'Your Brand'
+  - Placeholder pattern matched: 'Lorem Ipsum'
+  - Placeholder pattern matched: '(?<!AwaNet\s)Kaitiaki Collective'
+  - Suspicious external name found: 'Kaitiaki Collective'
+  - Suspicious external name found: 'Kaitiaki Collective'
+  - Suspicious external name found: 'Mauri Systems'
+
+docs/reference/API_CONTRACTS.md:
+  - Placeholder pattern matched: 'example\.com'
+
+docs/root/COMPLETE_WORKFLOW.md:
+  - Placeholder pattern matched: 'example\.com'
+
+docs/root/REALM_GENERATOR.md:
+  - Placeholder pattern matched: 'example\.com'
+
+docs/root/REALM_ISOLATION.md:
+  - Placeholder pattern matched: 'example\.com'
+
+docs/root_docs/MASTER_SUMMARY.md:
+  - Placeholder pattern matched: 'example\.com'
+
+docs/root_docs/REFACTOR_INDEX.md:
+  - Placeholder pattern matched: 'example\.com'
+
+docs/root_docs/REFACTOR_SUMMARY.md:
+  - Placeholder pattern matched: 'example\.com'
+
+kitenga_mcp/cloudflare/tools.json:
+  - Placeholder pattern matched: 'project name'
+
+kitenga_mcp/tools/manifests/cloudflare_tools.json:
+  - Placeholder pattern matched: 'project name'
+
+mauri/archived/scripts/generate_test_files_tepo.py:
+  - Placeholder pattern matched: 'Lorem Ipsum'
+
+mauri/openai_gpt.json:
+  - Placeholder pattern matched: 'project name'
+
+scripts/tests/test_template.py:
+  - Placeholder pattern matched: 'example\.com'
+
+te_hau/cli/hau.py:
+  - Placeholder pattern matched: 'project name'
+  - Placeholder pattern matched: 'example\.com'
+
+te_hau/core/healing.py:
+  - Placeholder pattern matched: 'project name'
+
+te_hau/project_template/.github/workflows/health-check.yml:
+  - Placeholder pattern matched: 'example\.com'
+
+te_hau/project_template/config/realm.json:
+  - Placeholder pattern matched: 'example\.com'
+
+te_hau/project_template/docs/CLI_PLAN.md:
+  - Placeholder pattern matched: 'project name'
+
+te_hau/project_template/mauri/kaitiaki_templates/realm.yaml:
+  - Placeholder pattern matched: 'example\.com'
+
+te_hau/project_template/template.config.json:
+  - Placeholder pattern matched: 'project name'
+  - Placeholder pattern matched: 'example\.com'
+
+te_hau/scripts/generate_realm.py:
+  - Placeholder pattern matched: 'example\.com'
+
+te_hau/scripts/generate_realm_old.py:
+  - Placeholder pattern matched: 'example\.com'
+
+te_hau/verbs/security.py:
+  - Placeholder pattern matched: 'example\.com'
+
+te_po/routes/realm_generator.py:
+  - Placeholder pattern matched: 'project name'
+
+te_po/services/realm_generator.py:
+  - Placeholder pattern matched: 'project name'
+  - Placeholder pattern matched: 'example\.com'
+
+te_po/storage/chunks/chunk_0c6d8b69446b45e5800abf765ea8dbf3.json:
+  - Placeholder pattern matched: 'example\.com'
+
+te_po/storage/chunks/chunk_7c811dfb8bb946878b9e04ff11f617c0.json:
+  - Placeholder pattern matched: 'example\.com'
+
+te_po/storage/chunks/chunk_8cbe42265b634cdf9f1d4a322640e149.json:
+  - Placeholder pattern matched: 'example\.com'
+
+te_po/templates/realm_template/config/realm.yaml:
+  - Placeholder pattern matched: 'example\.com'

@@ -1,6 +1,6 @@
 # Te Kaitiaki o ngā Āhua Kawenga — Payload Registry
 
-**Scan time:** 2025-12-23T20:59:56.498397
+**Scan time:** 2025-12-27T10:04:57.029481
 **Mauri score:** 10 / 10
 
 ## Realm Whakapapa
@@ -68,6 +68,30 @@
 - Mauri score: 1
 
 ### GET /tools/list → list_tools
+- Module: kitenga_mcp.app_server
+- Whakapapa path: kitenga_mcp/app_server.py
+- Registered route: yes
+- Mauri score: 1
+
+### GET /openapi-core.json → openapi_core
+- Module: kitenga_mcp.app_server
+- Whakapapa path: kitenga_mcp/app_server.py
+- Registered route: yes
+- Mauri score: 1
+
+### GET /.well-known/openapi-core.json → openapi_core_well_known
+- Module: kitenga_mcp.app_server
+- Whakapapa path: kitenga_mcp/app_server.py
+- Registered route: yes
+- Mauri score: 1
+
+### GET /openai_tools.json → openai_tools
+- Module: kitenga_mcp.app_server
+- Whakapapa path: kitenga_mcp/app_server.py
+- Registered route: yes
+- Mauri score: 1
+
+### GET /.well-known/ai-plugin.json → ai_plugin
 - Module: kitenga_mcp.app_server
 - Whakapapa path: kitenga_mcp/app_server.py
 - Registered route: yes
@@ -148,6 +172,30 @@
 - Mauri score: 1
 
 ### GET /tools/list → list_tools_manifest
+- Module: kitenga_mcp.app_server
+- Whakapapa path: kitenga_mcp/app_server.py
+- Registered route: yes
+- Mauri score: 1
+
+### GET /mcp/tools/list → list_tools_manifest_alias
+- Module: kitenga_mcp.app_server
+- Whakapapa path: kitenga_mcp/app_server.py
+- Registered route: yes
+- Mauri score: 1
+
+### GET /openapi-core.json → openapi_core
+- Module: kitenga_mcp.app_server
+- Whakapapa path: kitenga_mcp/app_server.py
+- Registered route: yes
+- Mauri score: 1
+
+### GET /.well-known/openapi-core.json → openapi_core_well_known
+- Module: kitenga_mcp.app_server
+- Whakapapa path: kitenga_mcp/app_server.py
+- Registered route: yes
+- Mauri score: 1
+
+### GET /mcp/openapi-core.json → openapi_core_mcp_alias
 - Module: kitenga_mcp.app_server
 - Whakapapa path: kitenga_mcp/app_server.py
 - Registered route: yes
@@ -1126,6 +1174,22 @@
 - Registered route: no
 - Mauri score: 1
 
+### POST /git-checklist → run_git_checklist
+- Module: te_po.routes.automation
+- Whakapapa path: te_po/routes/automation.py
+- Registered route: no
+- Mauri score: 2
+- Parameters:
+  - payload (GitChecklistPayload) → fields: message
+- Example payload:
+```json
+{
+  "payload": {
+    "message": "example_message"
+  }
+}
+```
+
 ### POST /tools/run → run_tool
 - Module: te_po.routes.kitenga_tool_router
 - Whakapapa path: te_po/routes/kitenga_tool_router.py
@@ -1864,4 +1928,4 @@
 
 ---
 Author: awa developer (Kitenga Whiro [Adrian Hemi])
-Protection: {"kaitiaki_signature": "k9_72c5c83f24066e71", "encoding_version": "tawhiri_v1.0", "cultural_protection": "active", "ownership": "Te Kaitiaki Collective", "theft_protection": true, "original_hash": "72c5c83f24066e71", "encoding_timestamp": "2025-10-21", "liberation_marker": "w4o4_protected"}
+Protection: {"kaitiaki_signature": "k9_72c5c83f24066e71", "encoding_version": "tawhiri_v1.0", "cultural_protection": "active", "ownership": "AwaNet Kaitiaki Collective", "theft_protection": true, "original_hash": "72c5c83f24066e71", "encoding_timestamp": "2025-10-21", "liberation_marker": "w4o4_protected"}

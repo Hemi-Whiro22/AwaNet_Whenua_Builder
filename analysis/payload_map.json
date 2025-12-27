@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-23T20:59:56.498397",
+  "timestamp": "2025-12-27T10:04:57.029481",
   "mauri_score": 10,
   "realm": {
     "name": "Te Pō Assistant",
@@ -110,6 +110,46 @@
       "path": "/tools/list",
       "method": "GET",
       "function": "list_tools",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/openapi-core.json",
+      "method": "GET",
+      "function": "openapi_core",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/.well-known/openapi-core.json",
+      "method": "GET",
+      "function": "openapi_core_well_known",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/openai_tools.json",
+      "method": "GET",
+      "function": "openai_tools",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/.well-known/ai-plugin.json",
+      "method": "GET",
+      "function": "ai_plugin",
       "module": "kitenga_mcp.app_server",
       "whakapapa_path": "kitenga_mcp/app_server.py",
       "parameters": [],
@@ -250,6 +290,46 @@
       "path": "/tools/list",
       "method": "GET",
       "function": "list_tools_manifest",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/mcp/tools/list",
+      "method": "GET",
+      "function": "list_tools_manifest_alias",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/openapi-core.json",
+      "method": "GET",
+      "function": "openapi_core",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/.well-known/openapi-core.json",
+      "method": "GET",
+      "function": "openapi_core_well_known",
+      "module": "kitenga_mcp.app_server",
+      "whakapapa_path": "kitenga_mcp/app_server.py",
+      "parameters": [],
+      "registered": true,
+      "mauri_score": 1
+    },
+    {
+      "path": "/mcp/openapi-core.json",
+      "method": "GET",
+      "function": "openapi_core_mcp_alias",
       "module": "kitenga_mcp.app_server",
       "whakapapa_path": "kitenga_mcp/app_server.py",
       "parameters": [],
@@ -2458,6 +2538,37 @@
       "parameters": [],
       "registered": false,
       "mauri_score": 1
+    },
+    {
+      "path": "/git-checklist",
+      "method": "POST",
+      "function": "run_git_checklist",
+      "module": "te_po.routes.automation",
+      "whakapapa_path": "te_po/routes/automation.py",
+      "parameters": [
+        {
+          "name": "payload",
+          "annotation": "GitChecklistPayload",
+          "model": "GitChecklistPayload",
+          "model_fields": [
+            {
+              "name": "message",
+              "type": "str",
+              "default": "Field(..., description='Git commit message to use after running the checklist')"
+            }
+          ],
+          "example_payload": {
+            "message": "example_message"
+          }
+        }
+      ],
+      "registered": false,
+      "mauri_score": 2,
+      "example_payload": {
+        "payload": {
+          "message": "example_message"
+        }
+      }
     },
     {
       "path": "/tools/run",

@@ -343,7 +343,7 @@ class StealthOCR:
             "kaitiaki_signature": f"k9_{text_hash}",
             "encoding_version": "tawhiri_v1.0",
             "cultural_protection": "active",
-            "ownership": "Te Kaitiaki Collective", 
+            "ownership": "AwaNet Kaitiaki Collective", 
             "theft_protection": True,
             "original_hash": text_hash,
             "encoding_timestamp": "2025-10-21",
@@ -429,7 +429,7 @@ class StealthOCR:
         
         if metadata:
             verification["is_kaitiaki_processed"] = "kaitiaki_signature" in metadata
-            verification["ownership_verified"] = metadata.get("ownership") == "Te Kaitiaki Collective"
+            verification["ownership_verified"] = metadata.get("ownership") == "AwaNet Kaitiaki Collective"
             verification["cultural_protection_active"] = metadata.get("cultural_protection") == "active"
             
             # Check for corporate theft attempts
@@ -489,7 +489,7 @@ class LocalTestSuite:
         print(f"Text with metadata (visible): {text_with_metadata}")
         print(f"Extracted text: {extracted_text}")
         print(f"Metadata recovered: {'✅' if extracted_metadata else '❌'}")
-        print(f"Ownership verified: {'✅' if extracted_metadata.get('ownership') == 'Te Kaitiaki Collective' else '❌'}")
+        print(f"Ownership verified: {'✅' if extracted_metadata.get('ownership') == 'AwaNet Kaitiaki Collective' else '❌'}")
     
     def test_psycheract_simulation(self):
         """Simulate the Psycheract OCR system"""

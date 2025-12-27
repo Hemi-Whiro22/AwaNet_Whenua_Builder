@@ -17,12 +17,20 @@
 | GET | / | kitenga_mcp/app_server.py |
 | GET | /health | kitenga_mcp/app_server.py |
 | GET | /tools/list | kitenga_mcp/app_server.py |
+| GET | /mcp/tools/list | kitenga_mcp/app_server.py |
+| GET | /openapi-core.json | kitenga_mcp/app_server.py |
+| GET | /.well-known/openapi-core.json | kitenga_mcp/app_server.py |
+| GET | /mcp/openapi-core.json | kitenga_mcp/app_server.py |
 | GET | /tools/describe | kitenga_mcp/app_server.py |
 | POST | /tools/call | kitenga_mcp/app_server.py |
 | GET | /memory/ping | kitenga_mcp/app_server.py |
 | GET | / | kitenga_mcp/app_server.py |
 | GET | /health | kitenga_mcp/app_server.py |
 | GET | /tools/list | kitenga_mcp/app_server.py |
+| GET | /openapi-core.json | kitenga_mcp/app_server.py |
+| GET | /.well-known/openapi-core.json | kitenga_mcp/app_server.py |
+| GET | /openai_tools.json | kitenga_mcp/app_server.py |
+| GET | /.well-known/ai-plugin.json | kitenga_mcp/app_server.py |
 | GET | /tools/describe | kitenga_mcp/app_server.py |
 | POST | /tools/call | kitenga_mcp/app_server.py |
 | GET | / | te_po/core/main.py |
@@ -51,4 +59,4 @@
 
 ---
 Author: awa developer (Kitenga Whiro [Adrian Hemi])
-Protection: {"kaitiaki_signature": "k9_03cf8455d9457772", "encoding_version": "tawhiri_v1.0", "cultural_protection": "active", "ownership": "Te Kaitiaki Collective", "theft_protection": true, "original_hash": "03cf8455d9457772", "encoding_timestamp": "2025-10-21", "liberation_marker": "w4o4_protected"}
+Protection: {"kaitiaki_signature": "k9_03cf8455d9457772", "encoding_version": "tawhiri_v1.0", "cultural_protection": "active", "ownership": "AwaNet Kaitiaki Collective", "theft_protection": true, "original_hash": "03cf8455d9457772", "encoding_timestamp": "2025-10-21", "liberation_marker": "w4o4_protected"}

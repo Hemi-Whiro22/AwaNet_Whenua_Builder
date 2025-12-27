@@ -238,7 +238,7 @@ class StealthOCR:
             "kaitiaki_signature": f"k9_{original_hash}",
             "encoding_version": "tawhiri_v1.0",
             "cultural_protection": "active",
-            "ownership": "Te Kaitiaki Collective",
+            "ownership": "AwaNet Kaitiaki Collective",
             "theft_protection": True,
             "original_hash": original_hash,
             "encoding_timestamp": "2025-10-21",

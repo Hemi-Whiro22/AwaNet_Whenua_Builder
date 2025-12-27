@@ -87,6 +87,26 @@
   {
     "file": "kitenga_mcp/app_server.py",
     "method": "GET",
+    "path": "/mcp/tools/list"
+  },
+  {
+    "file": "kitenga_mcp/app_server.py",
+    "method": "GET",
+    "path": "/openapi-core.json"
+  },
+  {
+    "file": "kitenga_mcp/app_server.py",
+    "method": "GET",
+    "path": "/.well-known/openapi-core.json"
+  },
+  {
+    "file": "kitenga_mcp/app_server.py",
+    "method": "GET",
+    "path": "/mcp/openapi-core.json"
+  },
+  {
+    "file": "kitenga_mcp/app_server.py",
+    "method": "GET",
     "path": "/tools/describe"
   },
   {
@@ -113,6 +133,26 @@
     "file": "kitenga_mcp/app_server.py",
     "method": "GET",
     "path": "/tools/list"
+  },
+  {
+    "file": "kitenga_mcp/app_server.py",
+    "method": "GET",
+    "path": "/openapi-core.json"
+  },
+  {
+    "file": "kitenga_mcp/app_server.py",
+    "method": "GET",
+    "path": "/.well-known/openapi-core.json"
+  },
+  {
+    "file": "kitenga_mcp/app_server.py",
+    "method": "GET",
+    "path": "/openai_tools.json"
+  },
+  {
+    "file": "kitenga_mcp/app_server.py",
+    "method": "GET",
+    "path": "/.well-known/ai-plugin.json"
   },
   {
     "file": "kitenga_mcp/app_server.py",

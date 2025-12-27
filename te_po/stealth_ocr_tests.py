@@ -44,7 +44,7 @@ class LocalTestSuite:
         print(f"Extracted text: {extracted_text}")
         print(f"Metadata recovered: {'✅' if extracted_metadata else '❌'}")
         print(
-            f"Ownership verified: {'✅' if extracted_metadata.get('ownership') == 'Te Kaitiaki Collective' else '❌'}"
+            f"Ownership verified: {'✅' if extracted_metadata.get('ownership') == 'AwaNet Kaitiaki Collective' else '❌'}"
         )
 
     def test_psycheract_simulation(self):

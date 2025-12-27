@@ -41,6 +41,180 @@ ANALYSIS_ARTIFACT_DEFS = [
     ("mcp_tools_manifest", MCP_TOOLS_MANIFEST, "json"),
 ]
 
+REALM_README_CONFIGS = [
+    {
+        "id": "te_po",
+        "title": "Te Pō – AwaNet Backend Realm",
+        "root": ROOT_DIR / "te_po",
+        "purpose": "Te Pō houses the FastAPI-driven intelligence, pipelines, and OCR services that power AwaNet.",
+        "reason": "clarify the backend role and surface the state, manifest, and pipeline touchpoints so our kaitiaki tooling and Codex agents can keep context fresh while we reorganise the wider awa.",
+        "structure": [
+            {"path": "app.py / main.py", "description": "Expose the FastAPI app that federates routes, helpers, and diagnostics."},
+            {"path": "core/, services/, pipeline/", "description": "Encapsulate domain logic, OpenAI workflows, Supabase connectors, and automated jobs."},
+            {"path": "mauri/, state/, storage/", "description": "Hold guarded context, carving logs, and Supabase schema/state definitions."},
+            {"path": "scripts/, tests/", "description": "Utility helpers, dev scripts, and pytest suites that keep the backend resilient."},
+            {"path": "analysis/, docs/ (root)", "description": "Explain architecture, manifest intent, and route summaries for humans and kaitiaki."},
+        ],
+        "how_to_run": {
+            "dev_start": ["uvicorn te_po.main:app --reload --host 0.0.0.0 --port 8010"],
+            "tests": ["pytest"],
+            "key_env": [
+                "OPENAI_API_KEY",
+                "KITENGA_ASSISTANT_ID",
+                "KITENGA_VECTOR_STORE_ID",
+                "OPENAI_BASE_URL",
+                "SUPABASE_URL",
+                "SUPABASE_SERVICE_ROLE_KEY",
+                "TE_PO_STATE_BUCKET",
+            ],
+        },
+        "main_files": [
+            {"path": "core/, services/", "purpose": "Business logic, assistant orchestration, OCR, vector helpers."},
+            {"path": "pipeline/, migrations/", "purpose": "ETL jobs, data drift detection, schema updates."},
+            {"path": "state/, mauri/, storage/", "purpose": "Context snapshots, carving logs, Supabase/pgvector state."},
+            {"path": "scripts/, tests/", "purpose": "Dev tools, export helpers, pytest suites."},
+            {"path": "analysis/, docs/ (root)", "purpose": "Route catalogs, sync scripts, and architecture intent."},
+        ],
+        "connects_to": [
+            "Supabase vector tables",
+            "OpenAI APIs",
+            "kitenga_mcp tooling",
+            "mauri/state/te_po_state.json",
+            "analysis root reviews",
+        ],
+        "consumed_by": [
+            "te_ao dashboards",
+            "te_hau CLI proxies",
+            "analysis sync jobs",
+            "external UIs needing translation/OCR",
+        ],
+        "why_structure": [
+            "The split keeps API logic, memory/state snapshots, and automation tooling in well-defined folders so updates stay readable.",
+            "Manifest and state directories keep kaitiaki context packaged for Codex and downstream syncs.",
+            "`analysis/` + `docs/` act as the living map so the backend intent is discoverable before we move code around.",
+        ],
+        "kaitiaki_notes": [
+            "After touching routes, tools, or manifests, rerun /analysis/kaitiaki_context_sync.py and update /analysis/routes_summary.json so the wake and memory stay aligned.",
+            "Keep mauri/state/te_po_state.json and the Supabase schema snapshots in sync with any schema/pipeline changes.",
+            "Document architectural shifts in docs/architecture/ and docs/context/CONTEXT.md so future kaitiaki inherit the intent.",
+        ],
+    },
+    {
+        "id": "te_hau",
+        "title": "Te Hau – AwaNet Automation Realm",
+        "root": ROOT_DIR / "te_hau",
+        "purpose": "Te Hau orchestrates CLI tooling, automation, and proxy layers that keep Te Pō reachable for developers and other kaitiaki.",
+        "reason": "document how the CLI, event routing, and manifest generation bridge the backend and frontend so we can automate context syncs without losing the wai/tikanga embedded in this layer.",
+        "structure": [
+            {"path": "app.py", "description": "FastAPI bridge that relays Te Ao/Kitenga requests to Te Pō and emits events onto the awa bus."},
+            {"path": "cli/, core/, services/", "description": "CLI commands, kaitiaki orchestration helpers, request emitters, and context stores."},
+            {"path": "mauri/, state.yaml, mauri/scripts/", "description": "Templates and compiled manifests that define agent memory for automation tasks."},
+            {"path": "scripts/, start_tehau.sh", "description": "Boot scripts that wire Te Hau into the infrastructure and capture logs."},
+            {"path": "docs/, analysis/ (root)", "description": "Share knowledge of proxies, automation intent, and context sync guidance with other realms."},
+        ],
+        "how_to_run": {
+            "dev_start": ["uvicorn te_hau.app:app --reload --host 0.0.0.0 --port 8020"],
+            "tests": ["pytest"],
+            "key_env": [
+                "TE_HAU_MAURI_PATH",
+                "TE_PO_URL",
+                "KITENGA_PORT",
+                "SUPABASE_URL",
+                "SUPABASE_SERVICE_ROLE_KEY",
+                "CF_TUNNEL_ID",
+                "CF_TUNNEL_NAME",
+                "CF_TUNNEL_HOSTNAME",
+                "OPENAI_API_KEY",
+            ],
+        },
+        "main_files": [
+            {"path": "cli/, core/, services/", "purpose": "CLI commands, orchestration helpers, awa bus emitters, OCR/proxy clients."},
+            {"path": "start_tehau.sh, Dockerfile", "purpose": "Launch scripts that wire Te Hau into the wider CD pipeline."},
+            {"path": "mauri/, state.yaml, mauri/scripts/", "purpose": "Templates and compiled manifests capturing automation memory and agent identities."},
+            {"path": "scripts/, kitenga_whakairo/", "purpose": "Utility scripts and carving tools used by governance kaitiaki."},
+            {"path": "docs/, analysis/ (root)", "purpose": "Explanation of proxies, automation intent, and context sync guidance."},
+        ],
+        "connects_to": [
+            "Te Pō APIs",
+            "kitenga_mcp",
+            "Supabase for event persistence",
+            "Local mauri store for agent memory",
+        ],
+        "consumed_by": [
+            "Te Ao UI",
+            "Kitenga CLI consumers",
+            "Codex/IDE assistants",
+            "Automation jobs that inject context or emit events",
+        ],
+        "why_structure": [
+            "Separating CLI tooling, proxies, and mauri compilations keeps automation logic simple to audit and adjust as we restructure the awa.",
+            "The manifest/state folders ensure every change is mirrored in the kaitiaki templates that feed other realms.",
+            "Scripts and start_tehau.sh centralize environment loading so Te Hau can keep emitting events even when infrastructure shifts.",
+        ],
+        "kaitiaki_notes": [
+            "After touching CLI endpoints, rerun mauri/scripts/compile_kaitiaki.py so every automation kaitiaki manifest aligns with the new intent.",
+            "Keep /analysis/routes_summary.json and /analysis/mcp_tools_manifest.json updated with any new proxies, CLI routes, or tool loaders that Te Hau introduces.",
+            "Use docs/context/CONTEXT.md and docs/guides/GUARDIANS.md to narrate changes so future kaitiaki understand the automation contracts.",
+        ],
+    },
+    {
+        "id": "te_ao",
+        "title": "Te Ao – AwaNet Frontend Realm",
+        "root": ROOT_DIR / "te_ao",
+        "purpose": "Te Ao delivers the React/Vite dashboard and overview UI that surfaces OCR, translation, and state awareness for whānau and kaitiaki.",
+        "reason": "capture the UI’s purpose, connection points, and memory dependencies so we can automate documentation for every realm before we start moving code.",
+        "structure": [
+            {"path": "src/", "description": "React entrypoints, state management utilities, and UI components that talk to Te Pō and Te Hau."},
+            {"path": "config/, state/", "description": "Static config files plus the cached te_ao_state.json that keeps the interface aligned with the backend."},
+            {"path": "public/, dist/", "description": "Static assets and production build output for deployments."},
+            {"path": "package.json, node_modules/", "description": "Frontend tooling and dependencies managed by Vite and Tailwind."},
+            {"path": "docs/, analysis/ (root)", "description": "Document how the UI fits into the wider awa and record any new routes or endpoints."},
+        ],
+        "how_to_run": {
+            "dev_start": [
+                "npm install",
+                "npm run dev -- --host 0.0.0.0 --port 5173",
+            ],
+            "tests": ["npm run build", "npm run preview"],
+            "key_env": [
+                "VITE_API_BASE_URL",
+                "VITE_TE_HAU_PROXY_URL",
+                "VITE_SUPABASE_URL",
+                "VITE_SUPABASE_ANON_KEY",
+                "VITE_KITENGA_PORT",
+            ],
+        },
+        "main_files": [
+            {"path": "src/", "purpose": "React components, state hooks, and API utilities targeting Te Pō/Te Hau."},
+            {"path": "state/te_ao_state.json", "purpose": "Cached context that informs UI flows and bookmarks."},
+            {"path": "config/, public/", "purpose": "Theme/config presets plus static assets (icons, logos)."},
+            {"path": "dist/", "purpose": "Production bundle produced by npm run build."},
+            {"path": "docs/, analysis/ (root)", "purpose": "Human-readable architecture, route summaries, and automation expectations."},
+        ],
+        "connects_to": [
+            "Te Pō FastAPI routes",
+            "Te Hau proxies",
+            "Supabase insights",
+            "Mauri/state files that keep UI state durable",
+        ],
+        "consumed_by": [
+            "Product teams",
+            "Kaitiaki",
+            "Automation agents relying on the UI to monitor health, translation, and pipeline status",
+        ],
+        "why_structure": [
+            "The split between UI code, state snapshots, and production/dist assets keeps build tooling tidy and makes it obvious where to update the front-end when APIs evolve.",
+            "state/ holds the enduring context that Te Ao needs so the UI can replay the awa state even if the backend is still warming up.",
+            "Referencing docs/ and analysis/ ensures the UI is described in the same language as the other realms.",
+        ],
+        "kaitiaki_notes": [
+            "Keep state/te_ao_state.json and mauri/state/te_ao_state.json synced whenever new UI flows or statuses are added.",
+            "When routes used in the UI change, update /analysis/routes_summary.json and rerun /analysis/kaitiaki_context_sync.py so automations know about the new surface area.",
+            "Use docs/context/CONTEXT.md and docs/guides/DEVELOPMENT.md to explain how the UI should be consumed by future kaitiaki dashboards.",
+        ],
+    },
+]
+
 KARAKIA_TIMATANGA = "🌿  KARAKIA TIMATANGA"
 KARAKIA_WHAKAMUTUNGA = "🌊  KARAKIA WHAKAMUTUNGA"
 
@@ -242,6 +416,74 @@ def _maybe_sync_supabase(summary: Dict[str, Any], logger: Any) -> None:
     if not supabase_url or not supabase_key:
         return
     logger("⚡ Supabase credentials detected — summary vector syncing is pending implementation.")
+
+
+def _format_code_block(lines: List[str]) -> List[str]:
+    block: List[str] = ["```sh"]
+    block.extend(lines)
+    block.append("```")
+    return block
+
+
+def _build_readme_text(config: Dict[str, Any]) -> str:
+    lines: List[str] = [f"# {config['title']}", ""]
+    lines.extend(["## Purpose", "", f"{config['purpose']} **Reason for recent changes:** {config['reason']}", ""])
+    lines.append("## Structure")
+    for entry in config["structure"]:
+        lines.append(f"- **`{entry['path']}`**: {entry['description']}")
+    lines.append("")
+    how = config.get("how_to_run", {})
+    lines.append("## How to Run")
+    dev_start = how.get("dev_start")
+    if dev_start:
+        lines.append("- **Dev Start:**")
+        lines.extend(_format_code_block(dev_start))
+    tests = how.get("tests")
+    if tests:
+        lines.append("")
+        lines.append("- **Tests:**")
+        lines.extend(_format_code_block(tests))
+    key_env = how.get("key_env", [])
+    if key_env:
+        lines.append("")
+        lines.append("- **Key Env Vars:**")
+        for env in key_env:
+            lines.append(f"  - {env}")
+    lines.append("")
+    lines.append("### Main Files/Folders")
+    lines.append("| Path | Purpose |")
+    lines.append("| --- | --- |")
+    for entry in config.get("main_files", []):
+        lines.append(f"| `{entry['path']}` | {entry['purpose']} |")
+    lines.append("")
+    lines.append("## How it Connects")
+    connects_to = config.get("connects_to", [])
+    consumed_by = config.get("consumed_by", [])
+    if connects_to:
+        lines.append(f"- **Connects to:** {', '.join(connects_to)}")
+    if consumed_by:
+        lines.append(f"- **Consumed by:** {', '.join(consumed_by)}")
+    lines.append("")
+    lines.append("## Why This Structure?")
+    for inst in config.get("why_structure", []):
+        lines.append(f"- {inst}")
+    lines.append("")
+    lines.append("## Kaitiaki Notes")
+    for note in config.get("kaitiaki_notes", []):
+        lines.append(f"- {note}")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def regenerate_realm_readmes(logger: Any) -> None:
+    log = logger or _default_logger
+    log("🌿  KARAKIA TIMATANGA — regenerating realm READMEs")
+    for config in REALM_README_CONFIGS:
+        readme_path = config["root"] / "README.md"
+        readme_path.parent.mkdir(parents=True, exist_ok=True)
+        readme_path.write_text(_build_readme_text(config), encoding="utf-8")
+        log(f"✅ Updated {readme_path.relative_to(ROOT_DIR)}")
+    log("🌊  KARAKIA WHAKAMUTUNGA — realm README regeneration complete")
 
 
 def _read_json_file(path: Path, logger: Any) -> Optional[Dict[str, Any]]:
@@ -594,6 +836,7 @@ def generate_payload_map(routes: Optional[Iterable[Dict[str, Any]]] = None,
     except RuntimeError as exc:
         log(f"⚠️ Full Supabase sync bypassed: {exc}")
     log(f"Payload map persists {len(payload_shapes)} shapes; drift added {len(drift['added'])}, removed {len(drift['removed'])}, changed {len(drift['changed'])}.")
+    regenerate_realm_readmes(log)
     log(KARAKIA_WHAKAMUTUNGA)
     return {"count": len(payload_shapes), "drift": drift}
 
