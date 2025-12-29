@@ -2,6 +2,12 @@
 """Generate sample files for each supported extension and run the Te Pō pipeline."""
 
 from __future__ import annotations
+from taonga.sync_status import (
+    fetch_analysis_sync_status,
+    fetch_latest_analysis_document_content,
+)
+from te_po.utils.supabase_client import get_client
+from te_po.pipeline.orchestrator.pipeline_orchestrator import run_pipeline
 
 import argparse
 import json
@@ -15,12 +21,6 @@ from typing import Callable, Dict, List, Tuple
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.append(str(ROOT))
 
-from te_po.pipeline.orchestrator.pipeline_orchestrator import run_pipeline
-from te_po.utils.supabase_client import get_client
-from analysis.sync_status import (
-    fetch_analysis_sync_status,
-    fetch_latest_analysis_document_content,
-)
 SAMPLE_DIR = ROOT / "analysis" / "live_samples"
 
 
@@ -51,8 +51,10 @@ def create_wave(path: Path, duration=1.0) -> None:
         handle.setnchannels(1)
         handle.setsampwidth(2)
         handle.setframerate(44100)
-        data = (int(amplitude * math.sin(2 * math.pi * 440 * t / 44100)) for t in range(samples))
-        frames = b"".join(int(sample).to_bytes(2, "little", signed=True) for sample in data)
+        data = (int(amplitude * math.sin(2 * math.pi * 440 * t / 44100))
+                for t in range(samples))
+        frames = b"".join(int(sample).to_bytes(
+            2, "little", signed=True) for sample in data)
         handle.writeframes(frames)
 
 
@@ -61,14 +63,19 @@ def create_samples() -> List[Path]:
     SAMPLE_DIR.mkdir(parents=True, exist_ok=True)
     samples: List[Tuple[str, Callable[[Path], None]]] = [
         ("sample.txt", lambda p: create_text_file(p, sample_text)),
-        ("sample.md", lambda p: create_text_file(p, f"# Sample Markdown\n\n{sample_text}")),
-        ("sample.json", lambda p: create_json(p, {"text": sample_text, "tags": ["pipeline", "test"]})),
-        ("sample.yaml", lambda p: create_text_file(p, f"text: \"{sample_text}\"\ntags:\n  - pipeline\n  - test")),
-        ("sample.html", lambda p: create_text_file(p, "<html><body><p>" + sample_text + "</p></body></html>")),
+        ("sample.md", lambda p: create_text_file(
+            p, f"# Sample Markdown\n\n{sample_text}")),
+        ("sample.json", lambda p: create_json(
+            p, {"text": sample_text, "tags": ["pipeline", "test"]})),
+        ("sample.yaml", lambda p: create_text_file(
+            p, f"text: \"{sample_text}\"\ntags:\n  - pipeline\n  - test")),
+        ("sample.html", lambda p: create_text_file(
+            p, "<html><body><p>" + sample_text + "</p></body></html>")),
         ("sample.htm", lambda p: create_text_file(p, "<p>" + sample_text + "</p>")),
     ]
 
     Image, ImageDraw = ensure_pillow()
+
     def _make_image(path: Path, mode="PNG") -> None:
         img = Image.new("RGB", (128, 128), color="navy")
         draw = ImageDraw.Draw(img)
@@ -143,8 +150,10 @@ def fetch_supabase_snapshot() -> Dict[str, object]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Generate test files and run the Te Pō pipeline.")
-    parser.add_argument("--skip-samples", action="store_true", help="Do not recreate sample files.")
+    parser = argparse.ArgumentParser(
+        description="Generate test files and run the Te Pō pipeline.")
+    parser.add_argument("--skip-samples", action="store_true",
+                        help="Do not recreate sample files.")
     args = parser.parse_args()
 
     if not args.skip_samples:

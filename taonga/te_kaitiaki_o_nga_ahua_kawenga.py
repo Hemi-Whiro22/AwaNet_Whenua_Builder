@@ -21,10 +21,11 @@ ANALYSIS_DIR = Path(__file__).resolve().parent
 ROOT_DIR = ANALYSIS_DIR.parent
 sys.path.append(str(ROOT_DIR))
 from te_po.utils.supabase_client import get_client  # noqa: E402
-from analysis import metadata as analysis_metadata  # noqa: E402
+from taonga import metadata as analysis_metadata  # noqa: E402
 PAYLOAD_JSON = ANALYSIS_DIR / "payload_map.json"
 PAYLOAD_MD = ANALYSIS_DIR / "payload_map.md"
-DRIFT_LOG = ANALYSIS_DIR / f"review_log_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_payload.md"
+DRIFT_LOG = ANALYSIS_DIR / \
+    f"review_log_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_payload.md"
 ROUTES_JSON = ANALYSIS_DIR / "routes.json"
 ROUTES_SUMMARY = ANALYSIS_DIR / "routes_summary.json"
 ROUTES_COMPACT = ANALYSIS_DIR / "routes_compact.md"
@@ -49,11 +50,16 @@ REALM_README_CONFIGS = [
         "purpose": "Te Pō houses the FastAPI-driven intelligence, pipelines, and OCR services that power AwaNet.",
         "reason": "clarify the backend role and surface the state, manifest, and pipeline touchpoints so our kaitiaki tooling and Codex agents can keep context fresh while we reorganise the wider awa.",
         "structure": [
-            {"path": "app.py / main.py", "description": "Expose the FastAPI app that federates routes, helpers, and diagnostics."},
-            {"path": "core/, services/, pipeline/", "description": "Encapsulate domain logic, OpenAI workflows, Supabase connectors, and automated jobs."},
-            {"path": "mauri/, state/, storage/", "description": "Hold guarded context, carving logs, and Supabase schema/state definitions."},
-            {"path": "scripts/, tests/", "description": "Utility helpers, dev scripts, and pytest suites that keep the backend resilient."},
-            {"path": "analysis/, docs/ (root)", "description": "Explain architecture, manifest intent, and route summaries for humans and kaitiaki."},
+            {"path": "app.py / main.py",
+                "description": "Expose the FastAPI app that federates routes, helpers, and diagnostics."},
+            {"path": "core/, services/, pipeline/",
+                "description": "Encapsulate domain logic, OpenAI workflows, Supabase connectors, and automated jobs."},
+            {"path": "mauri/, state/, storage/",
+                "description": "Hold guarded context, carving logs, and Supabase schema/state definitions."},
+            {"path": "scripts/, tests/",
+                "description": "Utility helpers, dev scripts, and pytest suites that keep the backend resilient."},
+            {"path": "analysis/, docs/ (root)",
+             "description": "Explain architecture, manifest intent, and route summaries for humans and kaitiaki."},
         ],
         "how_to_run": {
             "dev_start": ["uvicorn te_po.main:app --reload --host 0.0.0.0 --port 8010"],
@@ -69,11 +75,16 @@ REALM_README_CONFIGS = [
             ],
         },
         "main_files": [
-            {"path": "core/, services/", "purpose": "Business logic, assistant orchestration, OCR, vector helpers."},
-            {"path": "pipeline/, migrations/", "purpose": "ETL jobs, data drift detection, schema updates."},
-            {"path": "state/, mauri/, storage/", "purpose": "Context snapshots, carving logs, Supabase/pgvector state."},
-            {"path": "scripts/, tests/", "purpose": "Dev tools, export helpers, pytest suites."},
-            {"path": "analysis/, docs/ (root)", "purpose": "Route catalogs, sync scripts, and architecture intent."},
+            {"path": "core/, services/",
+                "purpose": "Business logic, assistant orchestration, OCR, vector helpers."},
+            {"path": "pipeline/, migrations/",
+                "purpose": "ETL jobs, data drift detection, schema updates."},
+            {"path": "state/, mauri/, storage/",
+                "purpose": "Context snapshots, carving logs, Supabase/pgvector state."},
+            {"path": "scripts/, tests/",
+                "purpose": "Dev tools, export helpers, pytest suites."},
+            {"path": "analysis/, docs/ (root)",
+             "purpose": "Route catalogs, sync scripts, and architecture intent."},
         ],
         "connects_to": [
             "Supabase vector tables",
@@ -107,10 +118,14 @@ REALM_README_CONFIGS = [
         "reason": "document how the CLI, event routing, and manifest generation bridge the backend and frontend so we can automate context syncs without losing the wai/tikanga embedded in this layer.",
         "structure": [
             {"path": "app.py", "description": "FastAPI bridge that relays Te Ao/Kitenga requests to Te Pō and emits events onto the awa bus."},
-            {"path": "cli/, core/, services/", "description": "CLI commands, kaitiaki orchestration helpers, request emitters, and context stores."},
-            {"path": "mauri/, state.yaml, mauri/scripts/", "description": "Templates and compiled manifests that define agent memory for automation tasks."},
-            {"path": "scripts/, start_tehau.sh", "description": "Boot scripts that wire Te Hau into the infrastructure and capture logs."},
-            {"path": "docs/, analysis/ (root)", "description": "Share knowledge of proxies, automation intent, and context sync guidance with other realms."},
+            {"path": "cli/, core/, services/",
+                "description": "CLI commands, kaitiaki orchestration helpers, request emitters, and context stores."},
+            {"path": "mauri/, state.yaml, mauri/scripts/",
+                "description": "Templates and compiled manifests that define agent memory for automation tasks."},
+            {"path": "scripts/, start_tehau.sh",
+                "description": "Boot scripts that wire Te Hau into the infrastructure and capture logs."},
+            {"path": "docs/, analysis/ (root)",
+             "description": "Share knowledge of proxies, automation intent, and context sync guidance with other realms."},
         ],
         "how_to_run": {
             "dev_start": ["uvicorn te_hau.app:app --reload --host 0.0.0.0 --port 8020"],
@@ -128,11 +143,16 @@ REALM_README_CONFIGS = [
             ],
         },
         "main_files": [
-            {"path": "cli/, core/, services/", "purpose": "CLI commands, orchestration helpers, awa bus emitters, OCR/proxy clients."},
-            {"path": "start_tehau.sh, Dockerfile", "purpose": "Launch scripts that wire Te Hau into the wider CD pipeline."},
-            {"path": "mauri/, state.yaml, mauri/scripts/", "purpose": "Templates and compiled manifests capturing automation memory and agent identities."},
-            {"path": "scripts/, kitenga_whakairo/", "purpose": "Utility scripts and carving tools used by governance kaitiaki."},
-            {"path": "docs/, analysis/ (root)", "purpose": "Explanation of proxies, automation intent, and context sync guidance."},
+            {"path": "cli/, core/, services/",
+                "purpose": "CLI commands, orchestration helpers, awa bus emitters, OCR/proxy clients."},
+            {"path": "start_tehau.sh, Dockerfile",
+                "purpose": "Launch scripts that wire Te Hau into the wider CD pipeline."},
+            {"path": "mauri/, state.yaml, mauri/scripts/",
+                "purpose": "Templates and compiled manifests capturing automation memory and agent identities."},
+            {"path": "scripts/, kitenga_whakairo/",
+                "purpose": "Utility scripts and carving tools used by governance kaitiaki."},
+            {"path": "docs/, analysis/ (root)",
+             "purpose": "Explanation of proxies, automation intent, and context sync guidance."},
         ],
         "connects_to": [
             "Te Pō APIs",
@@ -166,9 +186,12 @@ REALM_README_CONFIGS = [
         "structure": [
             {"path": "src/", "description": "React entrypoints, state management utilities, and UI components that talk to Te Pō and Te Hau."},
             {"path": "config/, state/", "description": "Static config files plus the cached te_ao_state.json that keeps the interface aligned with the backend."},
-            {"path": "public/, dist/", "description": "Static assets and production build output for deployments."},
-            {"path": "package.json, node_modules/", "description": "Frontend tooling and dependencies managed by Vite and Tailwind."},
-            {"path": "docs/, analysis/ (root)", "description": "Document how the UI fits into the wider awa and record any new routes or endpoints."},
+            {"path": "public/, dist/",
+                "description": "Static assets and production build output for deployments."},
+            {"path": "package.json, node_modules/",
+                "description": "Frontend tooling and dependencies managed by Vite and Tailwind."},
+            {"path": "docs/, analysis/ (root)",
+             "description": "Document how the UI fits into the wider awa and record any new routes or endpoints."},
         ],
         "how_to_run": {
             "dev_start": [
@@ -186,10 +209,13 @@ REALM_README_CONFIGS = [
         },
         "main_files": [
             {"path": "src/", "purpose": "React components, state hooks, and API utilities targeting Te Pō/Te Hau."},
-            {"path": "state/te_ao_state.json", "purpose": "Cached context that informs UI flows and bookmarks."},
-            {"path": "config/, public/", "purpose": "Theme/config presets plus static assets (icons, logos)."},
+            {"path": "state/te_ao_state.json",
+                "purpose": "Cached context that informs UI flows and bookmarks."},
+            {"path": "config/, public/",
+                "purpose": "Theme/config presets plus static assets (icons, logos)."},
             {"path": "dist/", "purpose": "Production bundle produced by npm run build."},
-            {"path": "docs/, analysis/ (root)", "purpose": "Human-readable architecture, route summaries, and automation expectations."},
+            {"path": "docs/, analysis/ (root)",
+             "purpose": "Human-readable architecture, route summaries, and automation expectations."},
         ],
         "connects_to": [
             "Te Pō FastAPI routes",
@@ -223,7 +249,8 @@ ROUTE_METHODS = {"get", "post", "put", "patch", "delete"}
 ALLOWED_SCHEMAS = {"public", "graphql_public", "kitenga"}
 REGISTRY_SCHEMA = "kitenga"
 REGISTRY_TABLE = "payload_registry"
-MODEL_MARKERS = {"BaseModel", "BaseSettings", "pydantic.BaseModel", "pydantic.BaseSettings"}
+MODEL_MARKERS = {"BaseModel", "BaseSettings",
+                 "pydantic.BaseModel", "pydantic.BaseSettings"}
 
 
 def _default_logger(message: str) -> None:
@@ -272,7 +299,8 @@ def _collect_models(root: Path) -> Dict[str, Dict[str, Any]]:
         for node in ast.walk(tree):
             if not isinstance(node, ast.ClassDef):
                 continue
-            bases = {_safe_unparse(base) for base in node.bases if _safe_unparse(base)}
+            bases = {_safe_unparse(base)
+                     for base in node.bases if _safe_unparse(base)}
             decs = set()
             for dec in node.decorator_list:
                 target = dec.func if isinstance(dec, ast.Call) else dec
@@ -330,7 +358,7 @@ def _build_example(fields: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 
 def _normalize_signature(parameters: List[Dict[str, Any]]) -> Tuple[str, ...]:
-    return tuple(sorted(f"{param['name']}:{param.get('annotation','') or param.get('model','') or 'any'}" for param in parameters))
+    return tuple(sorted(f"{param['name']}:{param.get('annotation', '') or param.get('model', '') or 'any'}" for param in parameters))
 
 
 def _compute_drift(previous: List[Dict[str, Any]], current: List[Dict[str, Any]]) -> Dict[str, List[str]]:
@@ -339,13 +367,17 @@ def _compute_drift(previous: List[Dict[str, Any]], current: List[Dict[str, Any]]
 
     prev_map = {(_key(entry)): entry for entry in previous}
     curr_map = {(_key(entry)): entry for entry in current}
-    added = [f"{entry['method']} {entry['path']}" for key, entry in curr_map.items() if key not in prev_map]
-    removed = [f"{entry['method']} {entry['path']}" for key, entry in prev_map.items() if key not in curr_map]
+    added = [f"{entry['method']} {entry['path']}" for key,
+             entry in curr_map.items() if key not in prev_map]
+    removed = [f"{entry['method']} {entry['path']}" for key,
+               entry in prev_map.items() if key not in curr_map]
     changed = []
     for key in curr_map:
         if key in prev_map:
-            prev_sig = _normalize_signature(prev_map[key].get("parameters", []))
-            curr_sig = _normalize_signature(curr_map[key].get("parameters", []))
+            prev_sig = _normalize_signature(
+                prev_map[key].get("parameters", []))
+            curr_sig = _normalize_signature(
+                curr_map[key].get("parameters", []))
             if prev_sig != curr_sig:
                 route_label = key.replace("::", " → ")
                 changed.append(route_label)
@@ -353,7 +385,8 @@ def _compute_drift(previous: List[Dict[str, Any]], current: List[Dict[str, Any]]
 
 
 def _build_payload_markdown(summary: Dict[str, Any]) -> str:
-    lines: List[str] = ["# Te Kaitiaki o ngā Āhua Kawenga — Payload Registry", ""]
+    lines: List[str] = [
+        "# Te Kaitiaki o ngā Āhua Kawenga — Payload Registry", ""]
     lines.append(f"**Scan time:** {summary['timestamp']}")
     lines.append(f"**Mauri score:** {summary['mauri_score']} / 10")
     lines.append("")
@@ -364,10 +397,12 @@ def _build_payload_markdown(summary: Dict[str, Any]) -> str:
     lines.append("")
     lines.append("## Payload Shapes")
     for entry in summary.get("payload_shapes", []):
-        lines.append(f"### {entry['method']} {entry['path']} → {entry['function']}")
+        lines.append(
+            f"### {entry['method']} {entry['path']} → {entry['function']}")
         lines.append(f"- Module: {entry['module']}")
         lines.append(f"- Whakapapa path: {entry['whakapapa_path']}")
-        lines.append(f"- Registered route: {'yes' if entry.get('registered') else 'no'}")
+        lines.append(
+            f"- Registered route: {'yes' if entry.get('registered') else 'no'}")
         lines.append(f"- Mauri score: {entry.get('mauri_score', 1)}")
         params = entry.get("parameters", [])
         if params:
@@ -375,12 +410,15 @@ def _build_payload_markdown(summary: Dict[str, Any]) -> str:
             for param in params:
                 desc = f"  - {param['name']} ({param.get('annotation') or param.get('model') or 'any'})"
                 if param.get("model_fields"):
-                    desc += " → fields: " + ", ".join(f"{field['name']}" for field in param['model_fields'])
+                    desc += " → fields: " + \
+                        ", ".join(
+                            f"{field['name']}" for field in param['model_fields'])
                 lines.append(desc)
         if entry.get("example_payload"):
             lines.append("- Example payload:")
             lines.append("```json")
-            lines.append(json.dumps(entry["example_payload"], indent=2, ensure_ascii=False))
+            lines.append(json.dumps(
+                entry["example_payload"], indent=2, ensure_ascii=False))
             lines.append("```")
         lines.append("")
     drift = summary.get("drift", {})
@@ -393,21 +431,26 @@ def _build_payload_markdown(summary: Dict[str, Any]) -> str:
     lines.append("")
     lines.append("## Notes")
     if drift.get("added") or drift.get("removed") or drift.get("changed"):
-        lines.append("- Schema drift detected — keep this artifact aligned with route changes.")
-    lines.append("- Karakia: E rere ana te awa o ngā whakaaro, kia tau te mauri o tēnei mahi. Haumi e, hui e, tāiki e.")
+        lines.append(
+            "- Schema drift detected — keep this artifact aligned with route changes.")
+    lines.append(
+        "- Karakia: E rere ana te awa o ngā whakaaro, kia tau te mauri o tēnei mahi. Haumi e, hui e, tāiki e.")
     return "\n".join(lines)
 
 
 def _write_payload_markdown(summary: Dict[str, Any]) -> None:
     text = _build_payload_markdown(summary)
     PAYLOAD_MD.write_text(text, encoding="utf-8")
-    metadata = analysis_metadata.write_metadata_file(PAYLOAD_MD, "analysis_payload_map_md")
+    metadata = analysis_metadata.write_metadata_file(
+        PAYLOAD_MD, "analysis_payload_map_md")
     analysis_metadata.append_markdown_footer(PAYLOAD_MD, metadata)
 
 
 def _write_payload_json(summary: Dict[str, Any]) -> None:
-    PAYLOAD_JSON.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
-    analysis_metadata.write_metadata_file(PAYLOAD_JSON, "analysis_payload_map_json")
+    PAYLOAD_JSON.write_text(json.dumps(
+        summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    analysis_metadata.write_metadata_file(
+        PAYLOAD_JSON, "analysis_payload_map_json")
 
 
 def _maybe_sync_supabase(summary: Dict[str, Any], logger: Any) -> None:
@@ -427,7 +470,8 @@ def _format_code_block(lines: List[str]) -> List[str]:
 
 def _build_readme_text(config: Dict[str, Any]) -> str:
     lines: List[str] = [f"# {config['title']}", ""]
-    lines.extend(["## Purpose", "", f"{config['purpose']} **Reason for recent changes:** {config['reason']}", ""])
+    lines.extend(
+        ["## Purpose", "", f"{config['purpose']} **Reason for recent changes:** {config['reason']}", ""])
     lines.append("## Structure")
     for entry in config["structure"]:
         lines.append(f"- **`{entry['path']}`**: {entry['description']}")
@@ -495,7 +539,8 @@ def _read_json_file(path: Path, logger: Any) -> Optional[Dict[str, Any]]:
 
 
 def _latest_review_logs(limit: int = LATEST_LOGS_LIMIT) -> List[Path]:
-    logs = sorted(ANALYSIS_DIR.glob("review_log_*.md"), key=lambda p: p.stat().st_mtime)
+    logs = sorted(ANALYSIS_DIR.glob("review_log_*.md"),
+                  key=lambda p: p.stat().st_mtime)
     return logs[-limit:]
 
 
@@ -554,6 +599,7 @@ async def _sync_analysis_documents(artifacts: List[Dict[str, Any]], logger: Any)
             "text_content": artifact["text"],
             "metadata": artifact["metadata"],
         }
+
         def _upsert():
             return doc_ref.upsert(payload, on_conflict="name").execute()
         try:
@@ -635,7 +681,8 @@ async def full_supabase_sync(summary: Dict[str, Any], logger: Any) -> Dict[str, 
                                 filtered.add(f"{schema}.{table}")
                         return sorted(filtered)
                     return sorted(
-                        {r.get("table_name") or r.get("tablename") for r in rows if r.get("table_name") or r.get("tablename")}
+                        {r.get("table_name") or r.get("tablename")
+                         for r in rows if r.get("table_name") or r.get("tablename")}
                     )
             except Exception as exc:
                 logger(f"[warn] table discovery via {fn} failed: {exc}")
@@ -666,9 +713,11 @@ async def full_supabase_sync(summary: Dict[str, Any], logger: Any) -> Dict[str, 
         return {"synced_tables": [], "error": "no_tables"}
 
     try:
-        client.schema(REGISTRY_SCHEMA).table(REGISTRY_TABLE).select("table_name").limit(1).execute()
+        client.schema(REGISTRY_SCHEMA).table(
+            REGISTRY_TABLE).select("table_name").limit(1).execute()
     except Exception as exc:
-        logger(f"⚠️ Supabase registry table {REGISTRY_SCHEMA}.{REGISTRY_TABLE} missing: {exc}")
+        logger(
+            f"⚠️ Supabase registry table {REGISTRY_SCHEMA}.{REGISTRY_TABLE} missing: {exc}")
         logger("🌊  KARAKIA WHAKAMUTUNGA — Supabase sync incomplete")
         return {"synced_tables": [], "error": "registry_missing"}
 
@@ -714,14 +763,17 @@ async def full_supabase_sync(summary: Dict[str, Any], logger: Any) -> Dict[str, 
         status = getattr(resp, "status_code", None)
         resp_data = getattr(resp, "data", None)
         if error or (status is not None and status >= 400):
-            logger(f"⚠️ Supabase upsert skipped for {table}: status={status}, error={error}")
+            logger(
+                f"⚠️ Supabase upsert skipped for {table}: status={status}, error={error}")
             continue
         if status is None and resp_data is None:
-            logger(f"⚠️ Supabase upsert skipped for {table}: no status/data returned")
+            logger(
+                f"⚠️ Supabase upsert skipped for {table}: no status/data returned")
             continue
         synced.append(table)
 
-    logger(f"⚡ Supabase sync wrote {len(synced)} tables to payload_registry: {', '.join(synced[:5])}" + (f", ... (+{len(synced)-5} more)" if len(synced) > 5 else ""))
+    logger(f"⚡ Supabase sync wrote {len(synced)} tables to payload_registry: {', '.join(synced[:5])}" + (
+        f", ... (+{len(synced)-5} more)" if len(synced) > 5 else ""))
     await _log_sync_event(client, summary, synced, document_refs, logger)
     logger("🌊  KARAKIA WHAKAMUTUNGA — Supabase sync complete")
     return {"synced_tables": synced}
@@ -740,10 +792,12 @@ def generate_payload_map(routes: Optional[Iterable[Dict[str, Any]]] = None,
         candidate = ANALYSIS_DIR / "routes.json"
         if candidate.exists():
             try:
-                input_routes = json.loads(candidate.read_text(encoding="utf-8"))
+                input_routes = json.loads(
+                    candidate.read_text(encoding="utf-8"))
             except Exception:
                 input_routes = []
-    registered = {(route.get("method"), route.get("path")) for route in input_routes}
+    registered = {(route.get("method"), route.get("path"))
+                  for route in input_routes}
     models = _collect_models(root_path)
 
     payload_shapes: List[Dict[str, Any]] = []
@@ -781,8 +835,10 @@ def generate_payload_map(routes: Optional[Iterable[Dict[str, Any]]] = None,
                         annotation_text = _safe_unparse(arg.annotation)
                         model_info = None
                         if annotation_text:
-                            model_key = (module_name, annotation_text.split(".")[-1])
-                            model_info = models.get(model_key) or models.get(annotation_text.split(".")[-1])
+                            model_key = (
+                                module_name, annotation_text.split(".")[-1])
+                            model_info = models.get(model_key) or models.get(
+                                annotation_text.split(".")[-1])
                         param_entry: Dict[str, Any] = {
                             "name": arg.arg,
                             "annotation": annotation_text,
@@ -790,7 +846,8 @@ def generate_payload_map(routes: Optional[Iterable[Dict[str, Any]]] = None,
                         if model_info:
                             param_entry["model"] = model_info["name"]
                             param_entry["model_fields"] = model_info["fields"]
-                            param_entry["example_payload"] = _build_example(model_info["fields"])
+                            param_entry["example_payload"] = _build_example(
+                                model_info["fields"])
                         parameters.append(param_entry)
                     route_entry = {
                         "path": path,
@@ -811,7 +868,8 @@ def generate_payload_map(routes: Optional[Iterable[Dict[str, Any]]] = None,
                         route_entry["example_payload"] = example_payload
                     payload_shapes.append(route_entry)
     drift = _compute_drift(
-        (json.loads(PAYLOAD_JSON.read_text(encoding="utf-8")) if PAYLOAD_JSON.exists() else {}).get("payload_shapes", []),
+        (json.loads(PAYLOAD_JSON.read_text(encoding="utf-8"))
+         if PAYLOAD_JSON.exists() else {}).get("payload_shapes", []),
         payload_shapes
     )
     realm_data = {}
@@ -835,7 +893,8 @@ def generate_payload_map(routes: Optional[Iterable[Dict[str, Any]]] = None,
         asyncio.run(full_supabase_sync(summary, log))
     except RuntimeError as exc:
         log(f"⚠️ Full Supabase sync bypassed: {exc}")
-    log(f"Payload map persists {len(payload_shapes)} shapes; drift added {len(drift['added'])}, removed {len(drift['removed'])}, changed {len(drift['changed'])}.")
+    log(
+        f"Payload map persists {len(payload_shapes)} shapes; drift added {len(drift['added'])}, removed {len(drift['removed'])}, changed {len(drift['changed'])}.")
     regenerate_realm_readmes(log)
     log(KARAKIA_WHAKAMUTUNGA)
     return {"count": len(payload_shapes), "drift": drift}

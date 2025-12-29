@@ -3,6 +3,10 @@
 CLI to report the latest analysis sync status stored in Supabase.
 """
 
+from taonga.sync_status import (
+    fetch_analysis_sync_status,
+    fetch_latest_analysis_document_content,
+)
 import json
 import sys
 from pathlib import Path
@@ -10,16 +14,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.append(str(ROOT))
 
-from analysis.sync_status import (
-    fetch_analysis_sync_status,
-    fetch_latest_analysis_document_content,
-)
-
 
 def main() -> None:
     import argparse
 
-    parser = argparse.ArgumentParser(description="Report Supabase analysis sync status")
+    parser = argparse.ArgumentParser(
+        description="Report Supabase analysis sync status")
     parser.add_argument(
         "--document",
         action="store_true",

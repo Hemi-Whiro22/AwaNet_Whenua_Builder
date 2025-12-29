@@ -1,3 +1,4 @@
+from te_po.core.awa_event_loop import start_awa_event_loop
 from datetime import datetime
 import httpx
 import json
@@ -51,7 +52,7 @@ from te_po.routes import (
     automation,
     awa,
 )
-from analysis.sync_status import fetch_analysis_sync_status, fetch_latest_analysis_document_content
+from taonga.sync_status import fetch_analysis_sync_status, fetch_latest_analysis_document_content
 
 # -------------------------------------------------------------------
 # 🧠 APP INITIALIZATION
@@ -64,7 +65,8 @@ app = FastAPI(
     title="Te Pō — Kitenga Whiro Backend",
     version="1.0.0",
     description="Awa Network core backend orchestrator — Māori Intelligence Engine",
-    servers=[{"url": "https://tiwhanawhana-backend.onrender.com", "description": "Render deployment"}],
+    servers=[{"url": "https://tiwhanawhana-backend.onrender.com",
+              "description": "Render deployment"}],
 )
 
 # Enforce UTF-8 locale early
@@ -73,7 +75,8 @@ enforce_utf8_locale()
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SPEC_FILE = REPO_ROOT / "gpt_connect.yaml"
 REALM_FILE = REPO_ROOT / "realm.json"
-AWA_LOG_URL = os.getenv("AWA_LOG_URL", "https://tiwhanawhana-backend.onrender.com/awa/log")
+AWA_LOG_URL = os.getenv(
+    "AWA_LOG_URL", "https://tiwhanawhana-backend.onrender.com/awa/log")
 CORE_SPEC_FILE = REPO_ROOT / "app" / "openapi-core.json"
 WELL_KNOWN_DIR = REPO_ROOT / ".well-known"
 OPENAI_TOOLS_FILE = REPO_ROOT / "kitenga_mcp" / "openai_tools.json"
@@ -81,6 +84,7 @@ OPENAI_TOOLS_FILE = REPO_ROOT / "kitenga_mcp" / "openai_tools.json"
 # -------------------------------------------------------------------
 # 🌐 CORS + AUTH MIDDLEWARE
 # -------------------------------------------------------------------
+
 
 def get_cors_origins():
     env_origins = os.getenv("CORS_ALLOW_ORIGINS", "").strip()
@@ -94,6 +98,7 @@ def get_cors_origins():
         "http://127.0.0.1:5001",
         "http://127.0.0.1:5173",
     ]
+
 
 # Apply middleware (order matters)
 app.add_middleware(
@@ -111,6 +116,7 @@ apply_utf8_middleware(app)
 # 💚 ROOT + HEALTH ROUTES
 # -------------------------------------------------------------------
 
+
 @app.get("/", tags=["Root"])
 @app.head("/", tags=["Root"], include_in_schema=False)
 async def root():
@@ -119,6 +125,7 @@ async def root():
         "kaitiaki": "Kitenga Whiro",
         "message": "Kia ora — intelligence aligned with Māori truth.",
     }
+
 
 @app.get("/heartbeat", tags=["Health"])
 @app.head("/heartbeat", tags=["Health"], include_in_schema=False)
@@ -217,7 +224,8 @@ async def analysis_latest_document():
     return doc
 
 if WELL_KNOWN_DIR.exists():
-    app.mount("/.well-known", StaticFiles(directory=str(WELL_KNOWN_DIR)), name="well_known")
+    app.mount("/.well-known",
+              StaticFiles(directory=str(WELL_KNOWN_DIR)), name="well_known")
 
 # -------------------------------------------------------------------
 # 🔗 ROUTER REGISTRATION
@@ -259,7 +267,7 @@ app.include_router(awa_realtime.router)
 # 🧩 Mount Kitenga MCP as a sub-app
 # -------------------------------------------------------------------
 app.mount("/mcp", mcp_app)
-from te_po.core.awa_event_loop import start_awa_event_loop
+
 
 @app.on_event("startup")
 async def startup_event():

@@ -17,7 +17,7 @@ import datetime
 from pathlib import Path
 from typing import Any, Dict
 
-from analysis import metadata as analysis_metadata
+from taonga import metadata as analysis_metadata
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ANALYSIS_DIR = REPO_ROOT / "analysis"
@@ -25,13 +25,16 @@ ANALYSIS_DIR.mkdir(exist_ok=True)
 ROUTES_FILE = ANALYSIS_DIR / "routes.json"
 SUMMARY_FILE = ANALYSIS_DIR / "routes_summary.json"
 COMPACT_FILE = ANALYSIS_DIR / "routes_compact.md"
-LOG_FILE = ANALYSIS_DIR / f"review_log_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+LOG_FILE = ANALYSIS_DIR / \
+    f"review_log_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
 SCRIPT_KEYWORDS = ["real_time", "loop", "event", "awa", "mcp", "orchestrate"]
-SCRIPT_EXCLUDE_PARTS = {".venv", "venv", "__pycache__", "node_modules", ".git", "site-packages"}
+SCRIPT_EXCLUDE_PARTS = {".venv", "venv", "__pycache__",
+                        "node_modules", ".git", "site-packages"}
 OPENAPI_CORE = Path("app/openapi-core.json")
 TOOLS_MANIFEST_FILE = ANALYSIS_DIR / "mcp_tools_manifest.json"
 ROUTES_MD_FILE = ANALYSIS_DIR / "routes.md"
 PAYLOAD_SCRIPT_PATH = ANALYSIS_DIR / "te_kaitiaki_o_nga_ahua_kawenga.py"
+
 
 def _load_payload_module():
     if not PAYLOAD_SCRIPT_PATH.exists():
@@ -46,11 +49,13 @@ def _load_payload_module():
     except Exception as exc:
         return None, str(exc)
 
+
 _PAYLOAD_MODULE, _PAYLOAD_LOAD_ERROR = _load_payload_module()
 
 
 def _write_json_with_meta(path: Path, data: Any, resource: str) -> Dict[str, Any]:
-    path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    path.write_text(json.dumps(
+        data, indent=2, ensure_ascii=False), encoding="utf-8")
     return analysis_metadata.write_metadata_file(path, resource)
 
 
@@ -58,6 +63,7 @@ def _write_markdown_with_meta(path: Path, text: str, resource: str) -> None:
     path.write_text(text, encoding="utf-8")
     meta = analysis_metadata.write_metadata_file(path, resource)
     analysis_metadata.append_markdown_footer(path, meta)
+
 
 KARAKIA_OPEN = """
 🌿  KARAKIA TIMATANGA
@@ -71,6 +77,7 @@ KARAKIA_CLOSE = """
 Kua oti te titiro, kua rangona te ora o te repo.
 Haumi e, hui e, tāiki e.
 """
+
 
 def log(message: str):
     print(message)
@@ -92,7 +99,8 @@ def scan_scripts():
             uses_asyncio = "asyncio" in content or "await" in content
             functions = []
             for line in content.splitlines():
-                match = re.match(r"\s*(async\s+)?def\s+([a-zA-Z0-9_]+)\s*\(([^)]*)\)", line)
+                match = re.match(
+                    r"\s*(async\s+)?def\s+([a-zA-Z0-9_]+)\s*\(([^)]*)\)", line)
                 if not match:
                     continue
                 is_async = bool(match.group(1))
@@ -110,6 +118,7 @@ def scan_scripts():
                 "asyncio": uses_asyncio,
             }
     return scripts
+
 
 def find_routes():
     """Simple FastAPI route detector scanning for @app.get/post/etc patterns."""
@@ -180,7 +189,8 @@ def get_git_metadata():
     commit = "unknown"
     try:
         branch = (
-            subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], text=True)
+            subprocess.check_output(
+                ["git", "rev-parse", "--abbrev-ref", "HEAD"], text=True)
             .strip()
         )
         commit = (
@@ -190,6 +200,7 @@ def get_git_metadata():
     except subprocess.CalledProcessError:
         pass
     return branch, commit
+
 
 def summarise_routes(routes):
     summary = {}
@@ -204,14 +215,17 @@ def summarise_routes(routes):
         summary.setdefault(domain, []).append(f"{r['method']} {r['path']}")
     return summary
 
+
 def write_outputs(routes, summary, scripts):
     ANALYSIS_DIR.mkdir(exist_ok=True)
     _write_json_with_meta(ROUTES_FILE, routes, "analysis_routes_json")
     summary = update_routes_summary(summary)
-    _write_json_with_meta(SUMMARY_FILE, summary, "analysis_routes_summary_json")
+    _write_json_with_meta(SUMMARY_FILE, summary,
+                          "analysis_routes_summary_json")
     compact_lines = ["| Method | Path | File |", "|--------|------|------|"]
     compact_lines += [f"| {r['method']} | {r['path']} | {r['file']} |" for r in routes]
-    _write_markdown_with_meta(COMPACT_FILE, "\n".join(compact_lines), "analysis_routes_compact_md")
+    _write_markdown_with_meta(COMPACT_FILE, "\n".join(
+        compact_lines), "analysis_routes_compact_md")
 
     tools_manifest = gather_mcp_tools()
     update_manifest_file(tools_manifest, scripts)
@@ -280,7 +294,8 @@ def update_manifest_file(tools_manifest: dict, script_tools: dict):
     with open(TOOLS_MANIFEST_FILE, "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2, ensure_ascii=False)
     log(f"Updated {TOOLS_MANIFEST_FILE.name} with {len(script_entries)} script tool entries.")
-    analysis_metadata.write_metadata_file(TOOLS_MANIFEST_FILE, "analysis_mcp_manifest")
+    analysis_metadata.write_metadata_file(
+        TOOLS_MANIFEST_FILE, "analysis_mcp_manifest")
 
 
 def build_markdown(routes, summary, tools_manifest, script_tools):
@@ -296,7 +311,8 @@ def build_markdown(routes, summary, tools_manifest, script_tools):
         "RENDER_API_KEY",
     ]
     relevant_env = [key for key in env_highlights if key in env_keys]
-    env_context_keys = [key for key in relevant_env if "OPENAI" in key or "SUPABASE" in key]
+    env_context_keys = [
+        key for key in relevant_env if "OPENAI" in key or "SUPABASE" in key]
     env_context_line = (
         ", ".join(f"`{key}`" for key in env_context_keys)
         if env_context_keys
@@ -313,7 +329,8 @@ def build_markdown(routes, summary, tools_manifest, script_tools):
         f"Mauri score is {mauri_score}/10 and growing."
     )
 
-    tool_domains = ", ".join(sorted(tools_manifest.keys())) if tools_manifest else "none yet"
+    tool_domains = ", ".join(sorted(tools_manifest.keys())
+                             ) if tools_manifest else "none yet"
     top_tool_names = []
     for domain_tools in tools_manifest.values():
         for tool in domain_tools:
@@ -331,11 +348,13 @@ def build_markdown(routes, summary, tools_manifest, script_tools):
     script_count = len(script_tools)
     script_lines = []
     if script_count:
-        script_lines.append(f"- Script scan captured {script_count} file(s) matching keywords: {', '.join(SCRIPT_KEYWORDS)}.")
+        script_lines.append(
+            f"- Script scan captured {script_count} file(s) matching keywords: {', '.join(SCRIPT_KEYWORDS)}.")
         limit = 5
         for path in sorted(script_tools)[:limit]:
             info = script_tools[path]
-            func_names = ", ".join(f"{fn['name']}" for fn in info['functions'][:3])
+            func_names = ", ".join(
+                f"{fn['name']}" for fn in info['functions'][:3])
             if len(info["functions"]) > 3:
                 func_names += ", ..."
             script_lines.append(
@@ -390,6 +409,7 @@ def build_markdown(routes, summary, tools_manifest, script_tools):
 
     return "\n".join(parts)
 
+
 def main():
     log(KARAKIA_OPEN)
     log(f"Starting Repo Review at {datetime.datetime.now().isoformat()}")
@@ -399,7 +419,8 @@ def main():
     write_outputs(routes, summary, scripts)
     if _PAYLOAD_MODULE and hasattr(_PAYLOAD_MODULE, "generate_payload_map"):
         try:
-            payload_summary = _PAYLOAD_MODULE.generate_payload_map(routes, logger=log, root=REPO_ROOT)
+            payload_summary = _PAYLOAD_MODULE.generate_payload_map(
+                routes, logger=log, root=REPO_ROOT)
             drift = payload_summary.get("drift", {})
             log(
                 f"Payload map: {payload_summary.get('count')} shapes "
@@ -415,6 +436,7 @@ def main():
     log(f"Script scan keywords {', '.join(SCRIPT_KEYWORDS)} touched {len(scripts)} file(s).")
     log("Outputs written to /analysis/")
     log(KARAKIA_CLOSE)
+
 
 if __name__ == "__main__":
     main()
