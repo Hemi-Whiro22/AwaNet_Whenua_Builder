@@ -18,7 +18,8 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+# Repo root (/workspaces/The_Awa_Network)
+ROOT = Path(__file__).resolve().parents[2]
 STATE_DIR = ROOT / "mauri" / "state"
 STATE_DIR.mkdir(parents=True, exist_ok=True)
 

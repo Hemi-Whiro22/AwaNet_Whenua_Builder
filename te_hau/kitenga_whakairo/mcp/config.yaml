@@ -1,0 +1,148 @@
+# MCP servers for Whakairo Codex + shared realms
+
+mcpServers:
+  whakairo:
+    command: python3
+    args: ["${WORKSPACE_DIR}/te_hau/cli/start_whakairo.py"]
+    env:
+      DOTENV_PATH: "${DOTENV_PATH:te_hau/kitenga_whakairo/.env.whakairo}"
+
+  tepo:
+    command: python3
+    args: ["${WORKSPACE_DIR}/.mcp/tepo/server.py"]
+    env:
+      TE_PO_BASE_URL: "${TE_PO_BASE_URL:http://localhost:8010}"
+      TE_PO_AUTH_TOKEN: "${TE_PO_AUTH_TOKEN:}"
+      TE_PO_TIMEOUT: "60"
+
+  git:
+    command: python3
+    args: ["${WORKSPACE_DIR}/.mcp/git/server.py"]
+    env:
+      GITHUB_TOKEN: "${GITHUB_TOKEN}"
+
+  render:
+    command: python3
+    args: ["${WORKSPACE_DIR}/.mcp/render/server.py"]
+    env:
+      RENDER_API_KEY: "${RENDER_API_KEY}"
+
+  supabase:
+    command: python3
+    args: ["${WORKSPACE_DIR}/.mcp/supabase/server.py"]
+    env:
+      SUPABASE_URL: "${SUPABASE_URL}"
+      SUPABASE_KEY: "${SUPABASE_KEY}"
+
+  tehau:
+    command: python3
+    args: ["${WORKSPACE_DIR}/.mcp/tehau/server.py"]
+    env:
+      TE_HAU_BASE_URL: "${TE_HAU_BASE_URL:http://localhost:8000}"
+      TE_HAU_AUTH_TOKEN: "${TE_HAU_AUTH_TOKEN:}"
+      TE_HAU_TIMEOUT: "60"
+
+  openai:
+    command: python3
+    args: ["${WORKSPACE_DIR}/.mcp/openai/server.py"]
+    env:
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      OPENAI_BASE_URL: "${OPENAI_BASE_URL:https://api.openai.com/v1}"
+      OPENAI_DEFAULT_MODEL: "${OPENAI_DEFAULT_MODEL:gpt-5}"
+
+  cloudflare:
+    command: python3
+    args: ["${WORKSPACE_DIR}/.mcp/cloudflare/server.py"]
+    env:
+      CLOUDFLARE_API_TOKEN: "${CLOUDFLARE_API_TOKEN}"
+      CLOUDFLARE_ACCOUNT_ID: "${CLOUDFLARE_ACCOUNT_ID}"
+
+# Optional tool catalog (keep in sync with servers)
+tools:
+  - name: whakairo.supabase_sql
+    mcp: whakairo
+  - name: whakairo.supabase_storage_list
+    mcp: whakairo
+  - name: whakairo.supabase_table_select
+    mcp: whakairo
+  - name: whakairo.record_carve_entry
+    mcp: whakairo
+  - name: whakairo.sync_carver_context
+    mcp: whakairo
+  - name: whakairo.rules_writer
+    mcp: whakairo
+  - name: whakairo.read_file
+    mcp: whakairo
+  - name: whakairo.list_files
+    mcp: whakairo
+
+  - name: tepo_kitenga_whisper
+    mcp: tepo
+  - name: tepo_vector_search
+    mcp: tepo
+  - name: tepo_ocr_scan
+    mcp: tepo
+  - name: tepo_pipeline_run
+    mcp: tepo
+  - name: tepo_memory_store
+    mcp: tepo
+  - name: tepo_memory_query
+    mcp: tepo
+
+  - name: git_repo_info
+    mcp: git
+  - name: git_list_branches
+    mcp: git
+  - name: git_create_branch
+    mcp: git
+  - name: git_list_commits
+    mcp: git
+  - name: git_create_file
+    mcp: git
+  - name: git_update_file
+    mcp: git
+  - name: git_create_pull_request
+    mcp: git
+  - name: git_list_issues
+    mcp: git
+
+  - name: render_list_services
+    mcp: render
+  - name: render_get_service
+    mcp: render
+  - name: render_deploy
+    mcp: render
+  - name: render_list_deploys
+    mcp: render
+  - name: render_get_deploy
+    mcp: render
+  - name: render_update_env
+    mcp: render
+  - name: render_list_events
+    mcp: render
+  - name: render_scale_service
+    mcp: render
+
+  - name: supabase_select
+    mcp: supabase
+  - name: supabase_insert
+    mcp: supabase
+  - name: supabase_update
+    mcp: supabase
+  - name: supabase_delete
+    mcp: supabase
+  - name: supabase_rpc
+    mcp: supabase
+  - name: supabase_upload_file
+    mcp: supabase
+  - name: supabase_list_buckets
+    mcp: supabase
+
+  - name: tehau_health
+    mcp: tehau
+  - name: tehau_pipeline_run
+    mcp: tehau
+  - name: tehau_vector_search
+    mcp: tehau
+  - name: tehau_logs_recent
+    mcp: tehau

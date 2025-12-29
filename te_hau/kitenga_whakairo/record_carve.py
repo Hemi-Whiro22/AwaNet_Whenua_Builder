@@ -17,7 +17,8 @@ import sys
 from pathlib import Path
 from datetime import datetime, timezone
 
-ROOT = Path(__file__).resolve().parents[1]
+# Repo root (/workspaces/The_Awa_Network)
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(ROOT))
 
 from te_po.core.env_loader import load_env  # noqa: E402

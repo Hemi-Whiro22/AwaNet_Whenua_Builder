@@ -1,0 +1,20 @@
+{
+  "tools": [
+    {
+      "name": "tehau_health",
+      "description": "Check Te Hau /health endpoint."
+    },
+    {
+      "name": "tehau_pipeline_run",
+      "description": "Trigger Te Hau pipeline run (passes through payload)."
+    },
+    {
+      "name": "tehau_vector_search",
+      "description": "Search vectors via Te Hau vector/search endpoint."
+    },
+    {
+      "name": "tehau_logs_recent",
+      "description": "Fetch recent logs from Te Hau /logs/recent."
+    }
+  ]
+}

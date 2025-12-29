@@ -6,10 +6,12 @@ Files:
 - `whakairo_manifest.json` – quick pointers to env, tables, endpoints, modes.
 - `record_carve.py` – helper to append a carve summary to `mauri/state/carver_log.jsonl` and, if configured, to Supabase `carver_context_memory` (mode defaults to `research`).
 - `mcp/manifest.yaml` – MCP manifest for the Whakairo Codex agent (Supabase schema/SQL inspection); served by `te_hau/cli/start_whakairo.py`.
+- `start_codex.py` – FastMCP entrypoint for the Whakairo Codex (supabase tools, carve helpers, rules, file access).
+- `tools/` – MCP tool implementations (Supabase, storage, carve helpers, rules, file read/list).
 
 Usage (record a carve):
 ```bash
-python te_hau/whakairo/record_carve.py --title "Short title" --summary "What changed" --files "file1,file2" --tags "carve,api" --mode research
+python te_hau/kitenga_whakairo/record_carve.py --title "Short title" --summary "What changed" --files "file1,file2" --tags "carve,api" --mode research
 ```
 
 Notes:
@@ -33,6 +35,24 @@ The ingestion step targets `analysis`, `docs`, and `te_hau` directories by defau
 MCP usage:
 ```bash
 python -m te_hau.cli.start_whakairo
-# or
-mcp serve --manifest te_hau/whakairo_codex/mcp/manifest.yaml
+# or run the FastMCP server directly
+python -m te_hau.kitenga_whakairo.start_codex
+# legacy:
+# mcp serve --manifest te_hau/kitenga_whakairo/mcp/manifest.yaml
+```
+
+Env:
+- Place secrets in `te_hau/kitenga_whakairo/.env.whakairo` (see `.env.whakairo.example`).
+- The FastMCP loader falls back to `.env.whakairo`, then `.env`, then `te_po/core/.env`.
+
+MCP realms (shared services):
+- Symlink `.mcp` -> `kitenga_mcp` at repo root; `te_hau/kitenga_whakairo/mcp/realms` points to Te Pō, Git, Render, Supabase, OpenAI, Cloudflare servers.
+- Combined MCP config: `te_hau/kitenga_whakairo/mcp/config.yaml` (whakairo + realms) for Continue/Codex CLI.
+
+Helper to run the stack:
+```
+te_hau/kitenga_whakairo/scripts/whakairo_stack.sh start   # load env, start Whakairo + realms, run sync
+te_hau/kitenga_whakairo/scripts/whakairo_stack.sh status  # show pids
+te_hau/kitenga_whakairo/scripts/whakairo_stack.sh stop    # stop all
+te_hau/kitenga_whakairo/scripts/whakairo_stack.sh sync    # pull carver context cache
 ```
