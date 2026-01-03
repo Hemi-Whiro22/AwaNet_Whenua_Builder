@@ -8,11 +8,11 @@ import httpx
 from openai import OpenAI
 from fastapi import APIRouter, Body, Header, HTTPException, status
 
-from te_po.core.auth import require_pipeline_or_service
 from te_po.pipeline.orchestrator.pipeline_orchestrator import run_pipeline
 from te_po.utils.audit import log_event
 
 router = APIRouter(prefix="/assistant", tags=["Assistant"])
+PIPELINE_TOKEN = os.getenv("PIPELINE_TOKEN")
 ASSISTANT_ID = os.getenv("OPENAI_ASSISTANT_ID") or os.getenv("KITENGA_ASSISTANT_ID")
 VECTOR_STORE_ID = os.getenv("OPENAI_VECTOR_STORE_ID")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -20,7 +20,12 @@ LOG_DIR = Path("te_po/storage/logs/assistant_calls")
 
 
 def _auth_check(authorization: Optional[str]):
-    require_pipeline_or_service(authorization)
+    if PIPELINE_TOKEN:
+        if not authorization or not authorization.lower().startswith("bearer "):
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing bearer token.")
+        token = authorization.split(" ", 1)[1].strip()
+        if token != PIPELINE_TOKEN:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid bearer token.")
 
 
 def _log_assistant_call(payload: dict, result: dict, source: str):

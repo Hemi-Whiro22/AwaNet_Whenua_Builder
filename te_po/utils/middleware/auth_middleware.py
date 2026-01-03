@@ -4,7 +4,6 @@ from fastapi import Request, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
 
-from te_po.core.auth import load_tokens, classify_identity, require_token
 from te_po.stealth_ocr import pipeline_token_hash
 
 
@@ -36,12 +35,6 @@ class BearerAuthMiddleware(BaseHTTPMiddleware):
     STEALTH_HEADER = "x-stealth-token-hash"
 
     async def dispatch(self, request: Request, call_next):
-        """
-        Enforce bearer auth with explicit identity classification.
-        Behaviour is preserved:
-        - When no token envs are set, requests pass through (legacy mode).
-        - STEALTH_AUTH_PATHS accept the hashed pipeline token via header.
-        """
         if request.method in ("OPTIONS", "HEAD"):
             return await call_next(request)
 
@@ -53,13 +46,12 @@ class BearerAuthMiddleware(BaseHTTPMiddleware):
             if path.startswith(p):
                 return await call_next(request)
 
-        auth_header = request.headers.get("authorization")
+        auth_header = request.headers.get("authorization") or ""
         stealth_header = request.headers.get(self.STEALTH_HEADER)
-        tokens = load_tokens()
+        expected_bearer = os.getenv("HUMAN_BEARER_KEY") or os.getenv("PIPELINE_TOKEN")
         expected_hash = pipeline_token_hash()
 
-        # No configured tokens: preserve previous implicit bypass.
-        if not tokens.any_active:
+        if not expected_bearer:
             return await call_next(request)
 
         if (
@@ -68,18 +60,17 @@ class BearerAuthMiddleware(BaseHTTPMiddleware):
             and stealth_header
             and stealth_header == expected_hash
         ):
-            request.state.identity_role = "pipeline-stealth"
             request.state.human_identity = os.getenv("HUMAN_IDENTITY")
             request.state.trace_id = os.getenv("TRACE_ID")
             return await call_next(request)
 
-        # Prefer human token when configured, else pipeline/service for general protection.
-        expected = tokens.human or tokens.pipeline or tokens.service
-        require_token(auth_header, expected, token_label="global access")
+        if not auth_header.lower().startswith("bearer "):
+            raise HTTPException(status_code=401, detail="Missing Bearer token.")
 
-        role, token_used = classify_identity(tokens, auth_header)
-        request.state.identity_role = role
-        request.state.token_used = token_used
+        token = auth_header.split(" ", 1)[1].strip()
+        if token != expected_bearer:
+            raise HTTPException(status_code=403, detail="Invalid Bearer token.")
+
         request.state.human_identity = os.getenv("HUMAN_IDENTITY")
         request.state.trace_id = os.getenv("TRACE_ID")
         return await call_next(request)

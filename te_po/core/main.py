@@ -17,7 +17,7 @@ from te_po.utils.middleware.utf8_enforcer import apply_utf8_middleware
 
 
 # Core env + routers
-from te_po.core.env_loader import enforce_utf8_locale
+from te_po.core.env_loader import enforce_utf8_locale, get_env
 from te_po.core import awa_gpt, awa_realtime
 from te_po.routes import (
     intake,
@@ -229,8 +229,6 @@ if WELL_KNOWN_DIR.exists():
 # 🔗 ROUTER REGISTRATION
 # -------------------------------------------------------------------
 
-# NOTE: The MCP runtime is intentionally isolated; MCP tooling now lives
-# outside the FastAPI runtime to avoid lifecycle coupling.
 app.include_router(intake.router)
 app.include_router(reo.router)
 app.include_router(vector.router)
@@ -262,6 +260,12 @@ app.include_router(cors_manager.router)
 app.include_router(awa.router)
 app.include_router(awa_gpt.router)
 app.include_router(awa_realtime.router)
+
+# -------------------------------------------------------------------
+# 🧩 Mount Kitenga MCP as a sub-app
+# -------------------------------------------------------------------
+app.mount("/mcp", mcp_app)
+
 
 @app.on_event("startup")
 async def startup_event():

@@ -3,18 +3,13 @@ Te Po Configuration - Simple settings without encryption.
 UTF-8 enforced project-wide via mi_NZ.UTF-8 locale.
 """
 from typing import Optional, Dict, Any, List
+from pydantic_settings import BaseSettings
+from pydantic import Field
 from functools import lru_cache
 import os
 from dotenv import load_dotenv
 from pathlib import Path
 import locale
-
-from te_po.core.pydantic_shim import ensure_pydantic_internal_signature, ensure_pydantic_public_shims
-
-ensure_pydantic_internal_signature()
-ensure_pydantic_public_shims()
-from pydantic_settings import BaseSettings
-from pydantic import Field
 
 # Load .env from project root
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
