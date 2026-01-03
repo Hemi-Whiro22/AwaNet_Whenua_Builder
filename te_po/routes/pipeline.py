@@ -2,7 +2,7 @@ import json
 
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Header, status
 from te_po.core.auth import require_pipeline_or_service
-from te_po.pipeline.orchestrator.pipeline_orchestrator import run_pipeline
+from te_po.pipeline.services.api import handle_pipeline_run
 from typing import List
 import uuid
 import shutil
