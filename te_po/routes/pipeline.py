@@ -42,14 +42,7 @@ async def pipeline_run(
         data = (text or "").encode("utf-8")
         filename = "inline.txt"
 
-    result = run_pipeline(data, filename, source=source)
-    log_event(
-        "pipeline_run",
-        "Pipeline executed",
-        source=source,
-        data={"filename": filename, "result": result},
-    )
-    return result
+    return handle_pipeline_run(data, filename, source)
 
 
 @router.post("/enqueue")

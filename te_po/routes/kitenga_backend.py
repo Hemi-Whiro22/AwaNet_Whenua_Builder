@@ -35,13 +35,7 @@ from te_po.utils.openai_client import (
     generate_text,
     translate_text,
 )
-from te_po.kitenga.assistant_runtime import (
-    execute_tool_call,
-    extract_message_text,
-    latest_assistant_message,
-    poll_assistant_run,
-    tool_output_string,
-)
+from te_po.routes.kitenga_tool_router import TOOL_REGISTRY, call_tool_endpoint
 
 router = APIRouter(prefix="/kitenga", tags=["Kitenga"])
 
@@ -138,68 +132,7 @@ async def vision_ocr(
 ):
     """Extract text from an image via OpenAI vision; optionally persist to vector store."""
     _auth_check(authorization)
-    if client is None:
-        raise HTTPException(status_code=503, detail="OpenAI client not configured.")
-
-    _validate_base64(payload.image_base64)
-    image_url = f"data:image/png;base64,{payload.image_base64}"
-
-    try:
-        resp = client.chat.completions.create(
-            model=DEFAULT_VISION_MODEL,
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": "Extract all readable text from this image. Return plain text only.",
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {"url": image_url},
-                        },
-                    ],
-                }
-            ],
-            max_tokens=1200,
-        )
-        extracted = (resp.choices[0].message.content or "").strip()
-    except HTTPException:
-        raise
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"OCR failed: {exc}")
-
-    vector_result = None
-    pipeline_result = None
-    if payload.save_vector and extracted:
-        vector_result = embed_text(extracted)
-
-    if payload.run_pipeline and extracted:
-        pipeline_result = run_pipeline(
-            extracted.encode("utf-8"),
-            filename=f"vision_{uuid.uuid4().hex}.txt",
-            source=payload.pipeline_source or "kitenga_vision",
-        )
-
-    log_event(
-        "kitenga_vision_ocr",
-        "Vision OCR completed",
-        source=payload.pipeline_source or "kitenga_vision",
-        data={
-            "save_vector": payload.save_vector,
-            "run_pipeline": payload.run_pipeline,
-            "vector": vector_result,
-            "pipeline": pipeline_result,
-        },
-    )
-
-    return {
-        "status": "ok",
-        "extracted_text": extracted,
-        "vector": vector_result,
-        "pipeline": pipeline_result,
-    }
+    return vision_ocr_flow(payload, pipeline_source=payload.pipeline_source)
 
 
 class CardScanRequest(BaseModel):
@@ -536,9 +469,9 @@ async def ask_kitenga(request: KitengaAskRequest):
             thread_id=thread_id,
             assistant_id=assistant_id,
         )
-        final_run, tool_history = await poll_assistant_run(async_openai_client, thread_id, run.id)
-        latest = await latest_assistant_message(async_openai_client, thread_id)
-        reply_text = extract_message_text(latest) if latest else ""
+        final_run, tool_history = await _poll_assistant_run(thread_id, run.id)
+        latest = await _latest_assistant_message(thread_id)
+        reply_text = _extract_message_text(latest) if latest else ""
     except HTTPException:
         raise
     except Exception as exc:
@@ -560,11 +493,11 @@ async def ask_kitenga(request: KitengaAskRequest):
         pass
 
     return {
-        "reply": reply_text,
-        "thread_id": thread_id,
-        "run_id": getattr(final_run, "id", None),
-        "assistant_id": assistant_id,
-        "tool_results": tool_history,
+        "reply": result.get("reply"),
+        "thread_id": result.get("thread_id"),
+        "run_id": result.get("run"),
+        "assistant_id": _get_kitenga_assistant_id(),
+        "tool_results": result.get("tools"),
     }
 
 
@@ -704,11 +637,11 @@ async def gpt_whisper(
         try:
             inputs: list[dict[str, str]] = []
             ctx_block = _context_block()
-            
+
             # Add system prompt
             if payload.system_prompt:
                 inputs.append({"role": "system", "content": payload.system_prompt})
-            
+
             # Add project state context (live project snapshot)
             try:
                 project_state = get_project_state()
@@ -717,11 +650,11 @@ async def gpt_whisper(
                     inputs.append({"role": "system", "content": state_context})
             except Exception:
                 pass  # If project state unavailable, continue without it
-            
+
             # Add chat history context
             if ctx_block:
                 inputs.append({"role": "system", "content": f"Recent chat context:\n{ctx_block}"})
-            
+
             inputs.append({"role": "user", "content": payload.whisper})
             reply = generate_text(inputs, model=DEFAULT_BACKEND_MODEL, max_tokens=2000)
         except HTTPException:
