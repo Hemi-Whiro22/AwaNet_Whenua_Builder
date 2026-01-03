@@ -20,7 +20,7 @@ from te_po.pipeline.cards.card_upload_pipeline import (
     TRADEME_COLUMNS,
 )
 from te_po.core.config import settings
-from te_po.db.supabase import get_client
+from te_po.database.supabase import get_client
 from te_po.stealth_ocr import StealthOCR
 import logging
 

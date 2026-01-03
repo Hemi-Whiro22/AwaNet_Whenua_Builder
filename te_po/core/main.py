@@ -15,8 +15,6 @@ from fastapi.staticfiles import StaticFiles
 from te_po.utils.middleware.auth_middleware import BearerAuthMiddleware
 from te_po.utils.middleware.utf8_enforcer import apply_utf8_middleware
 
-# Sub-app import (Kitenga MCP)
-from kitenga_mcp.app_server import app as mcp_app
 
 # Core env + routers
 from te_po.core.env_loader import enforce_utf8_locale, get_env

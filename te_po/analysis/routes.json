@@ -1,0 +1,77 @@
+[
+  {
+    "file": "app.py",
+    "method": "GET",
+    "path": "/"
+  },
+  {
+    "file": "core/main.py",
+    "method": "GET",
+    "path": "/"
+  },
+  {
+    "file": "core/main.py",
+    "method": "GET",
+    "path": "/heartbeat"
+  },
+  {
+    "file": "core/main.py",
+    "method": "GET",
+    "path": "/gpt_connect.yaml"
+  },
+  {
+    "file": "core/main.py",
+    "method": "GET",
+    "path": "/realm.json"
+  },
+  {
+    "file": "core/main.py",
+    "method": "GET",
+    "path": "/openapi-core.json"
+  },
+  {
+    "file": "core/main.py",
+    "method": "GET",
+    "path": "/.well-known/openapi-core.json"
+  },
+  {
+    "file": "core/main.py",
+    "method": "GET",
+    "path": "/openai_tools.json"
+  },
+  {
+    "file": "core/main.py",
+    "method": "GET",
+    "path": "/analysis/sync-status"
+  },
+  {
+    "file": "core/main.py",
+    "method": "GET",
+    "path": "/analysis/documents/latest"
+  },
+  {
+    "file": "core/kitenga_cards.py",
+    "method": "POST",
+    "path": "/ocr"
+  },
+  {
+    "file": "core/kitenga_cards.py",
+    "method": "POST",
+    "path": "/translate"
+  },
+  {
+    "file": "core/kitenga_cards.py",
+    "method": "POST",
+    "path": "/speak"
+  },
+  {
+    "file": "core/kitenga_cards.py",
+    "method": "POST",
+    "path": "/scribe"
+  },
+  {
+    "file": "core/kitenga_cards.py",
+    "method": "POST",
+    "path": "/gpt-whisper"
+  }
+]

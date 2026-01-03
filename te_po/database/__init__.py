@@ -1,6 +1,6 @@
 """Database module for te_po — PostgreSQL connection pooling."""
 
-from te_po.db.postgres import (
+from te_po.database.postgres import (
     get_pool,
     db_execute,
     db_fetchone,

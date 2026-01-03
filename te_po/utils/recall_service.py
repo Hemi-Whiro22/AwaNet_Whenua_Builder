@@ -6,7 +6,7 @@ import os
 import time
 from typing import Any, Dict, List, Optional
 
-from te_po.db.supabase import get_client, insert_with_realm
+from te_po.database.supabase import get_client, insert_with_realm
 from te_po.schema.realms import RealmConfig
 from te_po.utils.openai_client import client as openai_client
 

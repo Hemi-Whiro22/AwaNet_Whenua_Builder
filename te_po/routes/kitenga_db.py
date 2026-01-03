@@ -5,7 +5,7 @@ Exposes the kitenga schema database to the API.
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
-from te_po.db.kitenga_db import (
+from te_po.database.kitenga_db import (
     # Logs
     log_event, get_recent_logs,
     # Memory

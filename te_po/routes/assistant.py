@@ -99,7 +99,7 @@ async def create_assistant(
     """
     Create an OpenAI Assistant with optional vector store.
     Used by Realm Generator to spin up kaitiaki with their own vector stores.
-    
+
     Payload:
     - name: Assistant name (required)
     - instructions: System instructions (required)
@@ -108,35 +108,35 @@ async def create_assistant(
     - vector_store_name: Name for the vector store
     """
     _auth_check(authorization)
-    
+
     if not OPENAI_API_KEY:
         raise HTTPException(status_code=500, detail="OPENAI_API_KEY not configured")
-    
+
     name = payload.get("name")
     instructions = payload.get("instructions")
     model = payload.get("model", "gpt-4o")
     create_vs = payload.get("create_vector_store", True)
     vs_name = payload.get("vector_store_name", f"{name}_vector_store" if name else "new_vector_store")
-    
+
     if not name or not instructions:
         raise HTTPException(status_code=400, detail="name and instructions are required")
-    
+
     try:
         client = OpenAI(api_key=OPENAI_API_KEY)
-        
+
         vector_store_id = None
-        
+
         # Create vector store if requested
         if create_vs:
             vs = client.vector_stores.create(name=vs_name)
             vector_store_id = vs.id
-        
+
         # Create assistant with file_search tool
         tools = [{"type": "file_search"}] if create_vs else []
         tool_resources = {}
         if vector_store_id:
             tool_resources = {"file_search": {"vector_store_ids": [vector_store_id]}}
-        
+
         assistant = client.beta.assistants.create(
             name=name,
             instructions=instructions,
@@ -144,7 +144,7 @@ async def create_assistant(
             tools=tools,
             tool_resources=tool_resources if tool_resources else None,
         )
-        
+
         result = {
             "assistant_id": assistant.id,
             "assistant_name": assistant.name,
@@ -153,10 +153,10 @@ async def create_assistant(
             "vector_store_name": vs_name if vector_store_id else None,
             "created_at": datetime.utcnow().isoformat() + "Z",
         }
-        
+
         # Log to kitenga schema
         try:
-            from te_po.db.kitenga_db import log_whakapapa, log_event as db_log
+            from te_po.database.kitenga_db import log_whakapapa, log_event as db_log
             log_whakapapa(
                 id=f"assistant-{assistant.id}",
                 title=f"Assistant: {name}",
@@ -169,9 +169,9 @@ async def create_assistant(
             db_log("assistant_created", f"Created assistant {name}", "assistant_route", result)
         except Exception:
             pass  # Non-critical logging
-        
+
         return result
-        
+
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Failed to create assistant: {exc}")
 
@@ -183,14 +183,14 @@ async def list_assistants(
 ):
     """List all OpenAI assistants."""
     _auth_check(authorization)
-    
+
     if not OPENAI_API_KEY:
         raise HTTPException(status_code=500, detail="OPENAI_API_KEY not configured")
-    
+
     try:
         client = OpenAI(api_key=OPENAI_API_KEY)
         assistants = client.beta.assistants.list(limit=limit)
-        
+
         return {
             "assistants": [
                 {
@@ -214,14 +214,14 @@ async def list_vector_stores(
 ):
     """List all OpenAI vector stores."""
     _auth_check(authorization)
-    
+
     if not OPENAI_API_KEY:
         raise HTTPException(status_code=500, detail="OPENAI_API_KEY not configured")
-    
+
     try:
         client = OpenAI(api_key=OPENAI_API_KEY)
         stores = client.vector_stores.list(limit=limit)
-        
+
         return {
             "vector_stores": [
                 {

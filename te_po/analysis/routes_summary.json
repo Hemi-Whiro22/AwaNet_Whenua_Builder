@@ -1,0 +1,18 @@
+{
+  "other": [
+    "GET /",
+    "GET /.well-known/openapi-core.json",
+    "GET /analysis/documents/latest",
+    "GET /analysis/sync-status",
+    "GET /gpt_connect.yaml",
+    "GET /heartbeat",
+    "GET /openai_tools.json",
+    "GET /openapi-core.json",
+    "GET /realm.json",
+    "POST /gpt-whisper",
+    "POST /ocr",
+    "POST /scribe",
+    "POST /speak",
+    "POST /translate"
+  ]
+}

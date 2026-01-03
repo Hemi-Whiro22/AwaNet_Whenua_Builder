@@ -1,0 +1,192 @@
+{
+  "script_tools": [
+    {
+      "name": "awa_event_loop.py",
+      "path": "core/awa_event_loop.py",
+      "functions": [
+        {
+          "name": "awa_event_loop",
+          "signature": "",
+          "async": true
+        },
+        {
+          "name": "start_awa_event_loop",
+          "signature": "",
+          "async": false
+        }
+      ],
+      "fastapi": false,
+      "uses_event_loop": true
+    },
+    {
+      "name": "awa_gpt.py",
+      "path": "core/awa_gpt.py",
+      "functions": [
+        {
+          "name": "call_awa_bridge",
+          "signature": "intent: str, domain: str = None, command: str = None, input: dict = None",
+          "async": true
+        },
+        {
+          "name": "gpt_reason",
+          "signature": "query: str",
+          "async": true
+        },
+        {
+          "name": "awa_gpt_invoke",
+          "signature": "request: Request",
+          "async": true
+        }
+      ],
+      "fastapi": true,
+      "uses_event_loop": true
+    },
+    {
+      "name": "awa_realtime.py",
+      "path": "core/awa_realtime.py",
+      "functions": [
+        {
+          "name": "awa_realtime_listener",
+          "signature": "",
+          "async": true
+        },
+        {
+          "name": "handle_awa_event",
+          "signature": "event",
+          "async": true
+        },
+        {
+          "name": "toggle_realtime",
+          "signature": "",
+          "async": true
+        },
+        {
+          "name": "realtime_status",
+          "signature": "",
+          "async": true
+        }
+      ],
+      "fastapi": true,
+      "uses_event_loop": true
+    },
+    {
+      "name": "awa_mana.py",
+      "path": "diagnostics/awa_mana.py",
+      "functions": [
+        {
+          "name": "run_diagnose",
+          "signature": "realm_path: str",
+          "async": false
+        },
+        {
+          "name": "main",
+          "signature": "",
+          "async": false
+        }
+      ],
+      "fastapi": false,
+      "uses_event_loop": true
+    },
+    {
+      "name": "awa.py",
+      "path": "routes/awa.py",
+      "functions": [
+        {
+          "name": "bridge_test",
+          "signature": "",
+          "async": true
+        },
+        {
+          "name": "awa_orchestrate",
+          "signature": "request: Request",
+          "async": true
+        },
+        {
+          "name": "gpt_bridge",
+          "signature": "request: Request",
+          "async": true
+        }
+      ],
+      "fastapi": true,
+      "uses_event_loop": true
+    },
+    {
+      "name": "awa_protocol.py",
+      "path": "routes/awa_protocol.py",
+      "functions": [
+        {
+          "name": "wrap_envelope",
+          "signature": "req: EnvelopeRequest",
+          "async": true
+        },
+        {
+          "name": "execute_task",
+          "signature": "req: TaskRequest",
+          "async": true
+        },
+        {
+          "name": "handoff_task",
+          "signature": "req: HandoffRequest",
+          "async": true
+        },
+        {
+          "name": "query_memory",
+          "signature": "req: MemoryQueryRequest",
+          "async": true
+        },
+        {
+          "name": "store_memory",
+          "signature": "req: MemoryStoreRequest",
+          "async": true
+        },
+        {
+          "name": "log_activity",
+          "signature": "req: LogRequest",
+          "async": true
+        },
+        {
+          "name": "send_notification",
+          "signature": "req: NotifyRequest",
+          "async": true
+        },
+        {
+          "name": "register_kaitiaki",
+          "signature": "req: KaitiakiregisterRequest",
+          "async": true
+        },
+        {
+          "name": "get_kaitiaki_context",
+          "signature": "kaitiaki: str, realm: Optional[str] = None",
+          "async": true
+        },
+        {
+          "name": "list_kaitiaki",
+          "signature": "",
+          "async": true
+        },
+        {
+          "name": "generate_embeddings",
+          "signature": "req: VectorEmbedRequest",
+          "async": true
+        },
+        {
+          "name": "semantic_search",
+          "signature": "req: MemoryQueryRequest",
+          "async": true
+        },
+        {
+          "name": "run_pipeline",
+          "signature": "req: PipelineRequest",
+          "async": true
+        },
+        {
+          "name": "list_pipelines",
+          "signature": "",
+          "async": true
+        }
+      ],
+      "fastapi": true,
+      "uses_event_loop": true
+    }
+  ]
+}

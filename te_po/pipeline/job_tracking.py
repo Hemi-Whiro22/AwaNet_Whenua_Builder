@@ -11,20 +11,20 @@ import traceback
 from typing import Any, Callable, Optional
 from functools import wraps
 
-from te_po.db import db_execute, db_fetchone, db_query
+from te_po.database import db_execute, db_fetchone, db_query
 
 
 def track_pipeline_job(
     job_func: Callable,
 ) -> Callable:
     """Decorator to wrap a pipeline job function with DB status tracking.
-    
+
     Usage:
         @track_pipeline_job
         def process_document(file_path: str, job_id: str) -> dict:
             # ... processing logic
             return {"status": "success", ...}
-    
+
     The wrapper:
     1. Updates status='running' + started_at=now() at start
     2. On success: status='finished', finished_at=now(), result=json
@@ -34,18 +34,18 @@ def track_pipeline_job(
     def wrapper(*args, **kwargs) -> Any:
         # Extract job_id from kwargs or assume first positional arg
         job_id = kwargs.get("job_id") or (args[1] if len(args) > 1 else None)
-        
+
         if not job_id:
             # No job tracking; just run the function
             return job_func(*args, **kwargs)
-        
+
         start_time = time.time()
-        
+
         # Mark as running
         try:
             db_execute(
                 """
-                UPDATE pipeline_jobs 
+                UPDATE pipeline_jobs
                 SET status = %s, started_at = now()
                 WHERE id = %s
                 """,
@@ -53,11 +53,11 @@ def track_pipeline_job(
             )
         except Exception:
             pass  # Best-effort; continue regardless
-        
+
         try:
             # Execute the actual job function
             result = job_func(*args, **kwargs)
-            
+
             # Mark as finished
             try:
                 duration_sec = time.time() - start_time
@@ -71,9 +71,9 @@ def track_pipeline_job(
                 )
             except Exception:
                 pass  # Best-effort update
-            
+
             return result
-        
+
         except Exception as exc:
             # Mark as failed + log error
             error_msg = f"{type(exc).__name__}: {str(exc)}\n{traceback.format_exc()}"
@@ -88,16 +88,16 @@ def track_pipeline_job(
                 )
             except Exception:
                 pass  # Best-effort
-            
+
             # Re-raise so RQ still handles retries/dead queue
             raise
-    
+
     return wrapper
 
 
 def get_job_status(job_id: str) -> Optional[dict]:
     """Retrieve job status from database.
-    
+
     Returns dict with keys: status, result, error, started_at, finished_at, etc.
     Or None if not found.
     """
@@ -114,21 +114,21 @@ def get_recent_jobs(
     status: Optional[str] = None,
 ) -> list:
     """Get recent jobs from database for dashboarding.
-    
+
     Args:
         limit: Max results (default 50, max 500)
         realm: Filter by realm (optional)
         queue: Filter by queue name (optional)
         status: Filter by status (queued/running/finished/failed) (optional)
-    
+
     Returns:
         List of job dicts, ordered by created_at DESC
     """
     limit = min(limit, 500)  # Safety cap
-    
+
     query = "SELECT * FROM pipeline_jobs WHERE 1=1"
     params = []
-    
+
     if realm:
         query += " AND realm = %s"
         params.append(realm)
@@ -138,8 +138,8 @@ def get_recent_jobs(
     if status:
         query += " AND status = %s"
         params.append(status)
-    
+
     query += " ORDER BY created_at DESC LIMIT %s"
     params.append(limit)
-    
+
     return db_query(query, tuple(params)) or []

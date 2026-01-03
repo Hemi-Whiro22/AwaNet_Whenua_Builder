@@ -17,7 +17,7 @@ from te_po.pipeline.custom_queue import (
 )
 from te_po.pipeline.metrics import track_job
 from te_po.pipeline.job_tracking import track_pipeline_job
-from te_po.db import db_execute
+from te_po.database import db_execute
 from te_po.utils.supabase_client import get_client
 from te_po.core.env_loader import get_queue_mode
 
@@ -100,20 +100,20 @@ def process_document(file_path: str, job_id: str, source: str = "queue") -> Dict
 def enqueue_for_pipeline(file_path: str, job_id: str, pages: int | None = None) -> Dict[str, Any]:
     """
     Enqueue job for pipeline processing.
-    
+
     Queue routing (RQ mode):
     - urgent: ≤3 pages, 10 min timeout, 2h result TTL
     - default: 3-50 pages, 30 min timeout, 24h result TTL
     - slow: >50 pages, 60 min timeout, 48h result TTL
-    
+
     Inline mode: Runs immediately in-process without Redis.
-    
+
     Returns:
     - RQ mode: {rq_job_id: str}
     - Inline mode: {result: dict, error: str or None}
     """
     mode = get_queue_mode()
-    
+
     if mode == "inline":
         # Run pipeline immediately in-process
         try:
@@ -121,12 +121,12 @@ def enqueue_for_pipeline(file_path: str, job_id: str, pages: int | None = None) 
             return {"result": result, "error": None}
         except Exception as e:
             return {"result": None, "error": str(e)}
-    
+
     # RQ mode: enqueue to appropriate queue
     q = default_queue
     timeout = "30m"  # default
     result_ttl = 86400  # 24 hours in seconds
-    
+
     if pages is not None:
         if pages <= 3 and urgent_queue:
             q = urgent_queue
@@ -138,7 +138,7 @@ def enqueue_for_pipeline(file_path: str, job_id: str, pages: int | None = None) 
             result_ttl = 172800  # 48 hours
         elif default_queue:
             q = default_queue
-    
+
     if q:
         rq_job = q.enqueue(
             process_document,
@@ -149,7 +149,7 @@ def enqueue_for_pipeline(file_path: str, job_id: str, pages: int | None = None) 
             retry=Retry(max=3, interval=[10, 30, 60])
         )
         return {"rq_job_id": rq_job.id}
-    
+
     return {"rq_job_id": None}
 
 
