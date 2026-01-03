@@ -602,11 +602,11 @@ async def gpt_whisper(
         try:
             inputs: list[dict[str, str]] = []
             ctx_block = _context_block()
-            
+
             # Add system prompt
             if payload.system_prompt:
                 inputs.append({"role": "system", "content": payload.system_prompt})
-            
+
             # Add project state context (live project snapshot)
             try:
                 project_state = get_project_state()
@@ -615,11 +615,11 @@ async def gpt_whisper(
                     inputs.append({"role": "system", "content": state_context})
             except Exception:
                 pass  # If project state unavailable, continue without it
-            
+
             # Add chat history context
             if ctx_block:
                 inputs.append({"role": "system", "content": f"Recent chat context:\n{ctx_block}"})
-            
+
             inputs.append({"role": "user", "content": payload.whisper})
             reply = generate_text(inputs, model=DEFAULT_BACKEND_MODEL, max_tokens=2000)
         except HTTPException:
