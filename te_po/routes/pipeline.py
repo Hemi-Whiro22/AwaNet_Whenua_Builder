@@ -1,8 +1,8 @@
-import os
 import json
 
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Header, status
-from te_po.pipeline.orchestrator.pipeline_orchestrator import run_pipeline
+from te_po.core.auth import require_pipeline_or_service
+from te_po.pipeline.services.api import handle_pipeline_run
 from typing import List
 import uuid
 import shutil
@@ -17,7 +17,6 @@ from te_po.utils.supabase_client import get_client
 from te_po.core.env_loader import get_queue_mode
 
 router = APIRouter(prefix="/pipeline", tags=["Pipeline"])
-PIPELINE_TOKEN = os.getenv("PIPELINE_TOKEN")
 SUPA = get_client()
 
 
@@ -31,12 +30,7 @@ async def pipeline_run(
     """
     Run the pipeline on an uploaded file (preferred) or inline text.
     """
-    if PIPELINE_TOKEN:
-        if not authorization or not authorization.lower().startswith("bearer "):
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing bearer token.")
-        token = authorization.split(" ", 1)[1].strip()
-        if token != PIPELINE_TOKEN:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid bearer token.")
+    require_pipeline_or_service(authorization)
 
     if not file and not text:
         raise HTTPException(status_code=400, detail="Provide a file or text payload.")
@@ -48,14 +42,7 @@ async def pipeline_run(
         data = (text or "").encode("utf-8")
         filename = "inline.txt"
 
-    result = run_pipeline(data, filename, source=source)
-    log_event(
-        "pipeline_run",
-        "Pipeline executed",
-        source=source,
-        data={"filename": filename, "result": result},
-    )
-    return result
+    return handle_pipeline_run(data, filename, source)
 
 
 @router.post("/enqueue")
