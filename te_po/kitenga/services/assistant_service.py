@@ -156,6 +156,8 @@ async def assistant_query_flow(payload, *, pipeline_token: str | None = None) ->
     return {
         "status": "ok",
         "run": getattr(final_run, "status", None),
+        "run_status": getattr(final_run, "status", None),
+        "run_id": getattr(final_run, "id", getattr(run, "id", None)),
         "thread_id": thread_id,
         "reply": reply_text,
         "tools": tool_history,

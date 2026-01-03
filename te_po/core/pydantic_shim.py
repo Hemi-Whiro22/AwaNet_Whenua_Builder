@@ -11,10 +11,26 @@ import sys
 import types
 
 
+def _pydantic_major_version() -> int | None:
+    try:
+        import pydantic  # type: ignore
+    except Exception:
+        return None
+    version_str = getattr(pydantic, "__version__", None)
+    if not version_str:
+        return None
+    try:
+        return int(str(version_str).split(".")[0])
+    except Exception:
+        return None
+
+
 def ensure_pydantic_internal_signature():
-    if "pydantic._internal._signature" in sys.modules:
+    major = _pydantic_major_version()
+    if major is None or major >= 2 or "pydantic._internal._signature" in sys.modules:
         return
     internal_mod = types.ModuleType("pydantic._internal")
+    internal_mod.__path__ = []  # mark as package to avoid shadowing real v2 internals
     signature_mod = types.ModuleType("pydantic._internal._signature")
     dataclasses_mod = types.ModuleType("pydantic._internal._dataclasses")
 

@@ -460,7 +460,7 @@ async def ask_kitenga(request: KitengaAskRequest):
     return {
         "reply": result.get("reply"),
         "thread_id": result.get("thread_id"),
-        "run_id": result.get("run"),
+        "run_id": result.get("run_id") or result.get("run"),
         "assistant_id": _get_kitenga_assistant_id(),
         "tool_results": result.get("tools"),
     }
